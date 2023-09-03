@@ -6,10 +6,7 @@
 #include <string>
 #include <vector>
 
-
 struct WorldItem;
-
-
 
 class World {
   public:
@@ -18,13 +15,13 @@ class World {
 
   //INLINE FUNCTIONS
   //the point in 3d is translate in the position in the 1d vector that represents the grid
-  inline uint8_t& at(const IntPoint& p) { return _grid[cols * rows * p.x() + cols * p.y() + p.z()];  } 
-  inline uint8_t at(const IntPoint& p) const { return _grid[cols * rows * p.x() + cols * p.y() + p.z()]; }
+  inline uint8_t& at(const IntPoint& p) { return _grid[cols * rows * p.z() + cols * p.x() + p.y()];  } 
+  inline uint8_t at(const IntPoint& p) const { return _grid[cols * rows * p.z() + cols * p.x() + p.y()]; }
 
   // IntPoint is a point inside the grid -> so vector of integer
   // Point is a point inside the "real world" so vector of float
   inline IntPoint world2grid(const Point& p) {return IntPoint(p.x()*i_res, p.y()*i_res, p.z()*i_res);}
-  inline Point grid2world(const IntPoint& p) {return Point(p.x() * res, p.y() * res, p.z() * res);}
+  inline Point grid2world(const IntPoint& p) {return Point(p.x()*res, p.y()*res, p.z()*res);}
 
 
   inline bool inside(const IntPoint& p) const {return p.x() >= 0 && p.y() >= 0 && p.z() >= 0 && p.x() < rows && p.y() < cols && p.z() < depth;}
@@ -36,10 +33,9 @@ class World {
   bool collides(const IntPoint& p, const int radius) const;
 
   void loadFromImage(const std::string filename_); // a function that given a filename setup word member?
-  void draw(); // the world draw itself?
+  void draw(); // Q: the world draw itself? -> the world should call the draw function of each items in it. It also should show aq depth map of the map
   void timeTick(float dt); 
   void add(WorldItem* item);
-
 
 
 
