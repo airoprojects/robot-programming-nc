@@ -1,0 +1,2 @@
+
+-DCATKIN_DEVEL_PREFIX=/home/bitasus/Desktop/Aplha/robot-programming-nc/rp_ws/devel -DCMAKE_INSTALL_PREFIX=/home/bitasus/Desktop/Aplha/robot-programming-nc/rp_ws/install -G Unix Makefiles
