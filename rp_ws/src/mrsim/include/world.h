@@ -8,8 +8,11 @@
 
 struct WorldItem;
 
+
+
 class World {
   public:
+
 
   World();
 
@@ -38,6 +41,8 @@ class World {
   void add(WorldItem* item);
 
 
+  //CONSTANTS
+  static constexpr int MAX_ITEMS=100;
 
   //MEMBER OF CLASS
   unsigned int rows = 0, cols = 0, depth = 0; 
