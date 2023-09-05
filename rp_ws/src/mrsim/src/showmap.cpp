@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 
   // Load the PCD file
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-  if (pcl::io::loadPCDFile<pcl::PointXYZ>("/home/leeoos/Projects/robot-programming-nc/map3D/test_pcd.pcd", *cloud) == -1) {
+  if (pcl::io::loadPCDFile<pcl::PointXYZ>("/home/leeoos/Projects/robot-programming-nc/map3D/map3D.pcd", *cloud) == -1) {
     PCL_ERROR("Couldn't read the PCD file \n");
     return (-1);
   }
@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
   pcl::toROSMsg(*cloud, output);
 
   // Set the frame ID to the appropriate frame for your setup
-  // output.header.frame_id = "base_link"; to change!!
+  //output.header.frame_id = "base_link"; 
   output.header.frame_id = "map";
 
   // Create a ROS Rate object to control the loop rate

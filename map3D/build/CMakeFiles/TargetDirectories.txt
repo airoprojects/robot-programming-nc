@@ -1,0 +1,3 @@
+/home/leeoos/Projects/robot-programming-nc/map3D/build/CMakeFiles/rebuild_cache.dir
+/home/leeoos/Projects/robot-programming-nc/map3D/build/CMakeFiles/edit_cache.dir
+/home/leeoos/Projects/robot-programming-nc/map3D/build/CMakeFiles/extrude.dir
