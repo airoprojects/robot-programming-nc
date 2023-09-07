@@ -1,19 +1,21 @@
 #pragma once
+#include <vector>
+
 #include "world.h"
 
-class Lidar: public WorldItem {
-public:
-  Lidar(float fov_, float max_range_, int num_beams_, World* w, const Pose& pose_=Pose());
+class Lidar : public WorldItem {
+ public:
+  Lidar(float fov_, float max_range_, int num_beams_, std::shared_ptr<World> w,
+        const Pose& pose_ = Pose::Identity());
 
-  Lidar(float fov_, float max_range_, int num_beams_, WorldItem* p_, const Pose& pose_=Pose());
+  Lidar(float fov_, float max_range_, int num_beams_,
+        std::shared_ptr<WorldItem> p_, const Pose& pose_ = Pose::Identity());
 
-  ~Lidar();
+  void timeTick(float dt) override;
 
-  void timeTick(float dt);
+  void draw() override;
 
-  void draw();
-  
   float fov, max_range;
   int num_beams;
-  float *ranges;
+  std::vector<float> ranges;
 };
