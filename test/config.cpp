@@ -24,7 +24,6 @@ int main(){
         std::cout << "Failed to parse JSON file: " << errs << std::endl;
         return 1;
     }
-
     const std::string map = root["map"].asString();
     const double radius = root["items"][0]["radius"].asDouble();
 

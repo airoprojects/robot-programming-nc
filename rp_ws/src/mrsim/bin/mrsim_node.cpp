@@ -42,8 +42,6 @@ int main(int argc, char** argv) {
   */
 
   //for create every robot!!!
-  
-
   while (ros::ok()) {
 
     // this function update the status of each world item
