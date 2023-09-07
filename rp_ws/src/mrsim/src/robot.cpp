@@ -1,5 +1,6 @@
 #include "robot.h"
 
+
 #include <opencv2/imgproc.hpp>
 
 Robot::Robot(float radius_, std::shared_ptr<World> w_, const Pose& pose_)
