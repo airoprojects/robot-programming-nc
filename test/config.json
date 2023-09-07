@@ -1,0 +1,35 @@
+{
+  "map": "map2D.png",
+  "items": [
+      {
+          "id": 0,
+          "type": "robot",
+          "frame_id": "frame_robot0",
+          "namespace": "robot_0",
+          "radius": 0.5,
+          "max_rv" : 0.1,
+          "max_tv" : 0.5,
+          "pose": [
+              20,
+              8,
+              0
+          ],
+          "parent": -1
+      },
+      {
+          "id": 1,
+          "type": "lidar",
+          "frame_id": "frame_lidar0",
+          "namespace": "robot_0",
+          "fov": 6.18,
+          "max_range": 10.0,
+          "num_beams": 360,
+          "pose": [
+              0,
+              0,
+              0
+          ],
+          "parent": 0
+      }
+  ]
+}
