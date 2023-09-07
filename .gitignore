@@ -31,5 +31,8 @@
 *.out
 *.app
 
-# VsCode
+# VSCode
 *.vscode
+
+# Git-Setup
+gitsetup.sh
