@@ -39,7 +39,7 @@ int main(){
     // iterate items in the json:
     if(root["items"].isArray()) {
 
-      for(const auto& item: root["items"]){
+      for(const Json::Value item: root["items"]){
         
         const int id = item["id"].asInt();
         const std::string type = item["type"].asString();

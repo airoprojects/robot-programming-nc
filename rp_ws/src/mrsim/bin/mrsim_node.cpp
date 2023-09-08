@@ -38,9 +38,9 @@ int main(int argc, char** argv) {
     4. Launch the launch file
     5. Initialize an array of publisher objects for each robot to allow mrsim_node to publish on specific topics for each robot
   */
+  makeLaunchFile(git_root_path + "/config/config.json", git_root_path + "/rp_ws/launch/simulation.launch");
 
-
-  while (ros::ok()) {
+  // while (ros::ok()) {
 
     // this function update the status of each world item
     // w.timeTick(delay); // 
@@ -95,8 +95,8 @@ int main(int argc, char** argv) {
       
     // pub.publish(msg)
       
-    ros::spinOnce();
-  }
+  //   ros::spinOnce();
+  // }
 
   return 0;
 }

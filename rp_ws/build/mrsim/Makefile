@@ -449,33 +449,6 @@ bin/mrsim_node.cpp.s:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim_node.dir/build.make mrsim/CMakeFiles/mrsim_node.dir/bin/mrsim_node.cpp.s
 .PHONY : bin/mrsim_node.cpp.s
 
-src/getgit.o: src/getgit.cpp.o
-
-.PHONY : src/getgit.o
-
-# target to build an object file
-src/getgit.cpp.o:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/getgit.cpp.o
-.PHONY : src/getgit.cpp.o
-
-src/getgit.i: src/getgit.cpp.i
-
-.PHONY : src/getgit.i
-
-# target to preprocess a source file
-src/getgit.cpp.i:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/getgit.cpp.i
-.PHONY : src/getgit.cpp.i
-
-src/getgit.s: src/getgit.cpp.s
-
-.PHONY : src/getgit.s
-
-# target to generate assembly for a file
-src/getgit.cpp.s:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/getgit.cpp.s
-.PHONY : src/getgit.cpp.s
-
 src/lidar.o: src/lidar.cpp.o
 
 .PHONY : src/lidar.o
@@ -529,6 +502,33 @@ src/robot.s: src/robot.cpp.s
 src/robot.cpp.s:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/robot.cpp.s
 .PHONY : src/robot.cpp.s
+
+src/utils.o: src/utils.cpp.o
+
+.PHONY : src/utils.o
+
+# target to build an object file
+src/utils.cpp.o:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/utils.cpp.o
+.PHONY : src/utils.cpp.o
+
+src/utils.i: src/utils.cpp.i
+
+.PHONY : src/utils.i
+
+# target to preprocess a source file
+src/utils.cpp.i:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/utils.cpp.i
+.PHONY : src/utils.cpp.i
+
+src/utils.s: src/utils.cpp.s
+
+.PHONY : src/utils.s
+
+# target to generate assembly for a file
+src/utils.cpp.s:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/utils.cpp.s
+.PHONY : src/utils.cpp.s
 
 src/world.o: src/world.cpp.o
 
@@ -590,15 +590,15 @@ help:
 	@echo "... bin/mrsim_node.o"
 	@echo "... bin/mrsim_node.i"
 	@echo "... bin/mrsim_node.s"
-	@echo "... src/getgit.o"
-	@echo "... src/getgit.i"
-	@echo "... src/getgit.s"
 	@echo "... src/lidar.o"
 	@echo "... src/lidar.i"
 	@echo "... src/lidar.s"
 	@echo "... src/robot.o"
 	@echo "... src/robot.i"
 	@echo "... src/robot.s"
+	@echo "... src/utils.o"
+	@echo "... src/utils.i"
+	@echo "... src/utils.s"
 	@echo "... src/world.o"
 	@echo "... src/world.i"
 	@echo "... src/world.s"
