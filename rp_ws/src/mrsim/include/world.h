@@ -75,7 +75,9 @@ class World {
 
 // LC: definition of WorldItem class to manage items in the world
 class WorldItem {
+
  public:
+ 
   // LC: constructors of world items
   WorldItem(std::shared_ptr<World> w_, const Pose& p_ = Pose::Identity());
   WorldItem(std::shared_ptr<WorldItem> parent_,

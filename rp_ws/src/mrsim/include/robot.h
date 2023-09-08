@@ -14,13 +14,13 @@ struct Robot : public WorldItem {
   Robot(float radius_, std::shared_ptr<WorldItem> parent_,
         const Pose& pose_ = Pose::Identity());
 
-  // method to dray the robot on the map with open cv
+  // Method to dray the robot on the map with open cv
   void draw() override;
 
-  // method to update the robot pose in function of the velocity
+  // Method to update the robot pose in function of the velocity
   void timeTick(float dt) override;
 
-  // robot dadious and initial translational and rotational velocity
+  // Robot dadious and initial translational and rotational velocity
   float radius;
   float tv = 0, rv = 0;
 };    

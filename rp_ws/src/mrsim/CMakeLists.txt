@@ -21,7 +21,7 @@ catkin_package(
 )
 
 
-add_library(mrsim SHARED src/robot.cpp src/world.cpp src/lidar.cpp src/getgit.cpp) 
+add_library(mrsim SHARED src/robot.cpp src/world.cpp src/lidar.cpp src/utils.cpp) 
 target_include_directories(mrsim PUBLIC 
     include 
     ${OpenCV_INCLUDE_DIRS}
