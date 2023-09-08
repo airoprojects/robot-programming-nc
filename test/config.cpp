@@ -19,7 +19,7 @@ int main(){
     Json::Value root; // B.F.N object to hold the parsed json file
     Json::CharReaderBuilder readerBuilder; // B.F.N reader of json file
     std::ifstream file("./config.json", std::ifstream::binary); // B.F.N file to read
-    std::string errs; // B.F.N where the error are memorized
+    std::string errs; // B.F.N where the errors are memorized
 
     // B.F.N check if the parse is successfull
     bool parsingSuccessful = Json::parseFromStream(readerBuilder, file, &root, &errs);
@@ -30,11 +30,9 @@ int main(){
 
     // start the parse of the file
     const std::string map = root["map"].asString();
-    const double radius = root["items"][0]["radius"].asDouble();
-
     std::cout << "Map: " << map << std::endl;
 
-    int contRobot = 0; // B.F.N a counter to keep trace of number of robot
+    int contRobot = 0; // B.F.N a counter to keep trace of number of robots
 
     // iterate items in the json:
     if(root["items"].isArray()) {
@@ -47,6 +45,8 @@ int main(){
         std::cout << "ID: " << id << std::endl;
         std::cout << "Type" << type << std::endl;
 
+        std::vector<double> pose = {pose_array_r[0].asDouble(),pose_array_r[1].asDouble(),pose_array_r[2].asDouble()}
+
         if (type == "robot"){
           // B.F.N insert here all params about robot:
           const std::string frame_id_r = item["frame_id"].asString();
@@ -56,9 +56,9 @@ int main(){
           const double max_tv = item["max_tv"].asDouble();
           const Json::Value pose_array_r = item["pose"];
           const Pose pose_r = {pose_array_r[0].asDouble(),pose_array_r[1].asDouble()}; // to fix
+          pose.translation(){pose_array_r[0].asDouble(),pose_array_r[1]}
+          pose.rotation(){pose_array_r[2].asDouble()}
           const int parent_r = item["parent"].asInt();
-            
-
           // 2 options:
           // insert directly in a robot!
           // store in a class||struct and after create a robot recalling them -> 1 options seems better for now
