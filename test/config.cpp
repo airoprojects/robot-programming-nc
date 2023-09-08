@@ -12,7 +12,9 @@
 #include <iostream>
 #include <jsoncpp/json/json.h>
 #include <fstream>
-#include "types.h"
+
+
+//B.F.N -> to remove the prints
 
 int main(){
   
@@ -45,9 +47,8 @@ int main(){
         std::cout << "ID: " << id << std::endl;
         std::cout << "Type" << type << std::endl;
 
-        std::vector<double> pose = {pose_array_r[0].asDouble(),pose_array_r[1].asDouble(),pose_array_r[2].asDouble()}
 
-        if (type == "robot"){
+        if(type == "robot"){
           // B.F.N insert here all params about robot:
           const std::string frame_id_r = item["frame_id"].asString();
           const std::string namespace_r = item["namespace"].asString();
@@ -55,24 +56,42 @@ int main(){
           const double max_rv = item["max_rv"].asDouble();
           const double max_tv = item["max_tv"].asDouble();
           const Json::Value pose_array_r = item["pose"];
-          const Pose pose_r = {pose_array_r[0].asDouble(),pose_array_r[1].asDouble()}; // to fix
-          pose.translation(){pose_array_r[0].asDouble(),pose_array_r[1]}
-          pose.rotation(){pose_array_r[2].asDouble()}
+          const std::vector<double> pose_r = {pose_array_r[0].asDouble(),pose_array_r[1].asDouble(),pose_array_r[2].asDouble()};
           const int parent_r = item["parent"].asInt();
-          // 2 options:
-          // insert directly in a robot!
-          // store in a class||struct and after create a robot recalling them -> 1 options seems better for now
+          std::cout << "Frame ID: " << frame_id_r << ", Namespace: " << namespace_r << ", Radius: " << radius << ", Max RV: " << max_rv << ", Max TV: " << max_tv << ", Parent: " << parent_r << std::endl;
+          for(int i = 0; i < 3; ++i) {
+            std::cout << "pose_r[" << i << "] = " << pose_r[i] << std::endl;
+          }
+         
+
         }else if(type == "lidar"){
           const std::string frame_id_l = item["frame_id"].asString();
           const std::string namespace_l = item["namespace"].asString();
-          const std::string fov_l = item["fov"].asDouble();
+          const double fov_l = item["fov"].asDouble();
           const double max_range_l = item["max_range"].asDouble();
           const int num_beams_l = item["num_beams"].asInt();
-          // POSE to fix
+          const Json::Value pose_array_l = item["pose"];
+          const std::vector<double>  pose_l = {pose_array_l[0].asDouble(),pose_array_l[1].asDouble(),pose_array_l[2].asDouble()}; 
           const int parent_l = item["parent"].asInt();
+
+
+          std::cout << "Frame ID: " << frame_id_l << std::endl
+          << "Namespace: " << namespace_l << std::endl
+          << "FOV: " << fov_l << std::endl
+          << "Max Range: " << max_range_l << std::endl
+          << "Number of Beams: " << num_beams_l << std::endl
+          << "Parent: " << parent_l << std::endl;
+
+          for(int i = 0; i < 3; ++i) {
+            std::cout << "pose_r[" << i << "] = " << pose_l[i] << std::endl;
+          }
+
+
+
         }else{
-          // to define
+          std::cout << "Type error reading JSON file" << std::endl;// to finish
         }
+
       
 
       }
