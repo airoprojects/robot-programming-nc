@@ -1,8 +1,8 @@
-#include "lidar.h"
-#include "types.h"
-
 #include <opencv2/imgproc.hpp>
 
+// Custom lib
+#include "lidar.h"
+#include "types.h"
 
 Lidar::Lidar(float fov_, float max_range_, int num_beams_,
              std::shared_ptr<World> w, const Pose& pose_)

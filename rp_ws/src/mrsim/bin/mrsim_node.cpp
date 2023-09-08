@@ -1,7 +1,10 @@
+#include <fstream>
+#include <iostream>
 #include <ros/ros.h>
+#include <jsoncpp/json/json.h>
 #include <opencv2/highgui.hpp>
 
-// Custom include 
+// Custom lib
 #include "types.h"
 #include "world.h"
 #include "robot.h"
@@ -15,21 +18,34 @@ int main(int argc, char** argv) {
   ros::NodeHandle nh("/");
 
   // LC: get git root directory path
+  std::string git_root_path;
   try {
-        std::string gitRootPath = getGitRootPath();
-        std::cout << "Git Root Path: " << gitRootPath << '\n';
+        git_root_path = getGitRootPath();
+        cout << "Git Root Path: " << git_root_path << '\n';
     } catch(const std::runtime_error& e) {
-        std::cerr << "Exception: " << e.what() << '\n';
+        cerr << "Exception: " << e.what() << '\n';
   }
 
-  // Load the configuration file and initialize the simulator 
-  // TODO
+  // Load the configuration file and initialize the simulator
+  // TODO :
   /*
-    1. Count numebr of robots / lidar
-    2. create a vector of publisher
-    3. lauch file to run all the robots nodes:
-        rosrun mrsim robot_node "robot_i" 
+    1. Import json config file
+    2. Read json config file and extract:
+      2.1 NUM_ROBOTS: number of robots in the simulation (N)
+      2.2 NUM_LIDARS: number of lidars in the simulation (M)
+      2.3 INFO about robots
+      2.4 INFO about lidars
+    3. Make a launch file to run N robot_nodes and M lidars_nodes
+    4. Launch the launch file
+    5. Initialize an array of publisher objects for each robot to allow mrsim_node to publish on specific topics for each robot
   */
+
+  // 1
+  Json::Value root; // B.F.N object to hold the parsed json file
+  Json::CharReaderBuilder readerBuilder; // B.F.N reader of json file
+  std::ifstream file(git_root_path + "/config.json", std::ifstream::binary); // B.F.N file to read
+  std::string errs; // B.F.N where the error are memorized
+
 
   // int NUM_ROBOT = 2;
 

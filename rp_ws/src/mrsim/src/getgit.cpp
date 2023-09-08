@@ -1,7 +1,4 @@
-// #include <iostream>
-// #include <cstdio>
-// #include <array>
-
+// Custom lib
 #include "getgit.h"
 
 // LC: this function return the path to the root directory of the current git project
