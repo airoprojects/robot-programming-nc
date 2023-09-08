@@ -21,8 +21,6 @@ int main(){
     std::ifstream file("./config.json", std::ifstream::binary); // B.F.N file to read
     std::string errs; // B.F.N where the error are memorized
 
-
-
     // B.F.N check if the parse is successfull
     bool parsingSuccessful = Json::parseFromStream(readerBuilder, file, &root, &errs);
     if (!parsingSuccessful) {
@@ -30,7 +28,7 @@ int main(){
         return 1;
     }
 
-    //start the parse of the file
+    // start the parse of the file
     const std::string map = root["map"].asString();
     const double radius = root["items"][0]["radius"].asDouble();
 

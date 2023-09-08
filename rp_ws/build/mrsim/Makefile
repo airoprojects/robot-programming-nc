@@ -56,18 +56,6 @@ CMAKE_BINARY_DIR = /home/leeoos/Projects/robot-programming-nc/rp_ws/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip/fast
-
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
@@ -79,6 +67,49 @@ install/local/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
 	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
+
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
 
 # Special rule for the target install
 install: preinstall
@@ -92,48 +123,17 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
 
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -168,229 +168,19 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-mrsim/CMakeFiles/showmap.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/showmap.dir/rule
-.PHONY : mrsim/CMakeFiles/showmap.dir/rule
+mrsim/CMakeFiles/mrsim.dir/rule:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/mrsim.dir/rule
+.PHONY : mrsim/CMakeFiles/mrsim.dir/rule
 
 # Convenience name for target.
-showmap: mrsim/CMakeFiles/showmap.dir/rule
+mrsim: mrsim/CMakeFiles/mrsim.dir/rule
 
-.PHONY : showmap
+.PHONY : mrsim
 
 # fast build rule for target.
-showmap/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/showmap.dir/build.make mrsim/CMakeFiles/showmap.dir/build
-.PHONY : showmap/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-tf2_msgs_generate_messages_nodejs: mrsim/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : tf2_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-tf2_msgs_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/build
-.PHONY : tf2_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-tf2_msgs_generate_messages_lisp: mrsim/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : tf2_msgs_generate_messages_lisp
-
-# fast build rule for target.
-tf2_msgs_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/build
-.PHONY : tf2_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/actionlib_msgs_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_msgs_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-actionlib_msgs_generate_messages_py: mrsim/CMakeFiles/actionlib_msgs_generate_messages_py.dir/rule
-
-.PHONY : actionlib_msgs_generate_messages_py
-
-# fast build rule for target.
-actionlib_msgs_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_msgs_generate_messages_py.dir/build.make mrsim/CMakeFiles/actionlib_msgs_generate_messages_py.dir/build
-.PHONY : actionlib_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-actionlib_msgs_generate_messages_cpp: mrsim/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : actionlib_msgs_generate_messages_cpp
-
-# fast build rule for target.
-actionlib_msgs_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/build
-.PHONY : actionlib_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/actionlib_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_generate_messages_py.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_py: mrsim/CMakeFiles/actionlib_generate_messages_py.dir/rule
-
-.PHONY : actionlib_generate_messages_py
-
-# fast build rule for target.
-actionlib_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_generate_messages_py.dir/build.make mrsim/CMakeFiles/actionlib_generate_messages_py.dir/build
-.PHONY : actionlib_generate_messages_py/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/actionlib_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_nodejs: mrsim/CMakeFiles/actionlib_generate_messages_nodejs.dir/rule
-
-.PHONY : actionlib_generate_messages_nodejs
-
-# fast build rule for target.
-actionlib_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/actionlib_generate_messages_nodejs.dir/build
-.PHONY : actionlib_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/actionlib_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_lisp: mrsim/CMakeFiles/actionlib_generate_messages_lisp.dir/rule
-
-.PHONY : actionlib_generate_messages_lisp
-
-# fast build rule for target.
-actionlib_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/actionlib_generate_messages_lisp.dir/build
-.PHONY : actionlib_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/actionlib_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_cpp: mrsim/CMakeFiles/actionlib_generate_messages_cpp.dir/rule
-
-.PHONY : actionlib_generate_messages_cpp
-
-# fast build rule for target.
-actionlib_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/actionlib_generate_messages_cpp.dir/build
-.PHONY : actionlib_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/tf_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-tf_generate_messages_nodejs: mrsim/CMakeFiles/tf_generate_messages_nodejs.dir/rule
-
-.PHONY : tf_generate_messages_nodejs
-
-# fast build rule for target.
-tf_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/tf_generate_messages_nodejs.dir/build
-.PHONY : tf_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/tf_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-tf_generate_messages_lisp: mrsim/CMakeFiles/tf_generate_messages_lisp.dir/rule
-
-.PHONY : tf_generate_messages_lisp
-
-# fast build rule for target.
-tf_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/tf_generate_messages_lisp.dir/build
-.PHONY : tf_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/geometry_msgs_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/geometry_msgs_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/geometry_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-geometry_msgs_generate_messages_eus: mrsim/CMakeFiles/geometry_msgs_generate_messages_eus.dir/rule
-
-.PHONY : geometry_msgs_generate_messages_eus
-
-# fast build rule for target.
-geometry_msgs_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/geometry_msgs_generate_messages_eus.dir/build.make mrsim/CMakeFiles/geometry_msgs_generate_messages_eus.dir/build
-.PHONY : geometry_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/pcl_msgs_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/pcl_msgs_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/pcl_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-pcl_msgs_generate_messages_py: mrsim/CMakeFiles/pcl_msgs_generate_messages_py.dir/rule
-
-.PHONY : pcl_msgs_generate_messages_py
-
-# fast build rule for target.
-pcl_msgs_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/pcl_msgs_generate_messages_py.dir/build.make mrsim/CMakeFiles/pcl_msgs_generate_messages_py.dir/build
-.PHONY : pcl_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_cpp: mrsim/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : sensor_msgs_generate_messages_cpp
-
-# fast build rule for target.
-sensor_msgs_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
-.PHONY : sensor_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/pcl_msgs_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/pcl_msgs_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/pcl_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-pcl_msgs_generate_messages_cpp: mrsim/CMakeFiles/pcl_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : pcl_msgs_generate_messages_cpp
-
-# fast build rule for target.
-pcl_msgs_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/pcl_msgs_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/pcl_msgs_generate_messages_cpp.dir/build
-.PHONY : pcl_msgs_generate_messages_cpp/fast
+mrsim/fast:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/build
+.PHONY : mrsim/fast
 
 # Convenience name for target.
 mrsim/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
@@ -408,199 +198,49 @@ std_msgs_generate_messages_py/fast:
 .PHONY : std_msgs_generate_messages_py/fast
 
 # Convenience name for target.
-mrsim/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
+mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
+.PHONY : mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
 
 # Convenience name for target.
-sensor_msgs_generate_messages_nodejs: mrsim/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
+std_msgs_generate_messages_nodejs: mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
 
-.PHONY : sensor_msgs_generate_messages_nodejs
+.PHONY : std_msgs_generate_messages_nodejs
 
 # fast build rule for target.
-sensor_msgs_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build
-.PHONY : sensor_msgs_generate_messages_nodejs/fast
+std_msgs_generate_messages_nodejs/fast:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build
+.PHONY : std_msgs_generate_messages_nodejs/fast
 
 # Convenience name for target.
-mrsim/CMakeFiles/tf2_msgs_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf2_msgs_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/tf2_msgs_generate_messages_py.dir/rule
+mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/rule:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
+.PHONY : mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
 
 # Convenience name for target.
-tf2_msgs_generate_messages_py: mrsim/CMakeFiles/tf2_msgs_generate_messages_py.dir/rule
+roscpp_generate_messages_cpp: mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
 
-.PHONY : tf2_msgs_generate_messages_py
+.PHONY : roscpp_generate_messages_cpp
 
 # fast build rule for target.
-tf2_msgs_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf2_msgs_generate_messages_py.dir/build.make mrsim/CMakeFiles/tf2_msgs_generate_messages_py.dir/build
-.PHONY : tf2_msgs_generate_messages_py/fast
+roscpp_generate_messages_cpp/fast:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/build
+.PHONY : roscpp_generate_messages_cpp/fast
 
 # Convenience name for target.
-mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_nodejs.dir/rule
+mrsim/CMakeFiles/mrsim_node.dir/rule:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/mrsim_node.dir/rule
+.PHONY : mrsim/CMakeFiles/mrsim_node.dir/rule
 
 # Convenience name for target.
-dynamic_reconfigure_generate_messages_nodejs: mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_nodejs.dir/rule
+mrsim_node: mrsim/CMakeFiles/mrsim_node.dir/rule
 
-.PHONY : dynamic_reconfigure_generate_messages_nodejs
+.PHONY : mrsim_node
 
 # fast build rule for target.
-dynamic_reconfigure_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_nodejs.dir/build
-.PHONY : dynamic_reconfigure_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/bond_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/bond_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/bond_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_cpp: mrsim/CMakeFiles/bond_generate_messages_cpp.dir/rule
-
-.PHONY : bond_generate_messages_cpp
-
-# fast build rule for target.
-bond_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/bond_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/bond_generate_messages_cpp.dir/build
-.PHONY : bond_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/bond_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/bond_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/bond_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_eus: mrsim/CMakeFiles/bond_generate_messages_eus.dir/rule
-
-.PHONY : bond_generate_messages_eus
-
-# fast build rule for target.
-bond_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/bond_generate_messages_eus.dir/build.make mrsim/CMakeFiles/bond_generate_messages_eus.dir/build
-.PHONY : bond_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/bond_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/bond_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/bond_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_lisp: mrsim/CMakeFiles/bond_generate_messages_lisp.dir/rule
-
-.PHONY : bond_generate_messages_lisp
-
-# fast build rule for target.
-bond_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/bond_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/bond_generate_messages_lisp.dir/build
-.PHONY : bond_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/pcl_msgs_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/pcl_msgs_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/pcl_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-pcl_msgs_generate_messages_eus: mrsim/CMakeFiles/pcl_msgs_generate_messages_eus.dir/rule
-
-.PHONY : pcl_msgs_generate_messages_eus
-
-# fast build rule for target.
-pcl_msgs_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/pcl_msgs_generate_messages_eus.dir/build.make mrsim/CMakeFiles/pcl_msgs_generate_messages_eus.dir/build
-.PHONY : pcl_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/topic_tools_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/topic_tools_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/topic_tools_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-topic_tools_generate_messages_cpp: mrsim/CMakeFiles/topic_tools_generate_messages_cpp.dir/rule
-
-.PHONY : topic_tools_generate_messages_cpp
-
-# fast build rule for target.
-topic_tools_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/topic_tools_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/topic_tools_generate_messages_cpp.dir/build
-.PHONY : topic_tools_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/nodelet_topic_tools_gencfg.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/nodelet_topic_tools_gencfg.dir/rule
-.PHONY : mrsim/CMakeFiles/nodelet_topic_tools_gencfg.dir/rule
-
-# Convenience name for target.
-nodelet_topic_tools_gencfg: mrsim/CMakeFiles/nodelet_topic_tools_gencfg.dir/rule
-
-.PHONY : nodelet_topic_tools_gencfg
-
-# fast build rule for target.
-nodelet_topic_tools_gencfg/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/nodelet_topic_tools_gencfg.dir/build.make mrsim/CMakeFiles/nodelet_topic_tools_gencfg.dir/build
-.PHONY : nodelet_topic_tools_gencfg/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_lisp: mrsim/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : sensor_msgs_generate_messages_lisp
-
-# fast build rule for target.
-sensor_msgs_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
-.PHONY : sensor_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_eus: mrsim/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
-
-.PHONY : sensor_msgs_generate_messages_eus
-
-# fast build rule for target.
-sensor_msgs_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build.make mrsim/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build
-.PHONY : sensor_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/pcl_msgs_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/pcl_msgs_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/pcl_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-pcl_msgs_generate_messages_lisp: mrsim/CMakeFiles/pcl_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : pcl_msgs_generate_messages_lisp
-
-# fast build rule for target.
-pcl_msgs_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/pcl_msgs_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/pcl_msgs_generate_messages_lisp.dir/build
-.PHONY : pcl_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/pcl_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/pcl_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/pcl_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-pcl_msgs_generate_messages_nodejs: mrsim/CMakeFiles/pcl_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : pcl_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-pcl_msgs_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/pcl_msgs_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/pcl_msgs_generate_messages_nodejs.dir/build
-.PHONY : pcl_msgs_generate_messages_nodejs/fast
+mrsim_node/fast:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim_node.dir/build.make mrsim/CMakeFiles/mrsim_node.dir/build
+.PHONY : mrsim_node/fast
 
 # Convenience name for target.
 mrsim/CMakeFiles/roscpp_generate_messages_eus.dir/rule:
@@ -616,21 +256,6 @@ roscpp_generate_messages_eus: mrsim/CMakeFiles/roscpp_generate_messages_eus.dir/
 roscpp_generate_messages_eus/fast:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/roscpp_generate_messages_eus.dir/build.make mrsim/CMakeFiles/roscpp_generate_messages_eus.dir/build
 .PHONY : roscpp_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/topic_tools_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/topic_tools_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/topic_tools_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-topic_tools_generate_messages_nodejs: mrsim/CMakeFiles/topic_tools_generate_messages_nodejs.dir/rule
-
-.PHONY : topic_tools_generate_messages_nodejs
-
-# fast build rule for target.
-topic_tools_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/topic_tools_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/topic_tools_generate_messages_nodejs.dir/build
-.PHONY : topic_tools_generate_messages_nodejs/fast
 
 # Convenience name for target.
 mrsim/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/rule:
@@ -663,36 +288,6 @@ std_msgs_generate_messages_lisp/fast:
 .PHONY : std_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
-mrsim/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-actionlib_msgs_generate_messages_eus: mrsim/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/rule
-
-.PHONY : actionlib_msgs_generate_messages_eus
-
-# fast build rule for target.
-actionlib_msgs_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/build.make mrsim/CMakeFiles/actionlib_msgs_generate_messages_eus.dir/build
-.PHONY : actionlib_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule
-
-# Convenience name for target.
-dynamic_reconfigure_generate_messages_py: mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule
-
-.PHONY : dynamic_reconfigure_generate_messages_py
-
-# fast build rule for target.
-dynamic_reconfigure_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/build.make mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/build
-.PHONY : dynamic_reconfigure_generate_messages_py/fast
-
-# Convenience name for target.
 mrsim/CMakeFiles/roscpp_generate_messages_py.dir/rule:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/roscpp_generate_messages_py.dir/rule
 .PHONY : mrsim/CMakeFiles/roscpp_generate_messages_py.dir/rule
@@ -706,111 +301,6 @@ roscpp_generate_messages_py: mrsim/CMakeFiles/roscpp_generate_messages_py.dir/ru
 roscpp_generate_messages_py/fast:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/roscpp_generate_messages_py.dir/build.make mrsim/CMakeFiles/roscpp_generate_messages_py.dir/build
 .PHONY : roscpp_generate_messages_py/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_cpp: mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-
-.PHONY : roscpp_generate_messages_cpp
-
-# fast build rule for target.
-roscpp_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/roscpp_generate_messages_cpp.dir/build
-.PHONY : roscpp_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/topic_tools_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/topic_tools_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/topic_tools_generate_messages_py.dir/rule
-
-# Convenience name for target.
-topic_tools_generate_messages_py: mrsim/CMakeFiles/topic_tools_generate_messages_py.dir/rule
-
-.PHONY : topic_tools_generate_messages_py
-
-# fast build rule for target.
-topic_tools_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/topic_tools_generate_messages_py.dir/build.make mrsim/CMakeFiles/topic_tools_generate_messages_py.dir/build
-.PHONY : topic_tools_generate_messages_py/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-geometry_msgs_generate_messages_lisp: mrsim/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : geometry_msgs_generate_messages_lisp
-
-# fast build rule for target.
-geometry_msgs_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build
-.PHONY : geometry_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/tf_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-tf_generate_messages_cpp: mrsim/CMakeFiles/tf_generate_messages_cpp.dir/rule
-
-.PHONY : tf_generate_messages_cpp
-
-# fast build rule for target.
-tf_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/tf_generate_messages_cpp.dir/build
-.PHONY : tf_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-actionlib_msgs_generate_messages_nodejs: mrsim/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : actionlib_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-actionlib_msgs_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/build
-.PHONY : actionlib_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-actionlib_msgs_generate_messages_lisp: mrsim/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : actionlib_msgs_generate_messages_lisp
-
-# fast build rule for target.
-actionlib_msgs_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/build
-.PHONY : actionlib_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/tf_generate_messages_py.dir/rule
-
-# Convenience name for target.
-tf_generate_messages_py: mrsim/CMakeFiles/tf_generate_messages_py.dir/rule
-
-.PHONY : tf_generate_messages_py
-
-# fast build rule for target.
-tf_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf_generate_messages_py.dir/build.make mrsim/CMakeFiles/tf_generate_messages_py.dir/build
-.PHONY : tf_generate_messages_py/fast
 
 # Convenience name for target.
 mrsim/CMakeFiles/std_msgs_generate_messages_eus.dir/rule:
@@ -843,21 +333,6 @@ roscpp_generate_messages_nodejs/fast:
 .PHONY : roscpp_generate_messages_nodejs/fast
 
 # Convenience name for target.
-mrsim/CMakeFiles/actionlib_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/actionlib_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/actionlib_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_eus: mrsim/CMakeFiles/actionlib_generate_messages_eus.dir/rule
-
-.PHONY : actionlib_generate_messages_eus
-
-# fast build rule for target.
-actionlib_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/actionlib_generate_messages_eus.dir/build.make mrsim/CMakeFiles/actionlib_generate_messages_eus.dir/build
-.PHONY : actionlib_generate_messages_eus/fast
-
-# Convenience name for target.
 mrsim/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
 .PHONY : mrsim/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
@@ -888,36 +363,6 @@ std_msgs_generate_messages_cpp/fast:
 .PHONY : std_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
-mrsim/CMakeFiles/std_srvs_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/std_srvs_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/std_srvs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-std_srvs_generate_messages_cpp: mrsim/CMakeFiles/std_srvs_generate_messages_cpp.dir/rule
-
-.PHONY : std_srvs_generate_messages_cpp
-
-# fast build rule for target.
-std_srvs_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/std_srvs_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/std_srvs_generate_messages_cpp.dir/build
-.PHONY : std_srvs_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/std_srvs_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/std_srvs_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/std_srvs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-std_srvs_generate_messages_py: mrsim/CMakeFiles/std_srvs_generate_messages_py.dir/rule
-
-.PHONY : std_srvs_generate_messages_py
-
-# fast build rule for target.
-std_srvs_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/std_srvs_generate_messages_py.dir/build.make mrsim/CMakeFiles/std_srvs_generate_messages_py.dir/build
-.PHONY : std_srvs_generate_messages_py/fast
-
-# Convenience name for target.
 mrsim/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/rule:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/rule
 .PHONY : mrsim/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/rule
@@ -933,36 +378,6 @@ rosgraph_msgs_generate_messages_eus/fast:
 .PHONY : rosgraph_msgs_generate_messages_eus/fast
 
 # Convenience name for target.
-mrsim/CMakeFiles/pcl_ros_gencfg.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/pcl_ros_gencfg.dir/rule
-.PHONY : mrsim/CMakeFiles/pcl_ros_gencfg.dir/rule
-
-# Convenience name for target.
-pcl_ros_gencfg: mrsim/CMakeFiles/pcl_ros_gencfg.dir/rule
-
-.PHONY : pcl_ros_gencfg
-
-# fast build rule for target.
-pcl_ros_gencfg/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/pcl_ros_gencfg.dir/build.make mrsim/CMakeFiles/pcl_ros_gencfg.dir/build
-.PHONY : pcl_ros_gencfg/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/tf_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-tf_generate_messages_eus: mrsim/CMakeFiles/tf_generate_messages_eus.dir/rule
-
-.PHONY : tf_generate_messages_eus
-
-# fast build rule for target.
-tf_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf_generate_messages_eus.dir/build.make mrsim/CMakeFiles/tf_generate_messages_eus.dir/build
-.PHONY : tf_generate_messages_eus/fast
-
-# Convenience name for target.
 mrsim/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
 .PHONY : mrsim/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
@@ -976,66 +391,6 @@ rosgraph_msgs_generate_messages_lisp: mrsim/CMakeFiles/rosgraph_msgs_generate_me
 rosgraph_msgs_generate_messages_lisp/fast:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build
 .PHONY : rosgraph_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-geometry_msgs_generate_messages_cpp: mrsim/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : geometry_msgs_generate_messages_cpp
-
-# fast build rule for target.
-geometry_msgs_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build
-.PHONY : geometry_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf2_msgs_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf2_msgs_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/tf2_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-tf2_msgs_generate_messages_eus: mrsim/CMakeFiles/tf2_msgs_generate_messages_eus.dir/rule
-
-.PHONY : tf2_msgs_generate_messages_eus
-
-# fast build rule for target.
-tf2_msgs_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf2_msgs_generate_messages_eus.dir/build.make mrsim/CMakeFiles/tf2_msgs_generate_messages_eus.dir/build
-.PHONY : tf2_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_py: mrsim/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-
-.PHONY : sensor_msgs_generate_messages_py
-
-# fast build rule for target.
-sensor_msgs_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make mrsim/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
-.PHONY : sensor_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-geometry_msgs_generate_messages_py: mrsim/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
-
-.PHONY : geometry_msgs_generate_messages_py
-
-# fast build rule for target.
-geometry_msgs_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/geometry_msgs_generate_messages_py.dir/build.make mrsim/CMakeFiles/geometry_msgs_generate_messages_py.dir/build
-.PHONY : geometry_msgs_generate_messages_py/fast
 
 # Convenience name for target.
 mrsim/CMakeFiles/roscpp_generate_messages_lisp.dir/rule:
@@ -1067,317 +422,140 @@ rosgraph_msgs_generate_messages_py/fast:
 	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build.make mrsim/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build
 .PHONY : rosgraph_msgs_generate_messages_py/fast
 
-# Convenience name for target.
-mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/rule
+bin/mrsim_node.o: bin/mrsim_node.cpp.o
 
-# Convenience name for target.
-dynamic_reconfigure_generate_messages_cpp: mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/rule
-
-.PHONY : dynamic_reconfigure_generate_messages_cpp
-
-# fast build rule for target.
-dynamic_reconfigure_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/build
-.PHONY : dynamic_reconfigure_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/topic_tools_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/topic_tools_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/topic_tools_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-topic_tools_generate_messages_eus: mrsim/CMakeFiles/topic_tools_generate_messages_eus.dir/rule
-
-.PHONY : topic_tools_generate_messages_eus
-
-# fast build rule for target.
-topic_tools_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/topic_tools_generate_messages_eus.dir/build.make mrsim/CMakeFiles/topic_tools_generate_messages_eus.dir/build
-.PHONY : topic_tools_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-geometry_msgs_generate_messages_nodejs: mrsim/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : geometry_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-geometry_msgs_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/build
-.PHONY : geometry_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-dynamic_reconfigure_generate_messages_eus: mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
-
-.PHONY : dynamic_reconfigure_generate_messages_eus
-
-# fast build rule for target.
-dynamic_reconfigure_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/build.make mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/build
-.PHONY : dynamic_reconfigure_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/dynamic_reconfigure_gencfg.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/dynamic_reconfigure_gencfg.dir/rule
-.PHONY : mrsim/CMakeFiles/dynamic_reconfigure_gencfg.dir/rule
-
-# Convenience name for target.
-dynamic_reconfigure_gencfg: mrsim/CMakeFiles/dynamic_reconfigure_gencfg.dir/rule
-
-.PHONY : dynamic_reconfigure_gencfg
-
-# fast build rule for target.
-dynamic_reconfigure_gencfg/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/dynamic_reconfigure_gencfg.dir/build.make mrsim/CMakeFiles/dynamic_reconfigure_gencfg.dir/build
-.PHONY : dynamic_reconfigure_gencfg/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/nodelet_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_cpp: mrsim/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
-
-.PHONY : nodelet_generate_messages_cpp
-
-# fast build rule for target.
-nodelet_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/nodelet_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/nodelet_generate_messages_cpp.dir/build
-.PHONY : nodelet_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/rule
-.PHONY : mrsim/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-tf2_msgs_generate_messages_cpp: mrsim/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : tf2_msgs_generate_messages_cpp
-
-# fast build rule for target.
-tf2_msgs_generate_messages_cpp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/build.make mrsim/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/build
-.PHONY : tf2_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-dynamic_reconfigure_generate_messages_lisp: mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/rule
-
-.PHONY : dynamic_reconfigure_generate_messages_lisp
-
-# fast build rule for target.
-dynamic_reconfigure_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/build
-.PHONY : dynamic_reconfigure_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-std_srvs_generate_messages_lisp: mrsim/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule
-
-.PHONY : std_srvs_generate_messages_lisp
-
-# fast build rule for target.
-std_srvs_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/std_srvs_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/std_srvs_generate_messages_lisp.dir/build
-.PHONY : std_srvs_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/nodelet_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/nodelet_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/nodelet_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_eus: mrsim/CMakeFiles/nodelet_generate_messages_eus.dir/rule
-
-.PHONY : nodelet_generate_messages_eus
-
-# fast build rule for target.
-nodelet_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/nodelet_generate_messages_eus.dir/build.make mrsim/CMakeFiles/nodelet_generate_messages_eus.dir/build
-.PHONY : nodelet_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_nodejs: mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : std_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-std_msgs_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build
-.PHONY : std_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/nodelet_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_lisp: mrsim/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
-
-.PHONY : nodelet_generate_messages_lisp
-
-# fast build rule for target.
-nodelet_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/nodelet_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/nodelet_generate_messages_lisp.dir/build
-.PHONY : nodelet_generate_messages_lisp/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/nodelet_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/nodelet_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/nodelet_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_nodejs: mrsim/CMakeFiles/nodelet_generate_messages_nodejs.dir/rule
-
-.PHONY : nodelet_generate_messages_nodejs
-
-# fast build rule for target.
-nodelet_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/nodelet_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/nodelet_generate_messages_nodejs.dir/build
-.PHONY : nodelet_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/bond_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/bond_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/bond_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_nodejs: mrsim/CMakeFiles/bond_generate_messages_nodejs.dir/rule
-
-.PHONY : bond_generate_messages_nodejs
-
-# fast build rule for target.
-bond_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/bond_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/bond_generate_messages_nodejs.dir/build
-.PHONY : bond_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/bond_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/bond_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/bond_generate_messages_py.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_py: mrsim/CMakeFiles/bond_generate_messages_py.dir/rule
-
-.PHONY : bond_generate_messages_py
-
-# fast build rule for target.
-bond_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/bond_generate_messages_py.dir/build.make mrsim/CMakeFiles/bond_generate_messages_py.dir/build
-.PHONY : bond_generate_messages_py/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/std_srvs_generate_messages_eus.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/std_srvs_generate_messages_eus.dir/rule
-.PHONY : mrsim/CMakeFiles/std_srvs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-std_srvs_generate_messages_eus: mrsim/CMakeFiles/std_srvs_generate_messages_eus.dir/rule
-
-.PHONY : std_srvs_generate_messages_eus
-
-# fast build rule for target.
-std_srvs_generate_messages_eus/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/std_srvs_generate_messages_eus.dir/build.make mrsim/CMakeFiles/std_srvs_generate_messages_eus.dir/build
-.PHONY : std_srvs_generate_messages_eus/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/nodelet_generate_messages_py.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/nodelet_generate_messages_py.dir/rule
-.PHONY : mrsim/CMakeFiles/nodelet_generate_messages_py.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_py: mrsim/CMakeFiles/nodelet_generate_messages_py.dir/rule
-
-.PHONY : nodelet_generate_messages_py
-
-# fast build rule for target.
-nodelet_generate_messages_py/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/nodelet_generate_messages_py.dir/build.make mrsim/CMakeFiles/nodelet_generate_messages_py.dir/build
-.PHONY : nodelet_generate_messages_py/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/std_srvs_generate_messages_nodejs.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/std_srvs_generate_messages_nodejs.dir/rule
-.PHONY : mrsim/CMakeFiles/std_srvs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-std_srvs_generate_messages_nodejs: mrsim/CMakeFiles/std_srvs_generate_messages_nodejs.dir/rule
-
-.PHONY : std_srvs_generate_messages_nodejs
-
-# fast build rule for target.
-std_srvs_generate_messages_nodejs/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/std_srvs_generate_messages_nodejs.dir/build.make mrsim/CMakeFiles/std_srvs_generate_messages_nodejs.dir/build
-.PHONY : std_srvs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-mrsim/CMakeFiles/topic_tools_generate_messages_lisp.dir/rule:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f CMakeFiles/Makefile2 mrsim/CMakeFiles/topic_tools_generate_messages_lisp.dir/rule
-.PHONY : mrsim/CMakeFiles/topic_tools_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-topic_tools_generate_messages_lisp: mrsim/CMakeFiles/topic_tools_generate_messages_lisp.dir/rule
-
-.PHONY : topic_tools_generate_messages_lisp
-
-# fast build rule for target.
-topic_tools_generate_messages_lisp/fast:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/topic_tools_generate_messages_lisp.dir/build.make mrsim/CMakeFiles/topic_tools_generate_messages_lisp.dir/build
-.PHONY : topic_tools_generate_messages_lisp/fast
-
-src/showmap.o: src/showmap.cpp.o
-
-.PHONY : src/showmap.o
+.PHONY : bin/mrsim_node.o
 
 # target to build an object file
-src/showmap.cpp.o:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/showmap.dir/build.make mrsim/CMakeFiles/showmap.dir/src/showmap.cpp.o
-.PHONY : src/showmap.cpp.o
+bin/mrsim_node.cpp.o:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim_node.dir/build.make mrsim/CMakeFiles/mrsim_node.dir/bin/mrsim_node.cpp.o
+.PHONY : bin/mrsim_node.cpp.o
 
-src/showmap.i: src/showmap.cpp.i
+bin/mrsim_node.i: bin/mrsim_node.cpp.i
 
-.PHONY : src/showmap.i
+.PHONY : bin/mrsim_node.i
 
 # target to preprocess a source file
-src/showmap.cpp.i:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/showmap.dir/build.make mrsim/CMakeFiles/showmap.dir/src/showmap.cpp.i
-.PHONY : src/showmap.cpp.i
+bin/mrsim_node.cpp.i:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim_node.dir/build.make mrsim/CMakeFiles/mrsim_node.dir/bin/mrsim_node.cpp.i
+.PHONY : bin/mrsim_node.cpp.i
 
-src/showmap.s: src/showmap.cpp.s
+bin/mrsim_node.s: bin/mrsim_node.cpp.s
 
-.PHONY : src/showmap.s
+.PHONY : bin/mrsim_node.s
 
 # target to generate assembly for a file
-src/showmap.cpp.s:
-	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/showmap.dir/build.make mrsim/CMakeFiles/showmap.dir/src/showmap.cpp.s
-.PHONY : src/showmap.cpp.s
+bin/mrsim_node.cpp.s:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim_node.dir/build.make mrsim/CMakeFiles/mrsim_node.dir/bin/mrsim_node.cpp.s
+.PHONY : bin/mrsim_node.cpp.s
+
+src/getgit.o: src/getgit.cpp.o
+
+.PHONY : src/getgit.o
+
+# target to build an object file
+src/getgit.cpp.o:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/getgit.cpp.o
+.PHONY : src/getgit.cpp.o
+
+src/getgit.i: src/getgit.cpp.i
+
+.PHONY : src/getgit.i
+
+# target to preprocess a source file
+src/getgit.cpp.i:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/getgit.cpp.i
+.PHONY : src/getgit.cpp.i
+
+src/getgit.s: src/getgit.cpp.s
+
+.PHONY : src/getgit.s
+
+# target to generate assembly for a file
+src/getgit.cpp.s:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/getgit.cpp.s
+.PHONY : src/getgit.cpp.s
+
+src/lidar.o: src/lidar.cpp.o
+
+.PHONY : src/lidar.o
+
+# target to build an object file
+src/lidar.cpp.o:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/lidar.cpp.o
+.PHONY : src/lidar.cpp.o
+
+src/lidar.i: src/lidar.cpp.i
+
+.PHONY : src/lidar.i
+
+# target to preprocess a source file
+src/lidar.cpp.i:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/lidar.cpp.i
+.PHONY : src/lidar.cpp.i
+
+src/lidar.s: src/lidar.cpp.s
+
+.PHONY : src/lidar.s
+
+# target to generate assembly for a file
+src/lidar.cpp.s:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/lidar.cpp.s
+.PHONY : src/lidar.cpp.s
+
+src/robot.o: src/robot.cpp.o
+
+.PHONY : src/robot.o
+
+# target to build an object file
+src/robot.cpp.o:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/robot.cpp.o
+.PHONY : src/robot.cpp.o
+
+src/robot.i: src/robot.cpp.i
+
+.PHONY : src/robot.i
+
+# target to preprocess a source file
+src/robot.cpp.i:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/robot.cpp.i
+.PHONY : src/robot.cpp.i
+
+src/robot.s: src/robot.cpp.s
+
+.PHONY : src/robot.s
+
+# target to generate assembly for a file
+src/robot.cpp.s:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/robot.cpp.s
+.PHONY : src/robot.cpp.s
+
+src/world.o: src/world.cpp.o
+
+.PHONY : src/world.o
+
+# target to build an object file
+src/world.cpp.o:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/world.cpp.o
+.PHONY : src/world.cpp.o
+
+src/world.i: src/world.cpp.i
+
+.PHONY : src/world.i
+
+# target to preprocess a source file
+src/world.cpp.i:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/world.cpp.i
+.PHONY : src/world.cpp.i
+
+src/world.s: src/world.cpp.s
+
+.PHONY : src/world.s
+
+# target to generate assembly for a file
+src/world.cpp.s:
+	cd /home/leeoos/Projects/robot-programming-nc/rp_ws/build && $(MAKE) -f mrsim/CMakeFiles/mrsim.dir/build.make mrsim/CMakeFiles/mrsim.dir/src/world.cpp.s
+.PHONY : src/world.cpp.s
 
 # Help Target
 help:
@@ -1385,95 +563,45 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install/strip"
 	@echo "... install/local"
-	@echo "... install"
-	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... showmap"
-	@echo "... tf2_msgs_generate_messages_nodejs"
-	@echo "... tf2_msgs_generate_messages_lisp"
-	@echo "... actionlib_msgs_generate_messages_py"
-	@echo "... actionlib_msgs_generate_messages_cpp"
-	@echo "... actionlib_generate_messages_py"
-	@echo "... actionlib_generate_messages_nodejs"
-	@echo "... actionlib_generate_messages_lisp"
-	@echo "... actionlib_generate_messages_cpp"
-	@echo "... tf_generate_messages_nodejs"
-	@echo "... tf_generate_messages_lisp"
-	@echo "... geometry_msgs_generate_messages_eus"
-	@echo "... test"
-	@echo "... pcl_msgs_generate_messages_py"
-	@echo "... sensor_msgs_generate_messages_cpp"
-	@echo "... pcl_msgs_generate_messages_cpp"
-	@echo "... std_msgs_generate_messages_py"
 	@echo "... edit_cache"
-	@echo "... sensor_msgs_generate_messages_nodejs"
-	@echo "... tf2_msgs_generate_messages_py"
-	@echo "... dynamic_reconfigure_generate_messages_nodejs"
-	@echo "... bond_generate_messages_cpp"
-	@echo "... bond_generate_messages_eus"
-	@echo "... bond_generate_messages_lisp"
-	@echo "... pcl_msgs_generate_messages_eus"
-	@echo "... topic_tools_generate_messages_cpp"
-	@echo "... nodelet_topic_tools_gencfg"
-	@echo "... sensor_msgs_generate_messages_lisp"
-	@echo "... sensor_msgs_generate_messages_eus"
-	@echo "... pcl_msgs_generate_messages_lisp"
-	@echo "... pcl_msgs_generate_messages_nodejs"
-	@echo "... roscpp_generate_messages_eus"
-	@echo "... topic_tools_generate_messages_nodejs"
-	@echo "... rosgraph_msgs_generate_messages_nodejs"
-	@echo "... std_msgs_generate_messages_lisp"
-	@echo "... actionlib_msgs_generate_messages_eus"
-	@echo "... dynamic_reconfigure_generate_messages_py"
-	@echo "... roscpp_generate_messages_py"
+	@echo "... test"
+	@echo "... mrsim"
+	@echo "... std_msgs_generate_messages_py"
+	@echo "... std_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_cpp"
-	@echo "... topic_tools_generate_messages_py"
-	@echo "... geometry_msgs_generate_messages_lisp"
-	@echo "... tf_generate_messages_cpp"
-	@echo "... actionlib_msgs_generate_messages_nodejs"
-	@echo "... actionlib_msgs_generate_messages_lisp"
-	@echo "... tf_generate_messages_py"
+	@echo "... mrsim_node"
+	@echo "... roscpp_generate_messages_eus"
+	@echo "... rosgraph_msgs_generate_messages_nodejs"
+	@echo "... list_install_components"
+	@echo "... std_msgs_generate_messages_lisp"
+	@echo "... roscpp_generate_messages_py"
+	@echo "... install"
 	@echo "... std_msgs_generate_messages_eus"
 	@echo "... roscpp_generate_messages_nodejs"
-	@echo "... actionlib_generate_messages_eus"
 	@echo "... rosgraph_msgs_generate_messages_cpp"
+	@echo "... install/strip"
 	@echo "... std_msgs_generate_messages_cpp"
-	@echo "... std_srvs_generate_messages_cpp"
-	@echo "... std_srvs_generate_messages_py"
 	@echo "... rosgraph_msgs_generate_messages_eus"
-	@echo "... pcl_ros_gencfg"
-	@echo "... tf_generate_messages_eus"
 	@echo "... rosgraph_msgs_generate_messages_lisp"
-	@echo "... geometry_msgs_generate_messages_cpp"
-	@echo "... tf2_msgs_generate_messages_eus"
-	@echo "... sensor_msgs_generate_messages_py"
-	@echo "... geometry_msgs_generate_messages_py"
 	@echo "... roscpp_generate_messages_lisp"
 	@echo "... rosgraph_msgs_generate_messages_py"
-	@echo "... dynamic_reconfigure_generate_messages_cpp"
-	@echo "... topic_tools_generate_messages_eus"
-	@echo "... geometry_msgs_generate_messages_nodejs"
-	@echo "... dynamic_reconfigure_generate_messages_eus"
-	@echo "... dynamic_reconfigure_gencfg"
-	@echo "... nodelet_generate_messages_cpp"
-	@echo "... tf2_msgs_generate_messages_cpp"
-	@echo "... dynamic_reconfigure_generate_messages_lisp"
-	@echo "... std_srvs_generate_messages_lisp"
-	@echo "... nodelet_generate_messages_eus"
-	@echo "... std_msgs_generate_messages_nodejs"
-	@echo "... nodelet_generate_messages_lisp"
-	@echo "... nodelet_generate_messages_nodejs"
-	@echo "... bond_generate_messages_nodejs"
-	@echo "... bond_generate_messages_py"
-	@echo "... std_srvs_generate_messages_eus"
-	@echo "... nodelet_generate_messages_py"
-	@echo "... std_srvs_generate_messages_nodejs"
-	@echo "... topic_tools_generate_messages_lisp"
-	@echo "... src/showmap.o"
-	@echo "... src/showmap.i"
-	@echo "... src/showmap.s"
+	@echo "... bin/mrsim_node.o"
+	@echo "... bin/mrsim_node.i"
+	@echo "... bin/mrsim_node.s"
+	@echo "... src/getgit.o"
+	@echo "... src/getgit.i"
+	@echo "... src/getgit.s"
+	@echo "... src/lidar.o"
+	@echo "... src/lidar.i"
+	@echo "... src/lidar.s"
+	@echo "... src/robot.o"
+	@echo "... src/robot.i"
+	@echo "... src/robot.s"
+	@echo "... src/world.o"
+	@echo "... src/world.i"
+	@echo "... src/world.s"
 .PHONY : help
 
 

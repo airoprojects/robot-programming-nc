@@ -36,3 +36,6 @@
 
 # Git-Setup
 gitsetup.sh
+
+# External build
+build/

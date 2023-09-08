@@ -13,17 +13,43 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
-    INCLUDE_DIRS
-    "include/"
+    INCLUDE_DIRS "include/"
     CATKIN_DEPENDS
     roscpp
 
     # Add required ROS dependencies
 )
 
-add_library(mrsim SHARED src/robot.cpp src/world.cpp src/lidar.cpp)
-target_include_directories(mrsim PUBLIC include ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(mrsim PUBLIC ${OpenCV_LIBRARIES} Eigen3::Eigen)
+# add_library(mrsim SHARED src/robot.cpp src/world.cpp src/lidar.cpp src/getgit.cpp) 
+# target_include_directories(mrsim PUBLIC include ${OpenCV_INCLUDE_DIRS})
+# target_link_libraries(mrsim PUBLIC ${OpenCV_LIBRARIES} Eigen3::Eigen)
+
+
+# add_executable(testgit bin/testgit.cpp)
+# target_link_libraries(testgit ${catkin_LIBRARIES})
+# # add_dependencies(talker pkg_1_generate_messages_cpp)
+
+add_library(mrsim SHARED src/robot.cpp src/world.cpp src/lidar.cpp src/getgit.cpp) 
+target_include_directories(mrsim PUBLIC 
+    include 
+    ${OpenCV_INCLUDE_DIRS}
+    ${catkin_INCLUDE_DIRS}
+    )
+target_link_libraries(mrsim PUBLIC 
+${OpenCV_LIBRARIES} 
+Eigen3::Eigen
+${catkin_LIBRARIES}
+)
+
+add_executable(mrsim_node bin/mrsim_node.cpp)
+target_include_directories(mrsim_node PUBLIC 
+include 
+${catkin_INCLUDE_DIRS}
+)
+target_link_libraries(mrsim_node 
+mrsim
+${catkin_LIBRARIES}
+)
 
 # If you want to use jsoncpp library, remember to link it!
 # target_link_libraries(<your_module> PUBLIC/PRIVATE jsoncpp_lib)

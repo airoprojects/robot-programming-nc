@@ -2,7 +2,7 @@ prefix=/home/leeoos/Projects/robot-programming-nc/rp_ws/install
 
 Name: mrsim
 Description: Description of mrsim
-Version: 0.0.0
+Version: 1.0.0
 Cflags: -I${prefix}/include
 Libs: -L${prefix}/lib 
-Requires: roscpp message_runtime
+Requires: roscpp

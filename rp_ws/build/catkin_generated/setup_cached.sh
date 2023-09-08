@@ -7,8 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export LD_LIBRARY_PATH="/home/leeoos/Projects/robot-programming-nc/rp_ws/devel/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="/home/leeoos/Projects/robot-programming-nc/rp_ws/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
+export CMAKE_PREFIX_PATH="/home/leeoos/Projects/robot-programming-nc/rp_ws/devel:$CMAKE_PREFIX_PATH"
 export PWD='/home/leeoos/Projects/robot-programming-nc/rp_ws/build'
-export PYTHONPATH="/home/leeoos/Projects/robot-programming-nc/rp_ws/devel/lib/python3/dist-packages:$PYTHONPATH"
-export ROS_PACKAGE_PATH='/home/leeoos/Projects/robot-programming-nc/rp_ws/src:/opt/ros/noetic/share'
+export ROSLISP_PACKAGE_DIRECTORIES='/home/leeoos/Projects/robot-programming-nc/rp_ws/devel/share/common-lisp'
+export ROS_PACKAGE_PATH="/home/leeoos/Projects/robot-programming-nc/rp_ws/src:$ROS_PACKAGE_PATH"
