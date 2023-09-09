@@ -20,6 +20,7 @@ Lidar::Lidar(float fov_, float max_range_, int num_beams_,
       num_beams(num_beams_),
       ranges(num_beams, -1.0) {}
 
+// modify the intern of the lidar, then when draw() is call is update on the map its position!
 void Lidar::timeTick(float dt) {
   Pose piw = poseInWorld();
   IntPoint origin = world->world2grid(piw.translation());

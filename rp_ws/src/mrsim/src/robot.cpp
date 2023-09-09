@@ -10,6 +10,7 @@ Robot::Robot(float radius_, std::shared_ptr<WorldItem> parent_,
              const Pose& pose_)
     : radius(radius_), WorldItem(parent_, pose_), tv(0.0), rv(0.0) {}
 
+// To edit in world
 void Robot::draw() {
   int int_radius = radius * world->i_res;
   IntPoint p = world->world2grid(poseInWorld().translation());
@@ -18,10 +19,12 @@ void Robot::draw() {
 }
 
 void Robot::timeTick(float dt) {
+  //initializing
   Pose motion = Pose::Identity();
   motion.translation() << tv * dt, 0;
   motion.rotate(rv * dt);
 
+  //apply trasformation
   Pose next_pose = pose_in_parent * motion;
   IntPoint ip = world->world2grid(next_pose.translation());
   int int_radius = radius * world->i_res;
