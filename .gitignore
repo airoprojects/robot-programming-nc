@@ -37,5 +37,10 @@
 # Git-Setup
 gitsetup.sh
 
-# External build
+# Build (ignore only in main branch)
 build/
+rp_ws/build/
+rp_ws/devel/
+
+# Test folder (ignore only in main)
+test/
