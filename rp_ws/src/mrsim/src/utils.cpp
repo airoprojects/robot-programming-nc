@@ -1,9 +1,8 @@
 // Custom lib
 #include "utils.h"
 
-// LC: thsi function thake as input a config.jason file and makes a ros launch file to start nodes in a simulation
-int makeLaunchFile(std::string in_path, std::string out_path) {
 
+Json::Value readJson(std::string in_path) {
   std::cout << "Configuration file path:" << in_path << std::endl;
   Json::Value root; // B.F.N object to hold the parsed json file
   Json::CharReaderBuilder readerBuilder; // B.F.N reader of json file
@@ -14,8 +13,67 @@ int makeLaunchFile(std::string in_path, std::string out_path) {
   bool parsingSuccessful = Json::parseFromStream(readerBuilder, file, &root, &errs);
   if (!parsingSuccessful) {
       std::cout << "Failed to parse JSON file: " << errs << std::endl;
-      return 1;
+      return nullptr;
   }
+
+  return root;
+  
+}
+
+// read json to initialize world items
+int initSimEnv(std::string in_path, std::shared_ptr<World> w) {
+
+  Json::Value root = readJson(in_path);
+  std::vector<WorldItem> items_;
+  std::map<std::string, std::shared_ptr<WorldItem>> dict;
+
+
+  //to add dict["namespace"].push_back()
+
+
+  if (root["items"].isArray()) {
+    for(const Json::Value& item: root["items"]) {
+
+      const int id = item["id"].asInt();
+      const std::string type = item["type"].asString();
+
+      std::shared_ptr<WorldItem> world_;
+
+
+      int id_p = item["parent"].asInt(); 
+      if (id_p == -1) {
+        world_ = w; // upcasting
+      }
+
+      world_item = dict[id_p];
+      if(world_item!=nullptr){
+        world_ = dict[id_p];
+      }else{
+        cerr << "doesn't exist the world_item you're refering, please check the json!"<<std::endl;
+      }
+      
+      if (type == "robot") {
+        // TODO get pose
+        // IntPoint 
+        // Pose robot_pose;
+        robot_pose.translation = w.grid2world(middle);
+        Robot r(item["radius"].toDouble(), &world_, robot_pose);
+        dict[item["id"]].push_back(r);
+      }
+      else {
+        // get lidar pose
+        Lidar l(item["fov"], item["max_range"], item["num_beams"],
+             &world_, lidar_pose)
+      }
+  }
+  
+
+}
+
+// LC: thsi function thake as input a config.jason file and makes a ros launch file to start nodes in a simulation
+int makeLaunchFile(std::string in_path, std::string out_path) {
+
+  Json::Value root = readJson(in_path);
 
   // start the parse of the file
   const std::string map = root["map"].asString();
