@@ -30,6 +30,21 @@
               0
           ],
           "parent": 0
-      }
+      },
+      {
+        "id": 2,
+        "type": "robot",
+        "frame_id": "frame_robot0",
+        "namespace": "robot_1",
+        "radius": 0.5,
+        "max_rv" : 0.1,
+        "max_tv" : 0.5,
+        "pose": [
+            20,
+            8,
+            0
+        ],
+        "parent": -1
+    }
   ]
 }
