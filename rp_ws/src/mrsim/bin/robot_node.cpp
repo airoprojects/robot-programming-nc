@@ -9,6 +9,10 @@ void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg, *r)
 
 int main(int argc, char **argv) {
 
+  //to do:
+    // read the params from argv (robot)
+    // 
+
   // argv[robot_name, *w]
   // tmp def of robot
   
