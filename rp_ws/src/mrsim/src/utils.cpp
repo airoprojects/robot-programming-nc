@@ -4,7 +4,7 @@
 // LC: thsi function thake as input a config.jason file and makes a ros launch file to start nodes in a simulation
 int makeLaunchFile(std::string in_path, std::string out_path) {
 
-  std::cout << "Path:" << in_path << std::endl;
+  std::cout << "Configuration file path:" << in_path << std::endl;
   Json::Value root; // B.F.N object to hold the parsed json file
   Json::CharReaderBuilder readerBuilder; // B.F.N reader of json file
   std::ifstream file(in_path, std::ifstream::binary); // B.F.N file to read
@@ -27,7 +27,7 @@ int makeLaunchFile(std::string in_path, std::string out_path) {
   // Open the launch file
   std::ofstream outfile(out_path);
 
-  std::cout << "Right path:" << out_path <<std::endl;
+  std::cout << "Launch file path:" << out_path <<std::endl;
 
   // Check if the file was opened successfully
   if (!outfile) {
@@ -37,7 +37,7 @@ int makeLaunchFile(std::string in_path, std::string out_path) {
   }
   outfile << "<launch> \n\n";
  
-  if(root["items"].isArray()) {
+  if (root["items"].isArray()) {
     for(const Json::Value& item: root["items"]) {
 
       const int id = item["id"].asInt();
@@ -55,8 +55,10 @@ int makeLaunchFile(std::string in_path, std::string out_path) {
                 << "' parent='" << item["parent"].asInt() << "'"
                 
                 << "/>\n</node> \n";
+
+        robot_counter++;
       }
-      else if(type == "lidar") {
+      else if (type == "lidar") {
         
         outfile << "<node pkg='mrsim'"<< " name='" << item["namespace"].asString() 
                 << "' type='" << type << "'"
@@ -75,7 +77,7 @@ int makeLaunchFile(std::string in_path, std::string out_path) {
   outfile << "\n</launch>";
   outfile.close();
   std::cout << "Launch file created successfully!!!" << std::endl;
-  return 0;
+  return robot_counter;
 }
        
 
