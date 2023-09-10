@@ -34,12 +34,24 @@ target_link_libraries(mrsim PUBLIC
     jsoncpp_lib
 )
 
+# Add mrsim_node
 add_executable(mrsim_node bin/mrsim_node.cpp)
 target_include_directories(mrsim_node PUBLIC 
     include 
     ${catkin_INCLUDE_DIRS}
 )
 target_link_libraries(mrsim_node 
+    mrsim
+    ${catkin_LIBRARIES}
+)
+
+# Add robot_node
+add_executable(robot_node bin/mrsim_node.cpp)
+target_include_directories(robot_node PUBLIC 
+    include 
+    ${catkin_INCLUDE_DIRS}
+)
+target_link_libraries(robot_node 
     mrsim
     ${catkin_LIBRARIES}
 )
