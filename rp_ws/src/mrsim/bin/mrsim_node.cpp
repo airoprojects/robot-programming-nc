@@ -12,16 +12,6 @@
 #include "lidar.h"
 #include "utils.h"
 
-void onMouse(int event, int x, int y, int flags, void* userdata) {
-    if (event == cv::EVENT_LBUTTONDOWN) {
-        // Define the button's region (here, a rectangle at the top-left corner of the window)
-        if (x > 50 && x < 200 && y > 50 && y < 100) {
-            std::cout << "Button clicked!" << std::endl;
-        }
-        cv::destroyWindow("ButtonsWindow");
-    }
-}
-
 int main(int argc, char** argv) {
 
   ros::init(argc, argv, "mrsim_node");
@@ -39,6 +29,7 @@ int main(int argc, char** argv) {
   // Load the configuration file and initialize the simulator
   // TODO :
   /*
+    0. Initialize a instance of world
     1. Import json config file                                                DONE
     2. Read json config file and extract:                                     DONE
       2.1 NUM_ROBOTS: number of robots in the simulation (N)  
@@ -50,12 +41,23 @@ int main(int argc, char** argv) {
     5. Initialize an array of publisher objects for each robot to 
        allow mrsim_node to publish on specific topics for each robot
   */
+
+  // LC: new instance of World
+  World world;
+
+  // LC: make a launch based on config.json to run multiple robot/lidar nodes
   int NUM_ROBOT = makeLaunchFile(
                   git_root_path + "/config/config.json", 
-                  git_root_path + "/rp_ws/launch/simulation.launch");
+                  git_root_path + "/rp_ws/src/mrsim/launch/simulation.launch");
+
+  // LC: launch the simulation launch file from this node
+  int result = system("roslaunch mrsim simulation.launch");
+  if (result != 0) {
+      ROS_ERROR("Failed to execute roslaunch command");
+  }
 
   // LC: no robot is selected to be controlled at the beginning
-  int select_robot = 1; // 1 == true 
+  bool select_robot = true; 
   int robot_index = -1;
 
   // LC: keypress log
@@ -64,11 +66,11 @@ int main(int argc, char** argv) {
   while (ros::ok()) {
 
     // LC: this function update the status of each world item
-    // w.timeTick(delay); 
-    // w.draw();
+    // world.timeTick(delay); 
+    // world.draw();
 
     // LC: Select the index of the robot you wnat to control
-    if (select_robot == 1) {
+    if (select_robot) {
 
       // This should be temporary, just to test key captures
       cv::namedWindow("Window");
@@ -93,7 +95,7 @@ int main(int argc, char** argv) {
         }
       }
       // reset the index to keep controlling the same robot
-      select_robot = 0;
+      select_robot = false;
     }
 
     // Switch case to control robot motion
@@ -105,13 +107,13 @@ int main(int argc, char** argv) {
         case 83: std::cout << "robot_" << robot_index << " right\n"; break; // arow right
         case 84: std::cout << "robot_" << robot_index << " down\n"; break; // arow dw
         case 32: std::cout << "\nspacebar"; break;// spacebar
-        case 99: select_robot = 1; break; // c key
+        case 99: select_robot = true; break; // c key
         case 27: std::cout << "\n"; return 0; // esc
         default: break;
     }
 
     // B.F.N: this if controll if you want change 
-    if (select_robot == 0) {
+    if (!select_robot) {
       ros::spinOnce();
     }
     else {

@@ -10,6 +10,7 @@
 #include "world.h"
 #include "robot.h"
 #include "lidar.h"
+#include "types.h"
 
 
 int makeLaunchFile(std::string in_path, std::string out_path);
