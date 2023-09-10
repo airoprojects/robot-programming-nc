@@ -42,7 +42,6 @@ int main(int argc, char** argv) {
        allow mrsim_node to publish on specific topics for each robot
   */
 
-
   string config_path = git_root_path + "/config/" + argv[1];
   Json::Value root = readJson(config_path);
   string map = root["map"].asString();
@@ -51,11 +50,7 @@ int main(int argc, char** argv) {
 
   // LC: pointer new instance of World
   shared_ptr<World> world_pointer = make_shared<World>(42);
- 
-  
-  // test world instance
-  // test load image
-  //w_ptr->loadFromImage(image_path); THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
+  w_ptr->loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
   
   int NUM_ROBOT = 0;
   RobotLidarMap  robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOT);
@@ -84,57 +79,6 @@ int main(int argc, char** argv) {
     // world.timeTick(delay); 
     // world.draw();
 
-    // LC: Select the index of the robot you wnat to control
-    // if (select_robot) {
-
-    //   // This should be temporary, just to test key captures
-    //   cv::namedWindow("Window");
-
-    //   while (true) {
-
-    //     cout << "\nWhat robot do you want to control? " << endl; 
-    //     cout << "Press a numebr beween 0 and " << NUM_ROBOT-1 << ": ";
-    //     cin >> robot_index;
-
-    //     // LC: check for user error in the input
-    //     if (cin.fail() || robot_index < 0 || robot_index > NUM_ROBOT-1) {
-    //       cin.clear(); // reset the fail state
-    //       cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard invalid input
-    //       cout << "Invalid input. Please try again." << endl;
-    //     } 
-    //     else {
-    //       cout << "You select robot " << robot_index << endl;
-    //       cout << "Press 'c' to change robot\n" << endl;
-    //       cout << "Press 'ESC' to exit the simulation\n" << endl;
-    //       break;
-    //     }
-    //   }
-    //   // reset the index to keep controlling the same robot
-    //   select_robot = false;
-    // }
-
-    // // Switch case to control robot motion
-    // int k = cv::waitKey(0);
-    // keylog << "\nKey pressed with decimal value: " << k << endl;
-    // switch (k) {
-    //     case 81: cout << "robot_" << robot_index << " left\n"; break; // arow left
-    //     case 82: cout << "robot_" << robot_index << " up\n"; break; // arow up
-    //     case 83: cout << "robot_" << robot_index << " right\n"; break; // arow right
-    //     case 84: cout << "robot_" << robot_index << " down\n"; break; // arow dw
-    //     case 32: cout << "\nspacebar"; break;// spacebar
-    //     case 99: select_robot = true; break; // c key
-    //     case 27: cout << "\n"; return 0; // esc
-    //     default: break;
-    // }
-
-    // // B.F.N: this if controll if you want change 
-    // if (!select_robot) {
-    //   ros::spinOnce();
-    // }
-    // else {
-    //   cout << "Change robot\n" << endl;
-    //   cv::destroyWindow("Window");
-    // }
   }
 
   // // Destroy the created window

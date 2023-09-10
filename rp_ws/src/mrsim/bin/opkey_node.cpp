@@ -78,11 +78,10 @@ int main(int argc, char** argv) {
     int k = cv::waitKey(0);
     keylog << "\nKey pressed with decimal value: " << k << std::endl;
     switch (k) {
-        case 81: std::cout << "robot_" << robot_index << " left\n"; break; // arow left
-        case 82: std::cout << "robot_" << robot_index << " up\n"; break; // arow up
-        case 83: std::cout << "robot_" << robot_index << " right\n"; break; // arow right
-        case 84: std::cout << "robot_" << robot_index << " down\n"; break; // arow dw
-        case 32: std::cout << "\nspacebar"; break;// spacebar
+        case 81: msg.angular.z = 0.5;; break; // arow left
+        case 82: msg.linear.x = 1.0; break; // arow up
+        case 83: msg.angular.z = -0.5; break; // arow right
+        case 84: msg.linear.x = -1.0; ; break; // arow dw
         case 99: select_robot = true; break; // c key
         case 27: std::cout << "\n"; return 0; // esc
         default: break;
