@@ -6,7 +6,7 @@
 // Custom lib
 #include "world.h"
 
-World::World() {}
+World::World(int id) {size = id;}
 
 void World::loadFromImage(const std::string filename_) {
   cv::Mat frame = cv::imread(filename_);

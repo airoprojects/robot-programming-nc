@@ -3,31 +3,40 @@
 
 
 Json::Value readJson(std::string in_path) {
+  
   std::cout << "Configuration file path:" << in_path << std::endl;
   Json::Value root; // B.F.N object to hold the parsed json file
   Json::CharReaderBuilder readerBuilder; // B.F.N reader of json file
+
+  
   std::ifstream file(in_path, std::ifstream::binary); // B.F.N file to read
+  std::cout <<in_path << std::endl;
   std::string errs; // B.F.N where the errors are memorized
 
+
+  if (!file.is_open()) {
+    std::cerr << "Could not open the file: " << in_path << std::endl;
+    return Json::Value();
+  }
   // B.F.N check if the parse is successfull
   bool parsingSuccessful = Json::parseFromStream(readerBuilder, file, &root, &errs);
   if (!parsingSuccessful) {
+      std::cout <<"ciao" << std::endl;
       std::cout << "Failed to parse JSON file: " << errs << std::endl;
-      return nullptr;
+      return Json::Value();
   }
 
+  file.close();
   return root;
 }
 
 // read json to initialize world items
-std::tuple<std::map<int, std::shared_ptr<WorldItem>>, std::map<std::string, std::vector<std::shared_ptr<WorldItem>>>> 
-initSimEnv(std::string in_path, std::shared_ptr<World> w) {
+// std::tuple<std::map<int, std::shared_ptr<WorldItem>>, std::map<std::string, std::vector<std::shared_ptr<WorldItem>>>> 
+DictTuple initSimEnv(Json::Value root, std::shared_ptr<World> w) {
 
-  Json::Value root = readJson(in_path);
   std::vector<WorldItem> items_;
-  std::map<int, std::shared_ptr<WorldItem>> dict_id_r;
-  std::map<std::string, std::vector<std::shared_ptr<WorldItem>>> dict_namespace_rl;
-  
+  WorldItemMap dict_id_r;
+  StringToWorldItemVectorMap dict_namespace_rl;
 
   if (root["items"].isArray()) {
 
@@ -36,47 +45,65 @@ initSimEnv(std::string in_path, std::shared_ptr<World> w) {
       const int id = item["id"].asInt();
       const std::string type = item["type"].asString();
 
-      std::shared_ptr<World> world_;
+      std::shared_ptr<World> world_ ; // IL MONDOOOOOOOOOOOOOOO
       int id_p = item["parent"].asInt(); 
+      if (w){
+        std::cout << "not empty" << std::endl;
+        std::cout << w->size << std::endl;
+        std::cout <<"World pointer rows -> " <<w->rows << std::endl;
+      }else{
+        std::cout << "empty"<< std::endl;
+      }
       
       if (id_p == -1) {
         world_ = w; // upcasting -> reference to World
-      } else { 
+        std::cout << world_->size << std::endl;
+        if (world_ == nullptr) {
+            std::cerr << "doesn't exist the world_item you're refering, please check the json woieuhgfoiuwehfiowehfowehofhweofih!"<<std::endl;
+        }
+      } 
+      else { 
         // we look for the pointer of the parent inside item_dict
+        std::cout <<"here6.1" << std::endl;
         std::shared_ptr<WorldItem> world_item = dict_id_r[id_p];
+        std::cout <<"here6.2" << std::endl;
+        std::cout << world_item->check << std::endl;
         if (world_item == nullptr) {
           std::cerr << "doesn't exist the world_item you're refering, please check the json!"<<std::endl;
-          }
+        }
       }
            
       if (type == "robot") {
         Pose pose_r;
-        double pose_x = item["pose"][0].isDouble();
-        double pose_y = item["pose"][1].isDouble();
+        double pose_x = item["pose"][0].asInt();
+        double pose_y = item["pose"][1].asInt();
         double theta = item["pose"][2].asDouble();
 
-        IntPoint middle(world_->rows/2, world_->cols/2); 
-        pose_r.translation() = world_->grid2world(middle);
+        IntPoint my_point(pose_x, pose_y); //colpevole
+        std::cout <<"here7" << std::endl;
+        pose_r.translation() = w->grid2world(my_point);
 
+        std::cout << "here8"  << std::endl;
         std::shared_ptr<Robot> r = std::make_shared<Robot>(item["radius"].asDouble(), world_, pose_r);
         dict_id_r[item["id"].asInt()] = r;
+        std::cout << "here9"  << std::endl;
         dict_namespace_rl[item["namespace"].asString()].push_back(r);
       }
       else {
+        Pose pose_l;
         float pose_x = item["pose"][0].asFloat();
         float pose_y = item["pose"][1].asFloat();
         float theta = item["pose"][2].asFloat();
-        Pose pose_l;
         pose_l.translation() = Eigen::Vector2f(pose_x, pose_y);
 
-      // to create a ptr_shared is the only way!
+        // to create a ptr_shared this is the only way!
         std::shared_ptr<Lidar> l = std::make_shared<Lidar>(item["fov"].asInt(), item["max_range"].asDouble(), item["num_beams"].asInt(), world_, pose_l);
         dict_namespace_rl[item["namespace"].asString()].push_back(l);
       }
     }
   }
 
-  std::tuple<std::map<int, std::shared_ptr<WorldItem>>, std::map<std::string, std::vector<std::shared_ptr<WorldItem>>>> result = std::make_tuple(dict_id_r, dict_namespace_rl);
+  DictTuple result = std::make_tuple(dict_id_r, dict_namespace_rl);
   return result;
 }
 

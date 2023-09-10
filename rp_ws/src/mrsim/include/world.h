@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "types.h"
+#include <iostream>
 
 // Here WorldItem is used to avoid cycle dependency at compile time
 struct WorldItem;
@@ -13,7 +14,7 @@ struct WorldItem;
 // Definition of class World. It is responsable of managing the whole simulation
 class World {
  public:
-  World();
+  World(int id);
 
   // LC: function to insert 2d coordinates into 1D grid points
   inline uint8_t& at(const IntPoint& p) { 
@@ -33,6 +34,7 @@ class World {
   }
 
   inline Point grid2world(const IntPoint& p) {
+    std::cout <<"here7.1 " << p.x() << " and " << p.y() << std::endl;
     return Point(p.x() * res, p.y() * res);
   }
 
@@ -92,4 +94,5 @@ class WorldItem {
   std::shared_ptr<World> world = nullptr;
   std::shared_ptr<WorldItem> parent = nullptr;
   Pose pose_in_parent;
+  int check = 10;
 };

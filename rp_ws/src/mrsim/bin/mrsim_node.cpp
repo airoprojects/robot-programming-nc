@@ -12,6 +12,9 @@
 #include "lidar.h"
 #include "utils.h"
 
+
+
+
 int main(int argc, char** argv) {
 
   ros::init(argc, argv, "mrsim_node");
@@ -42,24 +45,40 @@ int main(int argc, char** argv) {
        allow mrsim_node to publish on specific topics for each robot
   */
 
-  // LC: new instance of World
-  World world;
 
-  // LC: make a launch based on config.json to run multiple robot/lidar nodes
-  int NUM_ROBOT = makeLaunchFile(
-                  git_root_path + "/config/config.json", 
-                  git_root_path + "/rp_ws/src/mrsim/launch/simulation.launch");
+  std::string config_path = git_root_path + "/config/" + argv[1];
+  Json::Value root = readJson(config_path);
+  std::string map = root["map"].asString();
+  std::cout << "Map -> " << map << std::endl;
+  std::string image_path = git_root_path + "/map/" +  map;
 
-  // LC: launch the simulation launch file from this node
-  int result = system("roslaunch mrsim simulation.launch");
-  if (result != 0) {
-      ROS_ERROR("Failed to execute roslaunch command");
-  }
+  // LC: pointer new instance of World
+  std::shared_ptr<World> w_ptr = std::make_shared<World>(42);
+  std::shared_ptr<World> w2 = w_ptr;
+ 
+  
+  // test world instance
+  // test load image
+  w_ptr->loadFromImage(image_path);
+  
+  DictTuple robots_lidars =  initSimEnv(root, w2);
+  
+  // // LC: make a launch based on config.json to run multiple robot/lidar nodes
+  // int NUM_ROBOT = makeLaunchFile(
+  //                 git_root_path + "/config/config.json", 
+  //                 git_root_path + "/rp_ws/src/mrsim/launch/simulation.launch");
+
+  // // LC: launch the simulation launch file from this node
+  // int result = system("roslaunch mrsim simulation.launch");
+  // if (result != 0) {
+  //     ROS_ERROR("Failed to execute roslaunch command");
+  // }
 
   // LC: no robot is selected to be controlled at the beginning
   bool select_robot = true; 
   int robot_index = -1;
 
+  int NUM_ROBOT = 1;
   // LC: keypress log
   std::ofstream keylog("./key.log");
 
@@ -77,7 +96,7 @@ int main(int argc, char** argv) {
 
       while (true) {
 
-        std::cout << "What robot do you want to control? " << std::endl; 
+        std::cout << "\nWhat robot do you want to control? " << std::endl; 
         std::cout << "Press a numebr beween 0 and " << NUM_ROBOT-1 << ": ";
         std::cin >> robot_index;
 
