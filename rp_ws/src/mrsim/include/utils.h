@@ -8,14 +8,15 @@
 #include "lidar.h"
 #include "types.h"
 
-// custom tuple of dictionaries
-using WorldItemMap = std::map<int, std::shared_ptr<WorldItem>>;
-using StringToWorldItemVectorMap = std::map<std::string, std::vector<std::shared_ptr<WorldItem>>>;
-using InnerTuple = std::tuple<WorldItemMap, StringToWorldItemVectorMap>;
-using DictTuple = std::tuple<InnerTuple>;
+using namespace std;
+using WorldPointer = shared_ptr<World>;
+using WorldItemMap = map<int, shared_ptr<WorldItem>>;
+using RobotLidarMap = map<string, vector< shared_ptr<WorldItem>>>;
+// using InnerTuple =  tuple<WorldItemMap, StringToWorldItemVectorMap>;
+// using DictTuple =  tuple<InnerTuple>;
 
 
-Json::Value readJson(std::string in_path);
-DictTuple initSimEnv(Json::Value root, std::shared_ptr<World> w);
-int makeLaunchFile(std::string in_path, std::string out_path);
-std::string getGitRootPath();
+Json::Value readJson(string in_path);
+RobotLidarMap initSimEnv(Json::Value root, shared_ptr<World> w, int& robot_counter);
+int makeLaunchFile(string in_path,  string out_path);
+string getGitRootPath();

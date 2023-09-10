@@ -12,21 +12,18 @@
 #include "lidar.h"
 #include "utils.h"
 
-
-
-
 int main(int argc, char** argv) {
 
   ros::init(argc, argv, "mrsim_node");
   ros::NodeHandle nh("/");
 
   // LC: get git root directory path
-  std::string git_root_path;
+  string git_root_path;
   try {
         git_root_path = getGitRootPath();
-        //std::cerr << "Git Root Path: " << git_root_path << '\n';
-    } catch(const std::runtime_error& e) {
-        std::cerr << "Exception: " << e.what() << '\n';
+        //cerr << "Git Root Path: " << git_root_path << '\n';
+    } catch(const runtime_error& e) {
+        cerr << "Exception: " << e.what() << '\n';
   }
 
   // Load the configuration file and initialize the simulator
@@ -46,22 +43,22 @@ int main(int argc, char** argv) {
   */
 
 
-  std::string config_path = git_root_path + "/config/" + argv[1];
+  string config_path = git_root_path + "/config/" + argv[1];
   Json::Value root = readJson(config_path);
-  std::string map = root["map"].asString();
-  std::cout << "Map -> " << map << std::endl;
-  std::string image_path = git_root_path + "/map/" +  map;
+  string map = root["map"].asString();
+  cout << "Map -> " << map << endl;
+  string image_path = git_root_path + "/map/" +  map;
 
   // LC: pointer new instance of World
-  std::shared_ptr<World> w_ptr = std::make_shared<World>(42);
-  std::shared_ptr<World> w2 = w_ptr;
+  shared_ptr<World> world_pointer = make_shared<World>(42);
  
   
   // test world instance
   // test load image
-  w_ptr->loadFromImage(image_path);
+  //w_ptr->loadFromImage(image_path); THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
   
-  DictTuple robots_lidars =  initSimEnv(root, w2);
+  int NUM_ROBOT = 0;
+  RobotLidarMap  robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOT);
   
   // // LC: make a launch based on config.json to run multiple robot/lidar nodes
   // int NUM_ROBOT = makeLaunchFile(
@@ -78,9 +75,8 @@ int main(int argc, char** argv) {
   bool select_robot = true; 
   int robot_index = -1;
 
-  int NUM_ROBOT = 1;
   // LC: keypress log
-  std::ofstream keylog("./key.log");
+  // ofstream keylog("./key.log");
 
   while (ros::ok()) {
 
@@ -89,60 +85,60 @@ int main(int argc, char** argv) {
     // world.draw();
 
     // LC: Select the index of the robot you wnat to control
-    if (select_robot) {
+    // if (select_robot) {
 
-      // This should be temporary, just to test key captures
-      cv::namedWindow("Window");
+    //   // This should be temporary, just to test key captures
+    //   cv::namedWindow("Window");
 
-      while (true) {
+    //   while (true) {
 
-        std::cout << "\nWhat robot do you want to control? " << std::endl; 
-        std::cout << "Press a numebr beween 0 and " << NUM_ROBOT-1 << ": ";
-        std::cin >> robot_index;
+    //     cout << "\nWhat robot do you want to control? " << endl; 
+    //     cout << "Press a numebr beween 0 and " << NUM_ROBOT-1 << ": ";
+    //     cin >> robot_index;
 
-        // LC: check for user error in the input
-        if (std::cin.fail() || robot_index < 0 || robot_index > NUM_ROBOT-1) {
-          std::cin.clear(); // reset the fail state
-          std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard invalid input
-          std::cout << "Invalid input. Please try again." << std::endl;
-        } 
-        else {
-          std::cout << "You select robot " << robot_index << std::endl;
-          std::cout << "Press 'c' to change robot\n" << std::endl;
-          std::cout << "Press 'ESC' to exit the simulation\n" << std::endl;
-          break;
-        }
-      }
-      // reset the index to keep controlling the same robot
-      select_robot = false;
-    }
+    //     // LC: check for user error in the input
+    //     if (cin.fail() || robot_index < 0 || robot_index > NUM_ROBOT-1) {
+    //       cin.clear(); // reset the fail state
+    //       cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard invalid input
+    //       cout << "Invalid input. Please try again." << endl;
+    //     } 
+    //     else {
+    //       cout << "You select robot " << robot_index << endl;
+    //       cout << "Press 'c' to change robot\n" << endl;
+    //       cout << "Press 'ESC' to exit the simulation\n" << endl;
+    //       break;
+    //     }
+    //   }
+    //   // reset the index to keep controlling the same robot
+    //   select_robot = false;
+    // }
 
-    // Switch case to control robot motion
-    int k = cv::waitKey(0);
-    keylog << "\nKey pressed with decimal value: " << k << std::endl;
-    switch (k) {
-        case 81: std::cout << "robot_" << robot_index << " left\n"; break; // arow left
-        case 82: std::cout << "robot_" << robot_index << " up\n"; break; // arow up
-        case 83: std::cout << "robot_" << robot_index << " right\n"; break; // arow right
-        case 84: std::cout << "robot_" << robot_index << " down\n"; break; // arow dw
-        case 32: std::cout << "\nspacebar"; break;// spacebar
-        case 99: select_robot = true; break; // c key
-        case 27: std::cout << "\n"; return 0; // esc
-        default: break;
-    }
+    // // Switch case to control robot motion
+    // int k = cv::waitKey(0);
+    // keylog << "\nKey pressed with decimal value: " << k << endl;
+    // switch (k) {
+    //     case 81: cout << "robot_" << robot_index << " left\n"; break; // arow left
+    //     case 82: cout << "robot_" << robot_index << " up\n"; break; // arow up
+    //     case 83: cout << "robot_" << robot_index << " right\n"; break; // arow right
+    //     case 84: cout << "robot_" << robot_index << " down\n"; break; // arow dw
+    //     case 32: cout << "\nspacebar"; break;// spacebar
+    //     case 99: select_robot = true; break; // c key
+    //     case 27: cout << "\n"; return 0; // esc
+    //     default: break;
+    // }
 
-    // B.F.N: this if controll if you want change 
-    if (!select_robot) {
-      ros::spinOnce();
-    }
-    else {
-      std::cout << "Change robot\n" << std::endl;
-      cv::destroyWindow("Window");
-    }
+    // // B.F.N: this if controll if you want change 
+    // if (!select_robot) {
+    //   ros::spinOnce();
+    // }
+    // else {
+    //   cout << "Change robot\n" << endl;
+    //   cv::destroyWindow("Window");
+    // }
   }
 
-  // Destroy the created window
-  cv::destroyWindow("Window");
-  keylog.close();
-  return 0;
+  // // Destroy the created window
+  // cv::destroyWindow("Window");
+  // keylog.close();
+  // return 0;
 }

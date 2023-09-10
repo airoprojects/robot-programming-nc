@@ -1,6 +1,13 @@
 #pragma once
 #include <vector>
 #include "world.h"
+#include "ros/ros.h"
+#include "types.h"
+
+
+// pay attention:
+#include <sensor_msgs/LaserScan.h>
+
 
 class Lidar : public WorldItem {
 

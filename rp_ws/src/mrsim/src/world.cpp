@@ -3,10 +3,9 @@
 #include <opencv2/imgproc.hpp>
 #include <stdexcept>
 
-// Custom lib
 #include "world.h"
 
-World::World(int id) {size = id;}
+World::World(int id) {_id = id;}
 
 void World::loadFromImage(const std::string filename_) {
   cv::Mat frame = cv::imread(filename_);
