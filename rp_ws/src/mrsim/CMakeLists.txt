@@ -10,15 +10,29 @@ find_package(jsoncpp REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
     # Add required ROS packages to use in this project (ie. sensor_msgs, nav_msgs, etc)
     roscpp
+    std_msgs
+    geometry_msgs
+    message_generation
+)
+
+
+add_message_files(
+    FILES
+    rodom.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
 )
 
 catkin_package(
     INCLUDE_DIRS "include/"
-    CATKIN_DEPENDS
+    CATKIN_DEPENDS  message_runtime 
     roscpp
 
     # Add required ROS dependencies
-)
+)    
 
 
 add_library(mrsim SHARED src/robot.cpp src/world.cpp src/lidar.cpp src/utils.cpp) 

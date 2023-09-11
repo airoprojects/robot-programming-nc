@@ -30,7 +30,7 @@ Json::Value readJson( string in_path) {
 //  tuple< map<int,  shared_ptr<WorldItem>>,  map< string,  vector< shared_ptr<WorldItem>>>> 
 RobotLidarMap initSimEnv(Json::Value root, WorldPointer w_ptr, int& robot_counter) {
 
-    cout << "World id -> "  << w_ptr->_id << endl;
+  cout << "World id -> "  << w_ptr->_id << endl;
 
   vector<WorldItem> items_;
   WorldItemMap dict_id_r;
@@ -65,7 +65,7 @@ RobotLidarMap initSimEnv(Json::Value root, WorldPointer w_ptr, int& robot_counte
         IntPoint my_point(pose_x, pose_y); // libero su cauzione
         pose_r.translation() = world_->grid2world(my_point);
 
-        shared_ptr<Robot> r =  make_shared<Robot>(item["radius"].asDouble(), world_, pose_r);
+        shared_ptr<Robot> r =  make_shared<Robot>(item["radius"].asDouble(), world_,item["namespace"].asString(), pose_r);
         dict_id_r[item["id"].asInt()] = r;
         dict_namespace_rl[item["namespace"].asString()].push_back(r);
         robot_counter++;
@@ -78,7 +78,7 @@ RobotLidarMap initSimEnv(Json::Value root, WorldPointer w_ptr, int& robot_counte
         pose_l.translation() = Eigen::Vector2f(pose_x, pose_y);
 
         // This is to create a ptr_shared  the only way!
-        shared_ptr<Lidar> l =  make_shared<Lidar>(item["fov"].asInt(), item["max_range"].asDouble(), item["num_beams"].asInt(), world_, pose_l);
+        shared_ptr<Lidar> l =  make_shared<Lidar>(item["fov"].asInt(), item["max_range"].asDouble(), item["num_beams"].asInt(), world_,item["namespace"].asString(), pose_l);
         dict_namespace_rl[item["namespace"].asString()].push_back(l);
       }
     }

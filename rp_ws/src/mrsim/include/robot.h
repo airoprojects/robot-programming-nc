@@ -13,11 +13,11 @@ struct Robot : public WorldItem {
   
   // Robot constructor that takes as input a word to which the robot belong
   Robot(float radius_, std::shared_ptr<World> w_,
-        const Pose& pose_ = Pose::Identity());
+        std::string namespace_, const Pose& pose_ = Pose::Identity());
   
   // Robot contructor that takes as input a world item to which the robot belong
-  Robot(float radius_, std::shared_ptr<WorldItem> parent_,
-        const Pose& pose_ = Pose::Identity());
+  Robot(float radius_, std::shared_ptr<WorldItem> parent_, 
+        std::string namespace_, const Pose& pose_ = Pose::Identity());
 
   // Method to dray the robot on the map with open cv
   void draw() override;

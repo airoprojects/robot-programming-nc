@@ -2,8 +2,6 @@
 
 #include <Eigen/Dense>
 #include <opencv2/core.hpp>
-#include <string>
-#include <vector>
 
 #include "types.h"
 #include <iostream>
@@ -68,8 +66,11 @@ class WorldItem {
 
 public:
  
-  WorldItem(std::shared_ptr<World> w_, const Pose& p_ = Pose::Identity());
+  WorldItem(std::shared_ptr<World> w_,
+            std::string namespace_,
+            const Pose& p_ = Pose::Identity());
   WorldItem(std::shared_ptr<WorldItem> parent_,
+              std::string namespace_,
             const Pose& p_ = Pose::Identity());
   ~WorldItem();
 
@@ -81,4 +82,5 @@ public:
   std::shared_ptr<World> world = nullptr;
   std::shared_ptr<WorldItem> parent = nullptr;
   Pose pose_in_parent;
+  std::string namespace_ = "";
 };

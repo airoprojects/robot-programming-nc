@@ -14,6 +14,11 @@
 
 int main(int argc, char** argv) {
 
+  if (argc < 1) {
+    cerr << "Error: no config.jsosn file provided" << endl;
+    return 1;
+  }
+
   ros::init(argc, argv, "mrsim_node");
   ros::NodeHandle nh("/");
 
@@ -50,7 +55,8 @@ int main(int argc, char** argv) {
 
   // LC: pointer new instance of World
   shared_ptr<World> world_pointer = make_shared<World>(42);
-  w_ptr->loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
+  world_pointer->loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
+  world_pointer->draw();
   
   int NUM_ROBOT = 0;
   RobotLidarMap  robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOT);
@@ -70,14 +76,14 @@ int main(int argc, char** argv) {
   bool select_robot = true; 
   int robot_index = -1;
 
-  // LC: keypress log
-  // ofstream keylog("./key.log");
+  ros::Rate loop_rate(10);
+  cout << "Running primary node" << endl;
+  float delay = 0.1;
 
   while (ros::ok()) {
 
     // LC: this function update the status of each world item
-    // world.timeTick(delay); 
-    // world.draw();
+    world_pointer->timeTick(delay); 
 
   }
 

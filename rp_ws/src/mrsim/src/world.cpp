@@ -1,7 +1,6 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
-#include <stdexcept>
 
 #include "world.h"
 
@@ -18,12 +17,13 @@ void World::loadFromImage(const std::string filename_) {
   cols = display_image.cols;
   _grid = std::vector<uint8_t>(size, 0x00);
   memcpy(_grid.data(), display_image.data, size);
+  cout << "caricata l'immagine!!" << endl;
 }
 
 void World::draw() {
   for (const auto item : _items) item->draw();
   cv::imshow("Map", display_image);
-  // Clean the display image
+  cout << "ciao sono in draw al massimo scrivo non mostro!" << endl;
   memcpy(display_image.data, _grid.data(), size);
 }
 
@@ -35,13 +35,13 @@ void World::add(WorldItem* item) { _items.push_back(item); }
 
 bool World::traverseBeam(IntPoint& endpoint, const IntPoint& origin,
                          const float angle, const int max_range) {
-  Point p0 = origin.cast<float>();
-  const Point dp(cos(angle), sin(angle));
+  Point p0 = origin.cast<float>(); // start point of a beam
+  const Point dp(cos(angle), sin(angle)); // point -> (x,y) 
   int range_to_go = max_range;
   while (range_to_go > 0) {
     endpoint = IntPoint(p0.x(), p0.y());
-    if (!inside(endpoint)) return false;
-    if (at(endpoint) < 127) return true;
+    if (!inside(endpoint)) return false; //beam out of map
+    if (at(endpoint) < 127) return true; //beam that hit a object in the map
     p0 = p0 + dp;
     --range_to_go;
   }
@@ -66,12 +66,14 @@ bool World::collides(const IntPoint& p, const int radius) const {
   return false;
 }
 
-WorldItem::WorldItem(std::shared_ptr<World> w_, const Pose& p_)
+WorldItem::WorldItem(std::shared_ptr<World> w_, 
+                    std::string namespace_, const Pose& p_)
     : world(w_), parent(nullptr), pose_in_parent(p_) {
   if (world) world->add(this);
 }
 
-WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_, const Pose& p)
+WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_, 
+                    std::string namespace_, const Pose& p)
     : world(parent_->world), parent(parent_), pose_in_parent(p) {
   if (world) world->add(this);
 }

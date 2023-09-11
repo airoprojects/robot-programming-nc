@@ -4,7 +4,15 @@
 #include <vector>
 #include <map> 
 #include <tuple>
+#include <iostream>
 #include <Eigen/Dense>
+#include "ros/ros.h"
+#include "mrsim/rodom.h"
+#include "geometry_msgs/Twist.h"
+
+
+
+using namespace std;
 
 
 using IntPoint = Eigen::Vector2i;
