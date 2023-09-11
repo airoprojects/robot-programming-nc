@@ -37,6 +37,8 @@ void Robot::draw() {
 }
 
 void Robot::timeTick(float dt) {
+
+  cout << "ciao sono:" << _namespace << endl;
   //initializing
   
   ros::spin();
@@ -47,10 +49,13 @@ void Robot::timeTick(float dt) {
 
   // Apply trasformation
   Pose next_pose = pose_in_parent * motion;
+  cout << "here1" << endl;
   IntPoint ip = world->world2grid(next_pose.translation());
   int int_radius = radius * world->i_res;
   if (!world->collides(ip, int_radius)) pose_in_parent = next_pose;
 
+
+  cout << "here2" << endl;
   // Publish odometry data
   mrsim::rodom odom;
 

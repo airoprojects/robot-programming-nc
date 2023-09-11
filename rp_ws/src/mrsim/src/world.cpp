@@ -23,12 +23,16 @@ void World::loadFromImage(const std::string filename_) {
 void World::draw() {
   for (const auto item : _items) item->draw();
   cv::imshow("Map", display_image);
-  cout << "ciao sono in draw al massimo scrivo non mostro!" << endl;
   memcpy(display_image.data, _grid.data(), size);
 }
 
 void World::timeTick(float dt) {
-  for (const auto item : _items) item->timeTick(dt);
+  cout << "size " << _items.size() << endl;
+  for (const auto item : _items) {
+    cout << "here 0" << endl;
+    cout << item->world->rows << endl;
+    // item.timeTick(dt);
+  }
 }
 
 void World::add(WorldItem* item) { _items.push_back(item); }
@@ -68,13 +72,16 @@ bool World::collides(const IntPoint& p, const int radius) const {
 
 WorldItem::WorldItem(std::shared_ptr<World> w_, 
                     std::string namespace_, const Pose& p_)
-    : world(w_), parent(nullptr), pose_in_parent(p_) {
+    : world(w_), parent(nullptr), 
+      pose_in_parent(p_), _namespace(namespace_) {
   if (world) world->add(this);
+  cout<< "Added new item" << endl;
 }
 
 WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_, 
                     std::string namespace_, const Pose& p)
-    : world(parent_->world), parent(parent_), pose_in_parent(p) {
+    : world(parent_->world), parent(parent_), 
+      pose_in_parent(p), _namespace(namespace_) {
   if (world) world->add(this);
 }
 

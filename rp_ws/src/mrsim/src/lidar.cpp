@@ -31,6 +31,9 @@ Lidar::Lidar(float fov_, float max_range_, int num_beams_,
 
 // modify the intern of the lidar, then when draw() is call is update on the map its position!
 void Lidar::timeTick(float dt) {
+
+  cout << "ciao sono:" << _namespace << endl;
+
   Pose piw = poseInWorld();
   IntPoint origin = world->world2grid(piw.translation()); //point of origin of base scan
   if (!world->inside(origin)) return;

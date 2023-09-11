@@ -28,13 +28,15 @@ Json::Value readJson( string in_path) {
 
 // read json to initialize world items
 //  tuple< map<int,  shared_ptr<WorldItem>>,  map< string,  vector< shared_ptr<WorldItem>>>> 
-RobotLidarMap initSimEnv(Json::Value root, WorldPointer w_ptr, int& robot_counter) {
+vector<RobotPointer> initSimEnv(Json::Value root, WorldPointer w_ptr, int& robot_counter) {
 
   cout << "World id -> "  << w_ptr->_id << endl;
 
-  vector<WorldItem> items_;
+  // vector<WorldItem> items_;
   WorldItemMap dict_id_r;
-  RobotLidarMap dict_namespace_rl;
+  RobotLidarMap dict_namespace_rl; // DELETE
+  vector<RobotPointer> rvect;
+  
 
   if (root["items"].isArray()) {
 
@@ -42,50 +44,83 @@ RobotLidarMap initSimEnv(Json::Value root, WorldPointer w_ptr, int& robot_counte
 
       const int id = item["id"].asInt();
       const  string type = item["type"].asString();
+      int id_p = item["parent"].asInt(); 
 
       WorldPointer world_ ; // IL MONDOOOOOOO
-      int id_p = item["parent"].asInt(); 
+      WorldItemPointer world_item;
       
-      if (id_p == -1) {
-        world_ = w_ptr; // upcasting -> reference to World
-        if (world_ == nullptr) cerr << "The world item you're refering to doesn't exist, please check config.json !"<< endl;
-      } 
-      else { 
-        // Here we look for the pointer of the parent inside item_dict
-        shared_ptr<WorldItem> world_item = dict_id_r[id_p];
-        if (world_item == nullptr) cerr << "The world item you're refering to doesn't exist, please check config.json !"<< endl;
-      }
+      world_ = w_ptr; 
+      world_item = dict_id_r[id_p];// ASPEEEEEEE
+
+      if (world_ == nullptr) cerr << "The world item you're refering to doesn't exist, please check config.json !"<< endl;
+      if (world_item == nullptr) cerr << "The world item you're refering to doesn't exist, please check config.json !"<< endl;
+    
+      string namesp = item["namespace"].asString();
            
       if (type == "robot") {
+        
         Pose pose_r;
+
         double pose_x = item["pose"][0].asInt();
         double pose_y = item["pose"][1].asInt();
         double theta = item["pose"][2].asDouble();
+        double radius = item["radius"].asDouble();
+        int id = item["id"].asInt();
 
         IntPoint my_point(pose_x, pose_y); // libero su cauzione
         pose_r.translation() = world_->grid2world(my_point);
 
-        shared_ptr<Robot> r =  make_shared<Robot>(item["radius"].asDouble(), world_,item["namespace"].asString(), pose_r);
-        dict_id_r[item["id"].asInt()] = r;
-        dict_namespace_rl[item["namespace"].asString()].push_back(r);
+        Robot r(radius, world_, namesp, pose_r);
+        shared_ptr<Robot> r_pt =  make_shared<Robot>(r);
+
+        // if (id_p == -1) {
+        //   Robot r(radius, world_, namesp, pose_r);
+        //   //shared_ptr<Robot> r_pt = make_shared<Robot>(r); //upcast
+        //   // dict_id_r[id] = r_pt;
+        //   cout <<"ROBOT NAMESPACEEEEEEEEE " << r.world->_id<< endl;
+        // }
+        // else {
+        //   Robot r(radius, world_item, namesp, pose_r);
+        //   shared_ptr<WorldItem> r_pt = make_shared<WorldItem>(r); //upcast
+        //   dict_id_r[id] = r_pt;
+        // }
+
+        // shared_ptr<Robot> r =  make_shared<Robot>(item["radius"].asDouble(), world_, namesp, pose_r);
+        // cout <<"ROBOT NAMESPACEEEEEEEEE " << r_pt.namespace<< endl;
+
+        // cout <<"ROBOT NAMESPACEEEEEEEEE " << r->namespace_ << endl;
+        // dict_namespace_rl[item["namespace"].asString()].push_back(r);
+        rvect.push_back(r_pt);
         robot_counter++;
       }
       else {
         Pose pose_l;
+        float fov = item["fov"].asFloat();
         float pose_x = item["pose"][0].asFloat();
         float pose_y = item["pose"][1].asFloat();
         float theta = item["pose"][2].asFloat();
+        double max_range_l = item["max_range"].asDouble();
+        int num_beams_l = item["num_beams"].asInt();
         pose_l.translation() = Eigen::Vector2f(pose_x, pose_y);
 
+        // if (id_p == -1){
+        //   Lidar l(fov, max_range_l , num_beams_l, world_, namesp, pose_l);
+        // } else {
+        //   Lidar l(fov, max_range_l , num_beams_l, world_item, namesp, pose_l);
+        // }
+
         // This is to create a ptr_shared  the only way!
-        shared_ptr<Lidar> l =  make_shared<Lidar>(item["fov"].asInt(), item["max_range"].asDouble(), item["num_beams"].asInt(), world_,item["namespace"].asString(), pose_l);
-        dict_namespace_rl[item["namespace"].asString()].push_back(l);
+        // 
+        // cout <<"LIDAR NAMESPACEEEEEEEEE " << l._namespace<< endl;
+        // shared_ptr<Lidar> l =  make_shared<Lidar>(item["fov"].asInt(), item["max_range"].asDouble(), item["num_beams"].asInt(), world_,namesp, pose_l);
+        // dict_namespace_rl[item["namespace"].asString()].push_back(l);
       }
     }
   }
 
   // DictTuple result =  make_tuple(dict_id_r, dict_namespace_rl);
-  return dict_namespace_rl;
+  // return dict_namespace_rl;
+  return rvect;
 }
 
 // LC: thsi function thake as input a config.jason file and makes a ros launch file to start nodes in a simulation

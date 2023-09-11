@@ -56,10 +56,13 @@ public:
 
   cv::Mat display_image;
 
-protected:
 
   std::vector<uint8_t> _grid;
-  std::vector<WorldItem*> _items;
+  std::vector<WorldItem*> _items; 
+
+// protected:
+
+
 };
 
 class WorldItem {
@@ -82,5 +85,5 @@ public:
   std::shared_ptr<World> world = nullptr;
   std::shared_ptr<WorldItem> parent = nullptr;
   Pose pose_in_parent;
-  std::string namespace_ = "";
+  std::string _namespace = "";
 };

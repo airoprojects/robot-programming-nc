@@ -13,8 +13,9 @@
 #include "utils.h"
 
 int main(int argc, char** argv) {
+  cout << argc;
 
-  if (argc < 1) {
+  if (argc < 2) {
     cerr << "Error: no config.jsosn file provided" << endl;
     return 1;
   }
@@ -55,11 +56,18 @@ int main(int argc, char** argv) {
 
   // LC: pointer new instance of World
   shared_ptr<World> world_pointer = make_shared<World>(42);
-  world_pointer->loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
-  world_pointer->draw();
+  // world_pointer->loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
+  // world_pointer->draw();
   
   int NUM_ROBOT = 0;
-  RobotLidarMap  robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOT);
+  cout <<"ROBOT NAMESPACEEEEEEEEE 2 " << world_pointer->_id<< endl;
+
+  vector<RobotPointer> robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOT);
+  
+  cout <<"ROBOT NAMESPACEEEEEEEEE 3 " << world_pointer->_id<< endl;
+
+
+
   
   // // LC: make a launch based on config.json to run multiple robot/lidar nodes
   // int NUM_ROBOT = makeLaunchFile(
@@ -72,6 +80,8 @@ int main(int argc, char** argv) {
   //     ROS_ERROR("Failed to execute roslaunch command");
   // }
 
+  // int result = system("rosrun mrsim opkey_node NUM_ROBOT");
+
   // LC: no robot is selected to be controlled at the beginning
   bool select_robot = true; 
   int robot_index = -1;
@@ -80,10 +90,18 @@ int main(int argc, char** argv) {
   cout << "Running primary node" << endl;
   float delay = 0.1;
 
+  cout << "list of items: " << world_pointer->_items.size() << endl;
+  // for (const auto item : world_pointer->_items) cout << item->_namespace << endl;
+
+  world_pointer->timeTick(delay); 
   while (ros::ok()) {
 
     // LC: this function update the status of each world item
-    world_pointer->timeTick(delay); 
+    // world_pointer->draw();
+
+
+
+    // cv::waitKey(0);
 
   }
 

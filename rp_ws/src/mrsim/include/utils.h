@@ -10,6 +10,8 @@
 
 using namespace std;
 using WorldPointer = shared_ptr<World>;
+using RobotPointer = shared_ptr<Robot>;
+using WorldItemPointer = shared_ptr<WorldItem>;
 using WorldItemMap = map<int, shared_ptr<WorldItem>>;
 using RobotLidarMap = map<string, vector< shared_ptr<WorldItem>>>;
 // using InnerTuple =  tuple<WorldItemMap, StringToWorldItemVectorMap>;
@@ -17,6 +19,6 @@ using RobotLidarMap = map<string, vector< shared_ptr<WorldItem>>>;
 
 
 Json::Value readJson(string in_path);
-RobotLidarMap initSimEnv(Json::Value root, shared_ptr<World> w, int& robot_counter);
+vector<RobotPointer> initSimEnv(Json::Value root, shared_ptr<World> w, int& robot_counter);
 int makeLaunchFile(string in_path,  string out_path);
 string getGitRootPath();
