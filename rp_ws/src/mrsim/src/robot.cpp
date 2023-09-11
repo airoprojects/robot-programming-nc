@@ -14,7 +14,6 @@ Robot::Robot(float radius_, std::shared_ptr<WorldItem> parent_,
       cmd_vel_sub(nh.subscribe("cmd_vel", 10, &Robot::cmdVelCallback, this)) {}
 
 
-
 void Robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg) {
     // Update the robot's velocity based on received commands
     tv = msg->linear.x;

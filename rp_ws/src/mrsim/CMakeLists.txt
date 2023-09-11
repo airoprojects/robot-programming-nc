@@ -46,12 +46,12 @@ target_link_libraries(mrsim_node
 )
 
 # Add robot_node
-add_executable(robot_node bin/mrsim_node.cpp)
-target_include_directories(robot_node PUBLIC 
+add_executable(opkey_node bin/mrsim_node.cpp)
+target_include_directories(opkey_node PUBLIC 
     include 
     ${catkin_INCLUDE_DIRS}
 )
-target_link_libraries(robot_node 
+target_link_libraries(opkey_node
     mrsim
     ${catkin_LIBRARIES}
 )

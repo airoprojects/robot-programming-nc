@@ -25,6 +25,8 @@ struct Robot : public WorldItem {
   // Method to update the robot pose in function of the velocity
   void timeTick(float dt) override;
 
+  void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg);
+
   // Robot dadious and initial translational and rotational velocity
   float radius;
   float tv = 0, rv = 0;

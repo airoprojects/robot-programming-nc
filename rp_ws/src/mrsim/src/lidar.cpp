@@ -3,16 +3,15 @@
 // Custom lib
 #include "lidar.h"
 
-
-
 Lidar::Lidar(float fov_, float max_range_, int num_beams_,
              std::shared_ptr<World> w, const Pose& pose_)
     : WorldItem(w, pose_),
       fov(fov_),
       max_range(max_range_),
       num_beams(num_beams_),
-      ranges(num_beams, -1.0),
-      lidar_publisher(nh.advertise<sensor_msgs::LaserScan>("lidar_scan", 1000)) {}
+      ranges(num_beams, -1.0)
+      //lidar_publisher(nh.advertise<sensor_msgs::LaserScan>("lidar_scan", 1000)) 
+      {}
 
 Lidar::Lidar(float fov_, float max_range_, int num_beams_,
              std::shared_ptr<WorldItem> p_, const Pose& pose_)
@@ -20,8 +19,9 @@ Lidar::Lidar(float fov_, float max_range_, int num_beams_,
       fov(fov_),
       max_range(max_range_),
       num_beams(num_beams_),
-      ranges(num_beams, -1.0),
-      lidar_publisher(nh.advertise<sensor_msgs::LaserScan>("lidar_scan", 1000)) {}
+      ranges(num_beams, -1.0)
+      // lidar_publisher(nh.advertise<sensor_msgs::LaserScan>("lidar_scan", 1000)) 
+      {}
 
 // modify the intern of the lidar, then when draw() is call is update on the map its position!
 void Lidar::timeTick(float dt) {
@@ -46,15 +46,15 @@ void Lidar::timeTick(float dt) {
 
   // TO IMPLEMENTS MESSAGGE
   // Create a LaserScan message
-  sensor_msgs::LaserScan scan_msg;
-  scan_msg.angle_min = -fov / 2;
-  scan_msg.angle_max = fov / 2;
-  scan_msg.angle_increment = fov / num_beams;
-  scan_msg.range_min = 0.0;
-  scan_msg.range_max = max_range;
-  scan_msg.ranges = ranges;
+  // sensor_msgs::LaserScan scan_msg;
+  // scan_msg.angle_min = -fov / 2;
+  // scan_msg.angle_max = fov / 2;
+  // scan_msg.angle_increment = fov / num_beams;
+  // scan_msg.range_min = 0.0;
+  // scan_msg.range_max = max_range;
+  // scan_msg.ranges = ranges;
 
-  lidar_publisher.publish(scan_msg);
+  // lidar_publisher.publish(scan_msg);
 
 }
 
