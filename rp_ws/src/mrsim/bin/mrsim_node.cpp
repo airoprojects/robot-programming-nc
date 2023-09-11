@@ -13,7 +13,6 @@
 #include "utils.h"
 
 int main(int argc, char** argv) {
-  cout << argc;
 
   if (argc < 2) {
     cerr << "Error: no config.jsosn file provided" << endl;
@@ -55,58 +54,106 @@ int main(int argc, char** argv) {
   string image_path = git_root_path + "/map/" +  map;
 
   // LC: pointer new instance of World
-  shared_ptr<World> world_pointer = make_shared<World>(42);
-  // world_pointer->loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
+  World world(42);
+  shared_ptr<World> world_pointer = make_shared<World>(world);
+  world.loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
   // world_pointer->draw();
+  // cv::waitKey(0);
   
-  int NUM_ROBOT = 0;
-  cout <<"ROBOT NAMESPACEEEEEEEEE 2 " << world_pointer->_id<< endl;
+  int NUM_ROBOTS = 0;
+  vector<RobotPointer> robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
 
-  vector<RobotPointer> robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOT);
-  
-  cout <<"ROBOT NAMESPACEEEEEEEEE 3 " << world_pointer->_id<< endl;
-
-
-
-  
-  // // LC: make a launch based on config.json to run multiple robot/lidar nodes
-  // int NUM_ROBOT = makeLaunchFile(
-  //                 git_root_path + "/config/config.json", 
-  //                 git_root_path + "/rp_ws/src/mrsim/launch/simulation.launch");
-
-  // // LC: launch the simulation launch file from this node
-  // int result = system("roslaunch mrsim simulation.launch");
+  // LC: run opkey controller node
+  // std::string command = "rosrun mrsim opkey_node " + to_string(NUM_ROBOT) + " 1";
+  // int result = system(command.c_str());
   // if (result != 0) {
-  //     ROS_ERROR("Failed to execute roslaunch command");
+  //   ROS_ERROR("Failed to execute roslaunch command");
+  //   return 1;
   // }
 
-  // int result = system("rosrun mrsim opkey_node NUM_ROBOT");
+  // LC: make a vector of publishers
+  vector<ros::Publisher> publishers_vector;
+  for (int i=0; i < NUM_ROBOTS; i++) {
+    ros::Publisher foo_pub  = nh.advertise<geometry_msgs::Twist>("robot_" + to_string(i) + "/cmd_vel", 1000);
+    publishers_vector.push_back(foo_pub);
+  }
+
+  cout << "Running primary node" << endl;
 
   // LC: no robot is selected to be controlled at the beginning
   bool select_robot = true; 
   int robot_index = -1;
-
-  ros::Rate loop_rate(10);
-  cout << "Running primary node" << endl;
   float delay = 0.1;
 
-  cout << "list of items: " << world_pointer->_items.size() << endl;
-  // for (const auto item : world_pointer->_items) cout << item->_namespace << endl;
+  // LC: key press actions log
+  ofstream keylog("./key.log");
+  ros::Rate rate(2);
 
-  world_pointer->timeTick(delay); 
   while (ros::ok()) {
 
-    // LC: this function update the status of each world item
-    // world_pointer->draw();
+    // LC: draw world
+    world.draw();
 
+    // LC: message definition
+    geometry_msgs::Twist msg;
+    msg.linear.x = 1.0;
+    msg.angular.z = 1.0;
 
+    // LC: Select the index of the robot you wnat to control
+    if (select_robot) {
 
-    // cv::waitKey(0);
+      // This should be temporary, just to test key captures
+      // cv::namedWindow("Window");
+
+      while (true) {
+
+        std::cout << "\nWhat robot do you want to control? " << std::endl; 
+        std::cout << "Type a numebr beween 0 and " << NUM_ROBOTS-1 << ": ";
+        std::cin >> robot_index;
+
+        // LC: check for user error in the input
+        if (std::cin.fail() || robot_index < 0 || robot_index > NUM_ROBOTS-1) {
+          std::cin.clear(); // reset the fail state
+          std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard invalid input
+          std::cout << "Invalid input. Please try again." << std::endl;
+        } 
+        else {
+          std::cout << "\nControlling robot " << robot_index << "\n" << std::endl;
+          std::cout << "Press 'c' to change robot" << std::endl;
+          std::cout << "Press 'ESC' to exit the simulation\n" << std::endl;
+          break;
+        }
+      }
+      // LC: reset the index to keep controlling the same robot
+      select_robot = false;
+    }
+
+    // Switch case to control robot motion
+    int k = cv::waitKey(0);
+    keylog << "\nKey pressed with decimal value: " << k ;
+    switch (k) {
+        case 81: keylog << " left\n"; msg.angular.z = 0.5;; break; // arow left
+        case 82: keylog << " up\n"; msg.linear.x = 1.0; break; // arow up
+        case 83: keylog << " right\n"; msg.angular.z = -0.5; break; // arow right
+        case 84: keylog << " down\n"; msg.linear.x = -1.0; ; break; // arow down
+        case 99: select_robot = true; break; // c key
+        case 27: keylog << " esc\n"; return 0; // esc
+        default: break;
+    }
+
+    if (!select_robot) {
+
+      publishers_vector[robot_index].publish(msg);
+      ros::spinOnce();
+
+      for (const auto robot: robots_and_lidars) {
+        robot->timeTick(delay);
+      }
+    }
+    // LC: or change robot
 
   }
 
-  // // Destroy the created window
-  // cv::destroyWindow("Window");
-  // keylog.close();
-  // return 0;
+  keylog.close();
+  return 0;
 }
