@@ -12,21 +12,20 @@
 #include "lidar.h"
 #include "utils.h"
 
-int main(int argc, char** argv) {
+void writeOn(cv::Mat image, string text) {
+  cv::putText(image,                           // Target image
+            text,                // Text to be displayed
+            cv::Point(100, 250),             // Bottom-left corner of the text string in the image
+            cv::FONT_HERSHEY_SIMPLEX,        // Font type
+            1,                               // Font scale
+            cv::Scalar(0, 255, 0),           // Font color
+            2);                              // Line thickness
+}
 
-  if (argc < 3) {
-    cerr << "Error: not enough arouments provided" << endl
-    << "argv[1]: path to simulation map" << endl 
-    << "argv[2]: number of robots" << endl;
-    return 1;
-  }
+int main(int argc, char** argv) {
 
   ros::init(argc, argv, "opkey_node");
   ros::NodeHandle nh("/");
-
-  // LC: get the map here
-  // string image_path = argv[1];
-   string image_path = "/home/leeoos/Projects/robot-programming-nc/map/map2D.png";
  
   // LC: get the number of robots in the simulation
   int NUM_ROBOTS = -1;
@@ -50,23 +49,23 @@ int main(int argc, char** argv) {
   ofstream keylog("./key.log");
   ros::Rate rate(2);
 
-  while (ros::ok()) {
+  // LC: controller matrix
+  cv::Mat ctrl_window = cv::Mat::zeros(cv::Size(500, 500), CV_8UC3);
 
-    // LC: message definition
-    geometry_msgs::Twist msg;
-    msg.linear.x = 1.0;
-    msg.angular.z = 1.0;
+  while (ros::ok()) {
 
     // LC: Select the index of the robot you wnat to control
     if (select_robot) {
 
       // This should be temporary, just to test key captures
-      cv::namedWindow("Window");
+      // cv::namedWindow("Window");
+      // cv::destroyWindow("");
+      // cv::destroyAllWindows();
 
       while (true) {
 
         std::cout << "\nWhat robot do you want to control? " << std::endl; 
-        std::cout << "Press a numebr beween 0 and " << NUM_ROBOTS-1 << ": ";
+        std::cout << "Type a numebr beween 0 and " << NUM_ROBOTS-1 << ": ";
         std::cin >> robot_index;
 
         // LC: check for user error in the input
@@ -76,7 +75,7 @@ int main(int argc, char** argv) {
           std::cout << "Invalid input. Please try again." << std::endl;
         } 
         else {
-          std::cout << "You select robot " << robot_index << std::endl;
+          std::cout << "\nControlling robot " << robot_index << "\n" << std::endl;
           std::cout << "Press 'c' to change robot\n" << std::endl;
           std::cout << "Press 'ESC' to exit the simulation\n" << std::endl;
           break;
@@ -86,11 +85,18 @@ int main(int argc, char** argv) {
       select_robot = false;
     }
 
+    cv::imshow("Control Window", ctrl_window);
+
+    // LC: message definition
+    geometry_msgs::Twist msg;
+    msg.linear.x = 1.0;
+    msg.angular.z = 1.0;
+
     // Switch case to control robot motion
     int k = cv::waitKey(0);
     keylog << "\nKey pressed with decimal value: " << k << std::endl;
     switch (k) {
-        case 81: cout <<"\nleft\n"; msg.angular.z = 0.5;; break; // arow left
+        case 81: writeOn(ctrl_window, "left"); msg.angular.z = 0.5;; break; // arow left
         case 82: cout <<"\nup\n"; msg.linear.x = 1.0; break; // arow up
         case 83: cout <<"\nright\n"; msg.angular.z = -0.5; break; // arow right
         case 84: cout <<"\ndown\n"; msg.linear.x = -1.0; ; break; // arow down
@@ -104,15 +110,11 @@ int main(int argc, char** argv) {
       publishers_vector[robot_index].publish(msg);
       ros::spinOnce();
     }
-    // LC: or change robot
-    else {
-      std::cout << "Change robot\n" << std::endl;
-      cv::destroyWindow("Window");
-    }
   }
 
   // LC: destroy the created window
-  cv::destroyWindow("Window");
+  // cv::destroyWindow("Window");
+  //cv::destroyAllWindows();
   keylog.close();
   return 0;
 }
