@@ -26,6 +26,8 @@ struct Robot : public WorldItem {
   void timeTick(float dt) override;
 
   void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg);
+  void coso(const geometry_msgs::Twist::ConstPtr& msg); 
+
 
   // Robot dadious and initial translational and rotational velocity
   float radius;

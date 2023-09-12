@@ -9,7 +9,7 @@ World::World(int id) {_id = id;}
 void World::loadFromImage(const std::string filename_) {
   cv::Mat frame = cv::imread(filename_);
   if (frame.rows == 0) {
-    throw std::runtime_error("unable to load image");
+    throw runtime_error("unable to load image");
   }
   cv::cvtColor(frame, display_image, cv::COLOR_BGR2GRAY);
   size = display_image.rows * display_image.cols;
@@ -17,7 +17,7 @@ void World::loadFromImage(const std::string filename_) {
   cols = display_image.cols;
   _grid = std::vector<uint8_t>(size, 0x00);
   memcpy(_grid.data(), display_image.data, size);
-  cout << "caricata l'immagine!!" << endl;
+  cout << "Image loaded!!!" << endl;
 }
 
 void World::draw() {
