@@ -4,6 +4,7 @@
 #include <jsoncpp/json/json.h>
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
+#include <sys/time.h>
 
 // Custom lib
 #include "types.h"
@@ -11,6 +12,13 @@
 #include "robot.h"
 #include "lidar.h"
 #include "utils.h"
+
+double timeMillisec() {
+  struct timeval tv;
+  gettimeofday(&tv,0);
+  return tv.tv_sec*1000+tv.tv_usec*1e-3;
+}
+
 
 int main(int argc, char** argv) {
 
@@ -54,14 +62,18 @@ int main(int argc, char** argv) {
   string image_path = git_root_path + "/map/" +  map;
 
   // LC: pointer new instance of World
-  World world(42);
-  shared_ptr<World> world_pointer = make_shared<World>(world);
+  World world(42);  // Dynamically allocated instance of the World class
+  shared_ptr<World> world_pointer(&world, [](World*){ });
+  // World world(42);
+  // shared_ptr<World> world_pointer = make_shared<World>(42);
   world.loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
   // world_pointer->draw();
   // cv::waitKey(0);
+   cout << "rows " << world.rows << endl;
+   cout << "cols " << world.cols << endl;
   
-  int NUM_ROBOTS = 0;
-  vector<RobotPointer> robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
+  int NUM_ROBOTS = 1;
+  //vector<RobotPointer> robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
 
   // LC: run opkey controller node
   // std::string command = "rosrun mrsim opkey_node " + to_string(NUM_ROBOT) + " 1";
@@ -78,32 +90,36 @@ int main(int argc, char** argv) {
     publishers_vector.push_back(foo_pub);
   }
 
+
+  double radius = 0.5;
+  IntPoint middle(world.rows/2, world.cols/2);
+  Pose robot_pose;
+  robot_pose.translation() = world.grid2world(middle);
+  Robot r(radius, world_pointer, "robot_0", robot_pose);
+  cout << r.world << endl;
+
   cout << "Running primary node" << endl;
 
   // LC: no robot is selected to be controlled at the beginning
   bool select_robot = true; 
   int robot_index = -1;
-  float delay = 0.1;
+  float delay = 0.8;
 
   // LC: key press actions log
   ofstream keylog("./key.log");
-  ros::Rate rate(2);
+  ros::Rate rate(10);
+
+  // for (const auto robot: world._items) {cout << robot->_namespace;}
+  cout << world._items.size() << endl;
 
   while (ros::ok()) {
 
-    // LC: draw world
-    world.draw();
-
-    // LC: message definition
-    geometry_msgs::Twist msg;
-    msg.linear.x = 1.0;
-    msg.angular.z = 1.0;
-
-    // LC: Select the index of the robot you wnat to control
+     // LC: Select the index of the robot you wnat to control
     if (select_robot) {
 
       // This should be temporary, just to test key captures
       // cv::namedWindow("Window");
+      cv::destroyAllWindows();
 
       while (true) {
 
@@ -128,14 +144,28 @@ int main(int argc, char** argv) {
       select_robot = false;
     }
 
+    double t_start=timeMillisec();
+    world.timeTick(delay);
+    double t_end=timeMillisec();
+    cerr << "duration" << t_end-t_start << endl;
+    cerr << "image_size: " << world.rows << " " << world.cols << endl;
+    // LC: draw world
+    world.draw();
+    // r.draw();
+
+    // LC: message definition
+    geometry_msgs::Twist msg;
+    msg.linear.x = 1.0;
+    msg.angular.z = 1.0;
+
     // Switch case to control robot motion
     int k = cv::waitKey(0);
     keylog << "\nKey pressed with decimal value: " << k ;
     switch (k) {
-        case 81: keylog << " left\n"; msg.angular.z = 0.5;; break; // arow left
-        case 82: keylog << " up\n"; msg.linear.x = 1.0; break; // arow up
-        case 83: keylog << " right\n"; msg.angular.z = -0.5; break; // arow right
-        case 84: keylog << " down\n"; msg.linear.x = -1.0; ; break; // arow down
+        case 81: r.rv+=0.05; keylog << " left\n"; msg.angular.z = 0.5;; break; // arow left
+        case 82: r.tv+=1.0; keylog << " up\n"; msg.linear.x = 1.0; break; // arow up
+        case 83: r.rv-=0.05; keylog << " right\n"; msg.angular.z = -0.5; break; // arow right
+        case 84: r.tv-=1.0; keylog << " down\n"; msg.linear.x = -1.0; ; break; // arow down
         case 99: select_robot = true; break; // c key
         case 27: keylog << " esc\n"; return 0; // esc
         default: break;
@@ -143,17 +173,19 @@ int main(int argc, char** argv) {
 
     if (!select_robot) {
 
-      publishers_vector[robot_index].publish(msg);
-      ros::spinOnce();
+      // publishers_vector[robot_index].publish(msg);
+      // ros::spinOnce();
+      // r.timeTick(delay);
 
-      for (const auto robot: robots_and_lidars) {
-        robot->timeTick(delay);
-      }
+      // for (const auto robot: robots_and_lidars) {
+      //   // robot->timeTick(delay);
+      //   // robot->draw();
+      // }
     }
     // LC: or change robot
 
   }
-
+  cv::destroyAllWindows();
   keylog.close();
   return 0;
 }

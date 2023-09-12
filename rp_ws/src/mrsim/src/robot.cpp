@@ -37,11 +37,8 @@ void Robot::draw() {
 }
 
 void Robot::timeTick(float dt) {
-
-  cout << "ciao sono:" << _namespace << endl;
-  //initializing
   
-  ros::spin();
+  // ros::spin();
 
   Pose motion = Pose::Identity();
   motion.translation() << tv * dt, 0;
@@ -49,27 +46,26 @@ void Robot::timeTick(float dt) {
 
   // Apply trasformation
   Pose next_pose = pose_in_parent * motion;
-  cout << "here1" << endl;
   IntPoint ip = world->world2grid(next_pose.translation());
   int int_radius = radius * world->i_res;
   if (!world->collides(ip, int_radius)) pose_in_parent = next_pose;
 
 
-  cout << "here2" << endl;
-  // Publish odometry data
-  mrsim::rodom odom;
+  // cout << "here2" << endl;
+  // // Publish odometry data
+  // mrsim::rodom odom;
 
-  // Translational component extraction
-  Eigen::Vector2f msg_translation = pose_in_parent.translation();
-  float msg_x = msg_translation.x();
-  float msg_y = msg_translation.y();
+  // // Translational component extraction
+  // Eigen::Vector2f msg_translation = pose_in_parent.translation();
+  // float msg_x = msg_translation.x();
+  // float msg_y = msg_translation.y();
 
-  // Rotational component extraction
-  Eigen::Rotation2Df msg_rotation(pose_in_parent.linear());
-  float msg_theta = msg_rotation.angle();
+  // // Rotational component extraction
+  // Eigen::Rotation2Df msg_rotation(pose_in_parent.linear());
+  // float msg_theta = msg_rotation.angle();
   
-  odom.x = msg_x;
-  odom.y = msg_y;
-  odom.theta = msg_theta;
-  odom_pub.publish(odom);
+  // odom.x = msg_x;
+  // odom.y = msg_y;
+  // odom.theta = msg_theta;
+  // odom_pub.publish(odom);
 }

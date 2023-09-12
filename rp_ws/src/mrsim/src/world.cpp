@@ -27,11 +27,8 @@ void World::draw() {
 }
 
 void World::timeTick(float dt) {
-  cout << "size " << _items.size() << endl;
   for (const auto item : _items) {
-    cout << "here 0" << endl;
-    cout << item->world->rows << endl;
-    // item.timeTick(dt);
+    item->timeTick(dt);
   }
 }
 
@@ -74,8 +71,10 @@ WorldItem::WorldItem(std::shared_ptr<World> w_,
                     std::string namespace_, const Pose& p_)
     : world(w_), parent(nullptr), 
       pose_in_parent(p_), _namespace(namespace_) {
-  if (world) world->add(this);
-  cout<< "Added new item" << endl;
+  if (world) {
+    world->add(this);
+    cout<< "Added new item" << endl;
+  }
 }
 
 WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_, 

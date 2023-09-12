@@ -19,7 +19,7 @@ struct Robot : public WorldItem {
   Robot(float radius_, std::shared_ptr<WorldItem> parent_, 
         std::string namespace_, const Pose& pose_ = Pose::Identity());
 
-  // Method to dray the robot on the map with open cv
+  // Method to draw the robot on the map with open cv
   void draw() override;
 
   // Method to update the robot pose in function of the velocity
