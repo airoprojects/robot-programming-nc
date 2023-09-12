@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
   cout << "rows " << world.rows << endl;
   cout << "cols " << world.cols << endl;
   
-  int NUM_ROBOTS = 1;
+  int NUM_ROBOTS = 2;
   //vector<RobotPointer> robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
 
   // LC: run opkey controller node 
@@ -96,6 +96,13 @@ int main(int argc, char** argv) {
   nuova_pose.linear() = Eigen::Rotation2Df(M_PI/4).matrix();
 
   Robot r(radius, world_pointer, "robot_0", nuova_pose);
+  cout << r.world << endl;
+  std::cout << "pose in parent:\n" << r.pose_in_parent.matrix() << "\n";
+
+
+  double radius_2 = 0.8;
+
+  Robot r2(radius_2, world_pointer, "robot_1", nuova_pose);
   cout << r.world << endl;
   std::cout << "pose in parent:\n" << r.pose_in_parent.matrix() << "\n";
 

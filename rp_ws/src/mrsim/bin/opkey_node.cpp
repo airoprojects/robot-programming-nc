@@ -109,10 +109,10 @@ int main(int argc, char** argv) {
     else cerr << "Invalid command: " << ch << endl;
 
     // LC: publish on robot_{robot_index}/cmd_vel topic
-    if (!select_robot) {
+    //if (!select_robot) {
       publishers_vector[robot_index].publish(msg);
       ros::spinOnce();
-    }
+    //}
   }
   tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
   return 0;
