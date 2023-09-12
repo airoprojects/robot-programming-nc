@@ -96,11 +96,11 @@ int main(int argc, char** argv) {
       if(next_ch == '[') {
         ch = getchar(); // get the character after '['
         switch (ch) {
-          case 'A': msg.linear.x = 0.1; break;
-          case 'B': msg.linear.x = -0.1; break;
-          case 'C': msg.angular.z = -0.05; break;
-          case 'D': msg.angular.z = 0.05; break;
-          default: cerr << "Invalid command: " << ch << endl;
+          case 'A': cout << "up\n"; msg.linear.x = 0.1; break;
+          case 'B': cout << "down\n"; msg.linear.x = -0.1; break;
+          case 'C': cout << "right\n"; msg.angular.z = -0.05; break;
+          case 'D': cout << "left\n"; msg.angular.z = 0.05; break;
+          default: ;
         }
       }
       else break;

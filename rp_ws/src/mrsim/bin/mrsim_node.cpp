@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include <thread>
 #include <chrono>
+#include <cmath>
 
 // Custom lib
 #include "types.h"
@@ -82,11 +83,21 @@ int main(int argc, char** argv) {
   }
 
   double radius = 0.5;
-  IntPoint middle(world.rows/2, world.cols/2);
-  Pose robot_pose;
-  robot_pose.translation() = world.grid2world(middle);
-  Robot r(radius, world_pointer, "robot_0", robot_pose);
+  // IntPoint middle(world.rows/2, world.cols/2);
+  // Pose robot_pose;
+  // robot_pose.translation() = world.grid2world(middle);
+  
+  Pose nuova_pose = Pose::Identity();
+
+  // Definire una traslazione
+  nuova_pose.translation() = world.grid2world(Eigen::Vector2i(world.rows/2, world.cols/2));
+
+  // Definire una rotazione
+  nuova_pose.linear() = Eigen::Rotation2Df(M_PI/4).matrix();
+
+  Robot r(radius, world_pointer, "robot_0", nuova_pose);
   cout << r.world << endl;
+  std::cout << "pose in parent:\n" << r.pose_in_parent.matrix() << "\n";
 
   for (const auto robot: world._items) {cout << robot->_namespace << endl;}
   cout << "World items: " << world._items.size() << endl;
@@ -96,11 +107,11 @@ int main(int argc, char** argv) {
   // LC: no robot is selected to be controlled at the beginning
   bool select_robot = true; 
   int robot_index = -1;
-  float delay = 100;
+  float delay = 0.08;
 
   // LC: key press actions log
   ofstream keylog("./key.log");
-  ros::Rate loop_rate(0.1);
+  ros::Rate loop_rate(10);
 
   while (ros::ok()) {
 
@@ -108,17 +119,17 @@ int main(int argc, char** argv) {
    
     world.draw();
   
-    int k = cv::waitKey(10);
+    int k = cv::waitKey(1);
     if (k == 27) break;
 
     ros::spinOnce();
 
     world.timeTick(delay);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // dorme per 100 millisecondi
+    std::this_thread::sleep_for(std::chrono::milliseconds(10)); // dorme per 100 millisecondi
 
   }
-  cv::destroyAllWindows();
+  // cv::destroyAllWindows();
   // keylog.close();
   return 0;
 }
