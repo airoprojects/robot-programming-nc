@@ -4,6 +4,10 @@
 #include <jsoncpp/json/json.h>
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
+#include <sys/time.h>
+#include <thread>
+#include <chrono>
+#include <cmath>
 
 // Custom lib
 #include "types.h"
@@ -12,116 +16,127 @@
 #include "lidar.h"
 #include "utils.h"
 
-void onMouse(int event, int x, int y, int flags, void* userdata) {
-    if (event == cv::EVENT_LBUTTONDOWN) {
-        // Define the button's region (here, a rectangle at the top-left corner of the window)
-        if (x > 50 && x < 200 && y > 50 && y < 100) {
-            std::cout << "Button clicked!" << std::endl;
-        }
-        cv::destroyWindow("ButtonsWindow");
-    }
+double timeMillisec() {
+  struct timeval tv;
+  gettimeofday(&tv,0);
+  return tv.tv_sec*1000+tv.tv_usec*1e-3;
 }
 
+void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg) {
+    // Update the robot's velocity based on received commands
+    cout << "mrsim callback" << endl;
+    // tv = msg->linear.x;
+    // rv = msg->angular.z;
+    // cout << "tv " << tv << endl;
+    // cout << "rv " << rv << endl;
+}
+
+
 int main(int argc, char** argv) {
+
+  if (argc < 2) {
+    cerr << "Error: no config.jsosn file provided" << endl;
+    return 1;
+  }
 
   ros::init(argc, argv, "mrsim_node");
   ros::NodeHandle nh("/");
 
+  ros::Subscriber cmd_vel_sub(nh.subscribe("/robot_0/cmd_vel", 10, cmdVelCallback));
+
+
   // LC: get git root directory path
-  std::string git_root_path;
+  string git_root_path;
   try {
         git_root_path = getGitRootPath();
-        //std::cerr << "Git Root Path: " << git_root_path << '\n';
-    } catch(const std::runtime_error& e) {
-        std::cerr << "Exception: " << e.what() << '\n';
+        //cerr << "Git Root Path: " << git_root_path << '\n';
+    } catch(const runtime_error& e) {
+        cerr << "Exception: " << e.what() << '\n';
   }
 
-  // Load the configuration file and initialize the simulator
-  // TODO :
-  /*
-    1. Import json config file                                                DONE
-    2. Read json config file and extract:                                     DONE
-      2.1 NUM_ROBOTS: number of robots in the simulation (N)  
-      2.2 NUM_LIDARS: number of lidars in the simulation (M)  
-      2.3 INFO about robots                                                   DONE
-      2.4 INFO about lidars                                                   DONE
-    3. Make a launch file to run N robot_nodes and M lidars_nodes             DONE
-    4. Launch the launch file
-    5. Initialize an array of publisher objects for each robot to 
-       allow mrsim_node to publish on specific topics for each robot
-  */
-  int NUM_ROBOT = makeLaunchFile(
-                  git_root_path + "/config/config.json", 
-                  git_root_path + "/rp_ws/launch/simulation.launch");
+  // Load configuration file
+  string config_path = git_root_path + "/config/" + argv[1];
+  Json::Value root = readJson(config_path);
+  string map = root["map"].asString();
+  cout << "Map -> " << map << endl;
+  string image_path = git_root_path + "/map/" +  map;
+
+  // LC: new instance of World
+  World world(42); 
+  shared_ptr<World> world_pointer(&world, [](World*){ });   // is a lambda function 
+
+  world.loadFromImage(image_path); //THE MOST STUPID FUNCTION IN THE UNIVERSE, BASTARD FUNCTION.
+ 
+  // debug 
+  cout << "rows " << world.rows << endl;
+  cout << "cols " << world.cols << endl;
+  
+  int NUM_ROBOTS = 2;
+  //vector<RobotPointer> robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
+
+  // LC: run opkey controller node 
+  string command = "gnome-terminal -- bash -c 'rosrun mrsim opkey_node " + to_string(NUM_ROBOTS) + " ; exec bash'";
+  int result = system(command.c_str());
+  if (result != 0) {
+    ROS_ERROR("Failed to execute roslaunch command");
+    return 1;
+  }
+
+  double radius = 0.5;
+  // IntPoint middle(world.rows/2, world.cols/2);
+  // Pose robot_pose;
+  // robot_pose.translation() = world.grid2world(middle);
+  
+  Pose nuova_pose = Pose::Identity();
+
+  // Definire una traslazione
+  nuova_pose.translation() = world.grid2world(Eigen::Vector2i(world.rows/2, world.cols/2));
+
+  // Definire una rotazione
+  nuova_pose.linear() = Eigen::Rotation2Df(M_PI/4).matrix();
+
+  Robot r(radius, world_pointer, "robot_0", nuova_pose);
+  cout << r.world << endl;
+  std::cout << "pose in parent:\n" << r.pose_in_parent.matrix() << "\n";
+
+
+  double radius_2 = 0.8;
+
+  Robot r2(radius_2, world_pointer, "robot_1", nuova_pose);
+  cout << r.world << endl;
+  std::cout << "pose in parent:\n" << r.pose_in_parent.matrix() << "\n";
+
+  for (const auto robot: world._items) {cout << robot->_namespace << endl;}
+  cout << "World items: " << world._items.size() << endl;
+
+  cout << "Running primary node" << endl;
 
   // LC: no robot is selected to be controlled at the beginning
-  int select_robot = 1; // 1 == true 
+  bool select_robot = true; 
   int robot_index = -1;
+  float delay = 0.08;
 
-  // LC: keypress log
-  std::ofstream keylog("./key.log");
+  // LC: key press actions log
+  ofstream keylog("./key.log");
+  ros::Rate loop_rate(10);
 
   while (ros::ok()) {
 
-    // LC: this function update the status of each world item
-    // w.timeTick(delay); 
-    // w.draw();
-
     // LC: Select the index of the robot you wnat to control
-    if (select_robot == 1) {
+   
+    world.draw();
+  
+    int k = cv::waitKey(1);
+    if (k == 27) break;
 
-      // This should be temporary, just to test key captures
-      cv::namedWindow("Window");
+    ros::spinOnce();
 
-      while (true) {
+    world.timeTick(delay);
 
-        std::cout << "What robot do you want to control? " << std::endl; 
-        std::cout << "Press a numebr beween 0 and " << NUM_ROBOT-1 << ": ";
-        std::cin >> robot_index;
+    std::this_thread::sleep_for(std::chrono::milliseconds(10)); // dorme per 100 millisecondi
 
-        // LC: check for user error in the input
-        if (std::cin.fail() || robot_index < 0 || robot_index > NUM_ROBOT-1) {
-          std::cin.clear(); // reset the fail state
-          std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard invalid input
-          std::cout << "Invalid input. Please try again." << std::endl;
-        } 
-        else {
-          std::cout << "You select robot " << robot_index << std::endl;
-          std::cout << "Press 'c' to change robot\n" << std::endl;
-          std::cout << "Press 'ESC' to exit the simulation\n" << std::endl;
-          break;
-        }
-      }
-      // reset the index to keep controlling the same robot
-      select_robot = 0;
-    }
-
-    // Switch case to control robot motion
-    int k = cv::waitKey(0);
-    keylog << "\nKey pressed with decimal value: " << k << std::endl;
-    switch (k) {
-        case 81: std::cout << "robot_" << robot_index << " left\n"; break; // arow left
-        case 82: std::cout << "robot_" << robot_index << " up\n"; break; // arow up
-        case 83: std::cout << "robot_" << robot_index << " right\n"; break; // arow right
-        case 84: std::cout << "robot_" << robot_index << " down\n"; break; // arow dw
-        case 32: std::cout << "\nspacebar"; break;// spacebar
-        case 99: select_robot = 1; break; // c key
-        case 27: std::cout << "\n"; return 0; // esc
-        default: break;
-    }
-
-    // B.F.N: this if controll if you want change 
-    if (select_robot == 0) {
-      ros::spinOnce();
-    }
-    else {
-      std::cout << "Change robot\n" << std::endl;
-      cv::destroyWindow("Window");
-    }
   }
-
-  // Destroy the created window
-  cv::destroyWindow("Window");
-  keylog.close();
+  // cv::destroyAllWindows();
+  // keylog.close();
   return 0;
 }

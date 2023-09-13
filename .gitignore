@@ -34,6 +34,9 @@
 # VSCode
 *.vscode
 
+# Catkin
+*.catkin_workspace
+
 # Git-Setup
 gitsetup.sh
 
@@ -44,3 +47,7 @@ rp_ws/devel/
 
 # Test folder (ignore only in main)
 test/
+
+# Log file for keypressing 
+rp_ws/key.log
+key.log

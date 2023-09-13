@@ -1,17 +1,15 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
-#include <stdexcept>
 
-// Custom lib
 #include "world.h"
 
-World::World() {}
+World::World(int id) {_id = id;}
 
 void World::loadFromImage(const std::string filename_) {
   cv::Mat frame = cv::imread(filename_);
   if (frame.rows == 0) {
-    throw std::runtime_error("unable to load image");
+    throw runtime_error("unable to load image");
   }
   cv::cvtColor(frame, display_image, cv::COLOR_BGR2GRAY);
   size = display_image.rows * display_image.cols;
@@ -19,30 +17,32 @@ void World::loadFromImage(const std::string filename_) {
   cols = display_image.cols;
   _grid = std::vector<uint8_t>(size, 0x00);
   memcpy(_grid.data(), display_image.data, size);
+  cout << "Image loaded!!!" << endl;
 }
 
 void World::draw() {
   for (const auto item : _items) item->draw();
   cv::imshow("Map", display_image);
-  // Clean the display image
   memcpy(display_image.data, _grid.data(), size);
 }
 
 void World::timeTick(float dt) {
-  for (const auto item : _items) item->timeTick(dt);
+  for (const auto item : _items) {
+    item->timeTick(dt);
+  }
 }
 
 void World::add(WorldItem* item) { _items.push_back(item); }
 
 bool World::traverseBeam(IntPoint& endpoint, const IntPoint& origin,
                          const float angle, const int max_range) {
-  Point p0 = origin.cast<float>();
-  const Point dp(cos(angle), sin(angle));
+  Point p0 = origin.cast<float>(); // start point of a beam
+  const Point dp(cos(angle), sin(angle)); // point -> (x,y) 
   int range_to_go = max_range;
   while (range_to_go > 0) {
     endpoint = IntPoint(p0.x(), p0.y());
-    if (!inside(endpoint)) return false;
-    if (at(endpoint) < 127) return true;
+    if (!inside(endpoint)) return false; //beam out of map
+    if (at(endpoint) < 127) return true; //beam that hit a object in the map
     p0 = p0 + dp;
     --range_to_go;
   }
@@ -67,13 +67,20 @@ bool World::collides(const IntPoint& p, const int radius) const {
   return false;
 }
 
-WorldItem::WorldItem(std::shared_ptr<World> w_, const Pose& p_)
-    : world(w_), parent(nullptr), pose_in_parent(p_) {
-  if (world) world->add(this);
+WorldItem::WorldItem(std::shared_ptr<World> w_, 
+                    std::string namespace_, const Pose& p_)
+    : world(w_), parent(nullptr), 
+      pose_in_parent(p_), _namespace(namespace_) {
+  if (world) {
+    world->add(this);
+    cout<< "Added new item" << endl;
+  }
 }
 
-WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_, const Pose& p)
-    : world(parent_->world), parent(parent_), pose_in_parent(p) {
+WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_, 
+                    std::string namespace_, const Pose& p)
+    : world(parent_->world), parent(parent_), 
+      pose_in_parent(p), _namespace(namespace_) {
   if (world) world->add(this);
 }
 
