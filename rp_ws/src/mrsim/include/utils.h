@@ -1,24 +1,26 @@
-#include <iostream>
-#include <fstream>
-#include <cstdio>
-#include <array>
-#include <jsoncpp/json/json.h> 
+#include "types.h"
 #include "world.h"
 #include "robot.h"
 #include "lidar.h"
-#include "types.h"
 
-using namespace std;
+#include <jsoncpp/json/json.h> 
+#include <optional>
+
 using WorldPointer = shared_ptr<World>;
+using WorldItemPointer = shared_ptr<WorldItem>;
 using RobotPointer = shared_ptr<Robot>;
 using WorldItemPointer = shared_ptr<WorldItem>;
-using WorldItemMap = map<int, shared_ptr<WorldItem>>;
+
+// using IdWorldItemTuple =  tuple<int, WorldItem>;
+// using IdItemTupleVector = vector<IdWorldItemTuple>;
+
+using RobotsVector = vector<Robot*>;
+using IdRobotMap = map<int, Robot*>;
 using RobotLidarMap = map<string, vector< shared_ptr<WorldItem>>>;
-// using InnerTuple =  tuple<WorldItemMap, StringToWorldItemVectorMap>;
-// using DictTuple =  tuple<InnerTuple>;
+
 
 
 Json::Value readJson(string in_path);
-vector<RobotPointer> initSimEnv(Json::Value root, shared_ptr<World> w, int& robot_counter);
-int makeLaunchFile(string in_path,  string out_path);
+vector<Robot*>  initSimEnv(Json::Value root, shared_ptr<World> w, int& robot_counter);
 string getGitRootPath();
+double timeMillisec();

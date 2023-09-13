@@ -1,0 +1,3 @@
+#! /bin/bash
+
+rostopic echo /${1}/cmd_vel

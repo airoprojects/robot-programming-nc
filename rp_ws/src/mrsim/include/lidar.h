@@ -1,12 +1,10 @@
 #pragma once
-#include <vector>
-#include "world.h"
-#include "ros/ros.h"
+
 #include "types.h"
+#include "world.h"
 
-
-// pay attention:
-#include <sensor_msgs/LaserScan.h>
+#include "ros/ros.h"
+#include "sensor_msgs/LaserScan.h"
 
 
 class Lidar : public WorldItem {
@@ -32,6 +30,8 @@ class Lidar : public WorldItem {
   float fov, max_range; // B.F.N: fov = field of view
   int num_beams; // B.F.N:  num of beams launched from the sensor
   std::vector<float> ranges; // B.F.N: range of the beams launched
+
+  
   ros::NodeHandle nh;  // ROS Node Handle
   ros::Publisher scan_pub;  // Publisher to send odometry data
 };
