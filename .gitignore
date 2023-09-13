@@ -36,6 +36,7 @@
 
 # Catkin
 *.catkin_workspace
+rp_ws/*.catkin_workspace
 
 # Git-Setup
 gitsetup.sh

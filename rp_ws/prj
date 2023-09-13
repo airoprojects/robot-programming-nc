@@ -1,0 +1,40 @@
+#! /bin/bash
+
+log() { printf   "${1}""\nUsage: ""${0}""\n
+    --c: compile \n
+    --e: execute \n   
+    --a: compile and execute\n\n";} 
+
+# GETOPT
+# The effect of the call to getopt is to canonicalize the options
+TEMP=$(getopt -o sud --long compile,execute,all\
+              -n 'prj' -- "$@")
+
+# Note the quotes around '$TEMP': they are essential!
+eval set -- "$TEMP"
+
+# Compile path
+path=$HOME'/Projects/robot-programming-nc/rp_ws'
+
+# Source ROS noetic
+source /opt/ros/noetic/setup.bash
+
+EXIT=false
+# Check for argv
+if [ $# -lt 2 ]; then log "Error: No arguments provided" ; EXIT=true; fi
+
+if ! $EXIT;
+then 
+    while true; do
+        case "$1" in
+            -c | --compile) catkin_make; source ${path}'/devel/setup.bash'; break ;;
+            -e | --execute) source ${path}'/devel/setup.bash'; rosrun mrsim mrsim_node config.json; break;;
+            -a | --all) catkin_make; source ${path}'/devel/setup.bash'; rosrun mrsim mrsim_node config.json; break;;
+            --target) shift 2;;
+           *) break ;;
+        esac
+    done
+fi
+
+# rosrun mrsim mrsim_node config.json
+

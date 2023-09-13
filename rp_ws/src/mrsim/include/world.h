@@ -1,10 +1,6 @@
 #pragma once
 
-#include <Eigen/Dense>
-#include <opencv2/core.hpp>
-
 #include "types.h"
-#include <iostream>
 
 // Here WorldItem is used to avoid cyclic dependency at compile time
 struct WorldItem;

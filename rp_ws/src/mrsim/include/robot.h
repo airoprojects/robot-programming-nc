@@ -2,9 +2,9 @@
 
 #include "types.h"
 #include "world.h"
-#include "ros/ros.h"
 
-// pay attention:
+#include "ros/ros.h"
+#include "mrsim/rodom.h"
 #include "geometry_msgs/Twist.h"
 #include "nav_msgs/Odometry.h"
 
@@ -26,12 +26,12 @@ struct Robot : public WorldItem {
   void timeTick(float dt) override;
 
   void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg);
-  void coso(const geometry_msgs::Twist::ConstPtr& msg); 
-
 
   // Robot dadious and initial translational and rotational velocity
   float radius;
   float tv = 0, rv = 0;
+
+  // Node fields
   ros::NodeHandle nh;  // ROS Node Handle
   ros::Publisher odom_pub;  // Publisher to send odometry data
   ros::Subscriber cmd_vel_sub;  // Subscriber to receive velocity commands

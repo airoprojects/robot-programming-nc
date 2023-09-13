@@ -1,6 +1,3 @@
-#include <opencv2/imgproc.hpp>
-
-// Custom lib
 #include "lidar.h"
 
 Lidar::Lidar(float fov_, float max_range_, int num_beams_,
@@ -11,10 +8,7 @@ Lidar::Lidar(float fov_, float max_range_, int num_beams_,
       max_range(max_range_),
       num_beams(num_beams_),
       ranges(num_beams, -1.0),
-      scan_pub(nh.advertise<sensor_msgs::LaserScan>("/" +namespace_+ "/" +"base_scan", 1000)) {
-        int zero = 0;
-        ros::init(zero, NULL, "lidar_" + namespace_[namespace_.size()-1]);
-      }
+      scan_pub(nh.advertise<sensor_msgs::LaserScan>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
 Lidar::Lidar(float fov_, float max_range_, int num_beams_,
              std::shared_ptr<WorldItem> p_,
@@ -24,10 +18,7 @@ Lidar::Lidar(float fov_, float max_range_, int num_beams_,
       max_range(max_range_),
       num_beams(num_beams_),
       ranges(num_beams, -1.0),
-      scan_pub(nh.advertise<sensor_msgs::LaserScan>("/" +namespace_+ "/" +"base_scan", 1000)) {
-        int zero = 0;
-        ros::init(zero, NULL, "lidar_" + namespace_[namespace_.size()-1]);
-      }
+      scan_pub(nh.advertise<sensor_msgs::LaserScan>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
 // modify the intern of the lidar, then when draw() is call is update on the map its position!
 void Lidar::timeTick(float dt) {
