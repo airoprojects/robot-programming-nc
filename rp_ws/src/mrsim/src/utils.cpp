@@ -29,9 +29,12 @@ Json::Value readJson( string in_path) {
 vector<Robot*>  initSimEnv(Json::Value root, WorldPointer w, int& robot_counter) {
 
   cout << "World id -> "  << w->_id << endl;
-  WorldPointer world_ ; 
+  WorldPointer world_ = w; 
   IdRobotMap id_r_map;
   RobotsVector robots;
+
+  RobotsVector robot_orphans;
+  LidarsVector lidar_orphans;
 
   // IdItemTupleVector orphans;
 
@@ -43,10 +46,7 @@ vector<Robot*>  initSimEnv(Json::Value root, WorldPointer w, int& robot_counter)
       const  string type = item["type"].asString();
       const string namespace_ = item["namespace"].asString();
       const int id_p = item["parent"].asInt(); 
-      
-      // if (id_p == -1) world_ = w;
-      // else world_ = WorldPointer{};
-       world_ = w;
+    
 
       // if (world_ == nullptr) {
       //   cerr << "The world item you're refering to doesn't exist, please check config.json!"<< endl;
@@ -70,10 +70,10 @@ vector<Robot*>  initSimEnv(Json::Value root, WorldPointer w, int& robot_counter)
         robot_pose.translation() = world_->grid2world(Eigen::Vector2i(world_->rows/2, world_->cols/2));
         robot_pose.linear() = Eigen::Rotation2Df(theta).matrix();
 
-        Robot* r = new Robot(radius, world_, namespace_, robot_pose);
+        Robot* r = new Robot(radius, world_, namespace_, robot_pose, id_p);
         robots.push_back(r);
         id_r_map[id] = r;
-        // if (id_p != -1) orphans.push_back(make_tuple(id_p, r));
+        if (id_p != -1) robot_orphans.push_back(r);
         robot_counter++;
       }
       else {
@@ -96,9 +96,17 @@ vector<Robot*>  initSimEnv(Json::Value root, WorldPointer w, int& robot_counter)
     }
   }
 
-  // for (const auto items: orphans) {
-  //   world_item_ = id_r_map[get<0>(orphans)]
-  // }
+  for (const auto item: robot_orphans) {
+    auto robot_ = id_r_map[item->id_p];
+    if (robot_ == nullptr) {
+      cerr << "The world item you're refering to doesn't exist, please check config.json!"<< endl;
+      return RobotsVector{};
+    }
+    else {
+      // change the pose in parent of the robot
+    }
+          
+  }
 
   return robots;
 }

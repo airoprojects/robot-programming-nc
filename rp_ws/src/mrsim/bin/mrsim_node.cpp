@@ -50,10 +50,10 @@ int main(int argc, char** argv) {
   // LC: environment configuration
   int NUM_ROBOTS = 2;
   auto robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
-  // if (!robots_and_lidars){
-  //   cerr << "Error: incorrect configuration \n" << endl;
-  //   return 1;
-  // } 
+  if (robots_and_lidars == RobotsVector{}){
+    cerr << "Error: incorrect configuration \n" << endl;
+    return 1;
+  } 
 
   // LC: check that each items has been correctly added to the world
   for (const auto robot: world._items) {cout << robot->_namespace << endl;}

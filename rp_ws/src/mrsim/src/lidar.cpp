@@ -2,22 +2,24 @@
 
 Lidar::Lidar(float fov_, float max_range_, int num_beams_,
              std::shared_ptr<World> w,
-             std::string namespace_, const Pose& pose_)
+             std::string namespace_, const Pose& pose_, int id_p_)
     : WorldItem(w, namespace_, pose_),
       fov(fov_),
       max_range(max_range_),
       num_beams(num_beams_),
       ranges(num_beams, -1.0),
+      id_p(id_p_),
       scan_pub(nh.advertise<sensor_msgs::LaserScan>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
 Lidar::Lidar(float fov_, float max_range_, int num_beams_,
              std::shared_ptr<WorldItem> p_,
-             std::string namespace_, const Pose& pose_)
+             std::string namespace_, const Pose& pose_, int id_p_)
     : WorldItem(p_, namespace_, pose_),
       fov(fov_),
       max_range(max_range_),
       num_beams(num_beams_),
       ranges(num_beams, -1.0),
+      id_p(id_p_),
       scan_pub(nh.advertise<sensor_msgs::LaserScan>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
 // modify the intern of the lidar, then when draw() is call is update on the map its position!

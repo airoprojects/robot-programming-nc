@@ -1,14 +1,14 @@
 #include "robot.h"
 
 Robot::Robot(float radius_, std::shared_ptr<World> w_,
-            std::string namespace_, const Pose& pose_)
-    : radius(radius_), WorldItem(w_, namespace_,  pose_), tv(0.0), rv(0.0), nh("~"), 
+            std::string namespace_, const Pose& pose_, int id_p_)
+    : radius(radius_), WorldItem(w_, namespace_,  pose_), tv(0.0), rv(0.0), nh("~"), id_p(id_p_),
       odom_pub(nh.advertise<nav_msgs::Odometry>("/" + namespace_ + "/odom", 10)),
       cmd_vel_sub(nh.subscribe("/" + namespace_ + "/cmd_vel", 10, &Robot::cmdVelCallback, this)) {}
 
 Robot::Robot(float radius_, std::shared_ptr<WorldItem> parent_,
-            std::string namespace_, const Pose& pose_)
-    : radius(radius_), WorldItem(parent_, namespace_, pose_), tv(0.0), rv(0.0), nh("~"), 
+            std::string namespace_, const Pose& pose_, int id_p_)
+    : radius(radius_), WorldItem(parent_, namespace_, pose_), tv(0.0), rv(0.0), nh("~"), id_p(id_p_),
       odom_pub(nh.advertise<nav_msgs::Odometry>("/" + namespace_ + "/odom", 10)),
       cmd_vel_sub(nh.subscribe("/" + namespace_ + "/cmd_vel", 10, &Robot::cmdVelCallback, this)) {}
 
