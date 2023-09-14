@@ -60,10 +60,16 @@ void Lidar::timeTick(float dt) {
 }
 
 void Lidar::draw() {
+  cout << "ciao sono in lidar1" << endl;
+
   Pose piw = poseInWorld();
   IntPoint origin = world->world2grid(piw.translation());
 
+  cout << "ciao sono in lidar2" << endl;
+
+
   if (!world->inside(origin)) return;
+  
 
   float d_alpha = fov / num_beams;
   float alpha = -fov / 2;
@@ -75,5 +81,8 @@ void Lidar::draw() {
     cv::line(world->display_image, cv::Point(origin.y(), origin.x()),
              cv::Point(epi.y(), epi.x()), cv::Scalar(127, 127, 127), 1);
     alpha += d_alpha;
+    cout << "ciao sono in lidar loop" << endl;
   }
+  cout << "ciao sono in lidar3" << endl;
+
 };

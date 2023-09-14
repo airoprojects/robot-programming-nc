@@ -26,16 +26,18 @@ Json::Value readJson( string in_path) {
 }
 
 // read json to initialize world items
-vector<Robot*>  initSimEnv(Json::Value root, WorldPointer w, int& robot_counter) {
+RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_counter) {
 
   cout << "World id -> "  << w->_id << endl;
   WorldPointer world_ = w; 
-  IdRobotMap id_r_map;
-  RobotsVector robots;
-
+  RobotsVector robots; // changed
+  LidarsVector lidars; // changed
+  IdRobotSharedMap id_shared_robots; // map id -> shared_ptr<Robot>
   RobotsVector robot_orphans;
-  LidarsVector lidar_orphans;
-
+  
+  // to complete or delete
+  // LidarsVector lidar_orphans;
+  //LidarsVector lidars_with_parent;
   // IdItemTupleVector orphans;
 
   if (root["items"].isArray()) {
@@ -46,17 +48,7 @@ vector<Robot*>  initSimEnv(Json::Value root, WorldPointer w, int& robot_counter)
       const  string type = item["type"].asString();
       const string namespace_ = item["namespace"].asString();
       const int id_p = item["parent"].asInt(); 
-    
-
-      // if (world_ == nullptr) {
-      //   cerr << "The world item you're refering to doesn't exist, please check config.json!"<< endl;
-      //   return nullptr;
-      // }
-      
-      // if (id_p == -1 && robot_ == nullptr) {
-      //   cerr << "The world item you're refering to doesn't exist, please check config.json!"<< endl;
-      //   return 1;
-      // }
+  
              
       if (type == "robot") {
 
@@ -70,14 +62,17 @@ vector<Robot*>  initSimEnv(Json::Value root, WorldPointer w, int& robot_counter)
         robot_pose.translation() = world_->grid2world(Eigen::Vector2i(world_->rows/2, world_->cols/2));
         robot_pose.linear() = Eigen::Rotation2Df(theta).matrix();
 
-        Robot* r = new Robot(radius, world_, namespace_, robot_pose, id_p);
-        robots.push_back(r);
-        id_r_map[id] = r;
-        if (id_p != -1) robot_orphans.push_back(r);
+
+        Robot* r = new Robot(radius, world_, namespace_, robot_pose, id_p); // create a robot object dynamically
+        RobotPointer r_(r, [](Robot* r){ }); // create a shared_ptr with a custom deleter that doesn't delete dynamically allocated object
+
+        id_shared_robots[id] = r_; 
+
+        robots.push_back(r_);
+        if (id_p != -1) robot_orphans.push_back(r_);
         robot_counter++;
       }
       else {
-
         // Lidar parameters
         float fov = item["fov"].asFloat();
         double max_range_l = item["max_range"].asDouble();
@@ -90,25 +85,37 @@ vector<Robot*>  initSimEnv(Json::Value root, WorldPointer w, int& robot_counter)
         lidar_pose.translation() = world_->grid2world(Eigen::Vector2i(pose_x, pose_y));
         lidar_pose.linear() = Eigen::Rotation2Df(theta).matrix();
 
+        if (id_p != -1){
+          RobotPointer parent_= id_shared_robots[id_p]; // the robot where the lidar is placed
+
+          Lidar* l = new Lidar(fov, max_range_l , num_beams_l, parent_, namespace_, lidar_pose);
+          LidarPointer l_(l, [](Lidar* l){ }); // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
+          //lidars_with_parent.push_back(l); // to check if usefull
+          lidars.push_back(l_);
+        }
+        else{
+          Lidar* l = new Lidar(fov, max_range_l , num_beams_l, world_, namespace_, lidar_pose);
+          LidarPointer l_(l, [](Lidar* l){ }); // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
+          // lidar_orphans.push_back(l);
+          lidars.push_back(l_);
+        }
         //Lidar* l = new Lidar(fov, max_range_l , num_beams_l, world_, namespace_, lidar_pose);
         // if (id_p != -1) orphans.push_back(make_tuple(id_p, l));
       }
     }
   }
-
+  // robot 
   for (const auto item: robot_orphans) {
-    auto robot_ = id_r_map[item->id_p];
+    auto robot_ = id_shared_robots[item->id_p];
     if (robot_ == nullptr) {
       cerr << "The world item you're refering to doesn't exist, please check config.json!"<< endl;
-      return RobotsVector{};
+      return RobotsAndLidarsVector({}, {});
     }
     else {
       // change the pose in parent of the robot
-    }
-          
+    }   
   }
-
-  return robots;
+  return RobotsAndLidarsVector(robots,lidars);
 }
 
 // LC: this function return the path to the root directory of the current git project

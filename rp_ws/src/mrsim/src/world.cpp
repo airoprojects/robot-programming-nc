@@ -22,8 +22,12 @@ void World::loadFromImage(const std::string filename_) {
 
 void World::draw() {
   for (const auto item : _items) item->draw();
+  cout << "ciao sono in word1" << endl;
   cv::imshow("Map", display_image);
+  cout << "ciao sono in word2" << endl;
   memcpy(display_image.data, _grid.data(), size);
+  cout << "ciao sono in word3" << endl;
+
 }
 
 void World::timeTick(float dt) {
@@ -74,6 +78,7 @@ WorldItem::WorldItem(std::shared_ptr<World> w_,
   if (world) {
     world->add(this);
     cout<< "Added new item" << endl;
+    cout<< "my name is" << namespace_ << endl;
   }
 }
 
@@ -82,6 +87,8 @@ WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_,
     : world(parent_->world), parent(parent_), 
       pose_in_parent(p), _namespace(namespace_) {
   if (world) world->add(this);
+  cout<< "Added new item attached to another" << endl;
+  cout<< "my name is " << namespace_ << endl;
 }
 
 Pose WorldItem::poseInWorld() {

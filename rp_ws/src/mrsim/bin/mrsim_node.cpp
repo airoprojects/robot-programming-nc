@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
   // LC: environment configuration
   int NUM_ROBOTS = 2;
   auto robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
-  if (robots_and_lidars == RobotsVector{}){
+  if (robots_and_lidars == RobotsAndLidarsVector({},{})){
     cerr << "Error: incorrect configuration \n" << endl;
     return 1;
   } 
@@ -76,13 +76,23 @@ int main(int argc, char** argv) {
   while (ros::ok()) {
 
     world.draw();
+
+    cout << "ciao principale 1" << endl;
+
+
   
     int k = cv::waitKey(1);
     if (k == 27) break;
 
+    cout << "ciao principale 2" << endl;
+
     ros::spinOnce();
 
+    cout << "ciao principale 3" << endl;
+
     world.timeTick(delay);
+
+    cout << "ciao principale 4" << endl;
 
     this_thread::sleep_for(chrono::milliseconds(10)); // sleep for x milliseconds
 

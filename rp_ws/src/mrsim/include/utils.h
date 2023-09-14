@@ -9,19 +9,26 @@
 using WorldPointer = shared_ptr<World>;
 using WorldItemPointer = shared_ptr<WorldItem>;
 using RobotPointer = shared_ptr<Robot>;
+using LidarPointer = shared_ptr<Lidar>;
 using WorldItemPointer = shared_ptr<WorldItem>;
+//using RobotsAndLidarsVector = tuple<vector<Robot*>,vector<Lidar*>>;
+using RobotsAndLidarsVector = tuple<vector<RobotPointer>,vector<LidarPointer>>;
 
 // using IdWorldItemTuple =  tuple<int, Robot*>;
 // using IdItemTupleVector = vector<IdWorldItemTuple>;
 
-using RobotsVector = vector<Robot*>;
-using LidarsVector = vector<Lidar*>;
+using RobotsVector = vector<RobotPointer>;
+
+using LidarsVector = vector<LidarPointer>;
+using LidarsVectors = vector<shared_ptr<Lidar>>;
+using IdRobotSharedMap = map<int, shared_ptr<Robot>>;
 using IdRobotMap = map<int, Robot*>;
+
 using RobotLidarMap = map<string, vector< shared_ptr<WorldItem>>>;
 
 
 
 Json::Value readJson(string in_path);
-vector<Robot*>  initSimEnv(Json::Value root, shared_ptr<World> w, int& robot_counter);
+RobotsAndLidarsVector initSimEnv(Json::Value root, shared_ptr<World> w, int& robot_counter);
 string getGitRootPath();
 double timeMillisec();

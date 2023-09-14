@@ -20,10 +20,17 @@ void Robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg) {
 }
 
 void Robot::draw() {
+  cout << "ciao sono in robot1" << endl;
+
   int int_radius = radius * world->i_res;
+  
   IntPoint p = world->world2grid(poseInWorld().translation());
+  cout << "ciao sono in robot1" << endl;
+
   cv::circle(world->display_image, cv::Point(p.y(), p.x()), int_radius,
              cv::Scalar::all(0), -1);
+  cout << "ciao sono in robot1" << endl;
+
 }
 
 void Robot::timeTick(float dt) {
