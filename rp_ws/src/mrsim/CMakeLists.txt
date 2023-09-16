@@ -10,6 +10,9 @@ find_package(jsoncpp REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
     # Add required ROS packages to use in this project (ie. sensor_msgs, nav_msgs, etc)
     roscpp
+    tf2
+    tf2_ros
+    tf2_eigen
     std_msgs
     pcl_ros
     pcl_conversions
@@ -33,6 +36,9 @@ catkin_package(
     INCLUDE_DIRS "include/"
     CATKIN_DEPENDS  message_runtime 
     roscpp
+    tf2 
+    tf2_ros 
+    tf2_eigen
 )    
 
 

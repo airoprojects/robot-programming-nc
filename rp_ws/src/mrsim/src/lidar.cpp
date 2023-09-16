@@ -78,17 +78,6 @@ void Lidar::timeTick(float dt) {
 
   pointCloudConversion(lidar_points);
 
-  // TO IMPLEMENTS MESSAGGE
-  // Create a LaserScan message
-  // sensor_msgs::LaserScan scan_msg;
-  // scan_msg.angle_min = -fov / 2;
-  // scan_msg.angle_max = fov / 2;
-  // scan_msg.angle_increment = fov / num_beams;
-  // scan_msg.range_min = 0.0;
-  // scan_msg.range_max = max_range;
-  // scan_msg.ranges = ranges;
-  // lidar_publisher.publish(scan_msg);
-
 }
 
 void Lidar::draw() {
@@ -97,11 +86,8 @@ void Lidar::draw() {
   // std::cout << "pose in parent lidar:\n" << piw.matrix() << "\n";
   IntPoint origin = world->world2grid(piw.translation());
 
-
-
   if (!world->inside(origin)) return;
   
-
   float d_alpha = fov / num_beams;
   float alpha = -fov / 2;
   for (int i = 0; i < num_beams; ++i) {
@@ -129,14 +115,13 @@ void Lidar::pointCloudConversion(const vector<IntPoint3D>& points) {
     pcl_point.z = point(2);
     // pcl_point.intensity = 100;  // O un altro valore di intensità appropriato
     cloud.points.push_back(pcl_point);
-
-
   }
   sensor_msgs::PointCloud2 output;
   pcl::toROSMsg(cloud, output);
-  output.header.frame_id = "base_link";
+  output.header.frame_id = "frame_robot0";
   output.header.stamp = ros::Time::now();
 
+  // Publish on ros topic /robot_i/base_scan
   scan_pub.publish(output);
 
 };

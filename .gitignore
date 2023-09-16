@@ -52,3 +52,6 @@ test/
 # Log file for keypressing 
 rp_ws/key.log
 key.log
+
+# Reports
+frames.*

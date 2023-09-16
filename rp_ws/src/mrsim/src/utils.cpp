@@ -53,6 +53,7 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
       if (type == "robot") {
 
         // Robot parameters
+        string frame_id_ = item["frame_id"].asString();
         double radius = item["radius"].asDouble();
         double pose_x = item["pose"][0].asInt();
         double pose_y = item["pose"][1].asInt();
@@ -63,7 +64,7 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
         robot_pose.linear() = Eigen::Rotation2Df(theta).matrix();
 
 
-        Robot* r = new Robot(radius, world_, namespace_, robot_pose, id_p); // create a robot object dynamically
+        Robot* r = new Robot(radius, world_, namespace_, frame_id_, robot_pose, id_p); // create a robot object dynamically
         RobotPointer r_(r, [](Robot* r){ }); // create a shared_ptr with a custom deleter that doesn't delete dynamically allocated object
 
         id_shared_robots[id] = r_; 
