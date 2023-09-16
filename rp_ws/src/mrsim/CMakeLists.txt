@@ -10,7 +10,13 @@ find_package(jsoncpp REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
     # Add required ROS packages to use in this project (ie. sensor_msgs, nav_msgs, etc)
     roscpp
+    tf2
+    tf2_ros
+    tf2_eigen
     std_msgs
+    pcl_ros
+    pcl_conversions
+    sensor_msgs
     geometry_msgs
     message_generation
 )
@@ -30,8 +36,9 @@ catkin_package(
     INCLUDE_DIRS "include/"
     CATKIN_DEPENDS  message_runtime 
     roscpp
-
-    # Add required ROS dependencies
+    tf2 
+    tf2_ros 
+    tf2_eigen
 )    
 
 
@@ -40,26 +47,32 @@ target_include_directories(mrsim PUBLIC
     include 
     ${OpenCV_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
+    ${PCL_INCLUDE_DIRS}
 )
 target_link_libraries(mrsim PUBLIC 
     ${OpenCV_LIBRARIES} 
     Eigen3::Eigen
     ${catkin_LIBRARIES}
     jsoncpp_lib
+    
 )
+
 
 # Add mrsim_node
 add_executable(mrsim_node bin/mrsim_node.cpp)
 target_include_directories(mrsim_node PUBLIC 
     include 
-    ${catkin_INCLUDE_DIRS}
+    ${catkin_INCLUDE_DIRS}    
+    ${PCL_INCLUDE_DIRS}
+
 )
 target_link_libraries(mrsim_node 
     mrsim
     ${catkin_LIBRARIES}
+    ${PCL_LIBRARIES}
 )
 
-# Add robot_node
+# Add opkey_node
 add_executable(opkey_node bin/opkey_node.cpp)
 target_include_directories(opkey_node PUBLIC 
     include 
