@@ -43,20 +43,21 @@ int main(int argc, char** argv) {
   World world(42); 
   WorldPointer world_pointer(&world, [](World*){ });   // is a lambda function 
 
-  world.loadFromImage(image_path); 
-  world.draw();
-  cv::waitKey(1);
+  world.loadFromImage(image_path);  
+  // world.draw();
+  // cv::waitKey(1);
  
   // LC: environment configuration
   int NUM_ROBOTS = 2;
   auto robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
-  // if (!robots_and_lidars){
-  //   cerr << "Error: incorrect configuration \n" << endl;
-  //   return 1;
-  // } 
+  if (robots_and_lidars == RobotsAndLidarsVector({},{})){
+    cerr << "Error: incorrect configuration \n" << endl;
+    return 1;
+  } 
 
   // LC: check that each items has been correctly added to the world
   for (const auto robot: world._items) {cout << robot->_namespace << endl;}
+  
 
   // LC: run opkey controller node 
   string command = "gnome-terminal -- bash -c 'rosrun mrsim opkey_node " + to_string(NUM_ROBOTS) + " ; exec bash'";
@@ -75,16 +76,28 @@ int main(int argc, char** argv) {
 
   while (ros::ok()) {
 
-    world.draw();
+    // world.draw();
+
+    // cout << "ciao principale 1" << endl;
+
+
   
     int k = cv::waitKey(1);
     if (k == 27) break;
 
+    // cout << "ciao principale 2" << endl;
+
     ros::spinOnce();
+
+    // cout << "ciao principale 3" << endl;
 
     world.timeTick(delay);
 
+    // cout << "ciao principale 4" << endl;
+
     this_thread::sleep_for(chrono::milliseconds(10)); // sleep for x milliseconds
+
+    // return 1;
 
   }
   cv::destroyAllWindows();

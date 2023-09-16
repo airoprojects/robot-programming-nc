@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
   bool select_robot = true; // no robot is selected to be controlled at the beginning
   int robot_index = -1;
   string input;
+  geometry_msgs::Twist msg;
   ros::Rate rate(10);
 
   cout << "Running operational key controller node" << endl;
@@ -85,10 +86,14 @@ int main(int argc, char** argv) {
     }
 
     // LC: message definition
-    geometry_msgs::Twist msg;
     msg.linear.x = 0.0;
     msg.angular.z = 0.0;
 
+    // LC: publish on robot_{robot_index}/cmd_vel topic
+    this_thread::sleep_for(chrono::milliseconds(25)); // sleep for x milliseconds
+    publishers_vector[robot_index].publish(msg);
+    ros::spinOnce();
+ 
     // LC: capture user action: keypress
     char ch = getchar();
 
@@ -98,10 +103,10 @@ int main(int argc, char** argv) {
       if(next_ch == '[') {
         ch = getchar(); // get the character after '['
         switch (ch) {
-          case 'A': cout << "up\n"; msg.linear.x = 0.1; break;
-          case 'B': cout << "down\n"; msg.linear.x = -0.1; break;
-          case 'C': cout << "right\n"; msg.angular.z = -0.05; break;
-          case 'D': cout << "left\n"; msg.angular.z = 0.05; break;
+          case 'A': cout << "up\n"; msg.linear.x = 1.0; break;
+          case 'B': cout << "down\n"; msg.linear.x = -1.0; break;
+          case 'C': cout << "right\n"; msg.angular.z = -0.5; break;
+          case 'D': cout << "left\n"; msg.angular.z = 0.5; break;
           default: cerr << "Invalid command: " << ch << endl; break;
         }
       }

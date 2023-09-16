@@ -1,7 +1,3 @@
-// #include <opencv2/highgui.hpp>
-// #include <opencv2/imgcodecs.hpp>
-// #include <opencv2/imgproc.hpp>
-
 #include "world.h"
 
 World::World(int id) {_id = id;}
@@ -22,8 +18,12 @@ void World::loadFromImage(const std::string filename_) {
 
 void World::draw() {
   for (const auto item : _items) item->draw();
+  // cout << "ciao sono in word1" << endl;
   cv::imshow("Map", display_image);
+  // cout << "ciao sono in word2" << endl;
   memcpy(display_image.data, _grid.data(), size);
+  // cout << "ciao sono in word3" << endl;
+
 }
 
 void World::timeTick(float dt) {
@@ -34,6 +34,12 @@ void World::timeTick(float dt) {
 
 void World::add(WorldItem* item) { _items.push_back(item); }
 
+
+
+/*
+Once a beam touch a point at the base, this function return true and save
+in endpoint the point that is touched
+*/
 bool World::traverseBeam(IntPoint& endpoint, const IntPoint& origin,
                          const float angle, const int max_range) {
   Point p0 = origin.cast<float>(); // start point of a beam
@@ -48,6 +54,7 @@ bool World::traverseBeam(IntPoint& endpoint, const IntPoint& origin,
   }
   return true;
 }
+
 
 bool World::collides(const IntPoint& p, const int radius) const {
   if (!inside(p)) return true;
@@ -73,7 +80,8 @@ WorldItem::WorldItem(std::shared_ptr<World> w_,
       pose_in_parent(p_), _namespace(namespace_) {
   if (world) {
     world->add(this);
-    cout<< "Added new item" << endl;
+    // cout<< "Added new item" << endl;
+    // cout<< "my name is" << namespace_ << endl;
   }
 }
 
@@ -82,6 +90,8 @@ WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_,
     : world(parent_->world), parent(parent_), 
       pose_in_parent(p), _namespace(namespace_) {
   if (world) world->add(this);
+//   cout<< "Added new item attached to another" << endl;
+//   cout<< "my name is " << namespace_ << endl;
 }
 
 Pose WorldItem::poseInWorld() {

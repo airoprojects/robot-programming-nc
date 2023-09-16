@@ -1,14 +1,14 @@
 #include "robot.h"
 
 Robot::Robot(float radius_, std::shared_ptr<World> w_,
-            std::string namespace_, const Pose& pose_)
-    : radius(radius_), WorldItem(w_, namespace_,  pose_), tv(0.0), rv(0.0), nh("~"), 
+            std::string namespace_, const Pose& pose_, int id_p_)
+    : radius(radius_), WorldItem(w_, namespace_,  pose_), tv(0.0), rv(0.0), nh("~"), id_p(id_p_),
       odom_pub(nh.advertise<nav_msgs::Odometry>("/" + namespace_ + "/odom", 10)),
       cmd_vel_sub(nh.subscribe("/" + namespace_ + "/cmd_vel", 10, &Robot::cmdVelCallback, this)) {}
 
 Robot::Robot(float radius_, std::shared_ptr<WorldItem> parent_,
-            std::string namespace_, const Pose& pose_)
-    : radius(radius_), WorldItem(parent_, namespace_, pose_), tv(0.0), rv(0.0), nh("~"), 
+            std::string namespace_, const Pose& pose_, int id_p_)
+    : radius(radius_), WorldItem(parent_, namespace_, pose_), tv(0.0), rv(0.0), nh("~"), id_p(id_p_),
       odom_pub(nh.advertise<nav_msgs::Odometry>("/" + namespace_ + "/odom", 10)),
       cmd_vel_sub(nh.subscribe("/" + namespace_ + "/cmd_vel", 10, &Robot::cmdVelCallback, this)) {}
 
@@ -20,10 +20,16 @@ void Robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg) {
 }
 
 void Robot::draw() {
+
   int int_radius = radius * world->i_res;
+  
   IntPoint p = world->world2grid(poseInWorld().translation());
+
+  // cv::circle(world->display_image, cv::Point(p.y(), p.x()), int_radius,
+  //            cv::Scalar::all(0), -1);
   cv::circle(world->display_image, cv::Point(p.y(), p.x()), int_radius,
-             cv::Scalar::all(0), -1);
+             cv::Scalar(0,0, 0, 1), -1);
+
 }
 
 void Robot::timeTick(float dt) {
@@ -43,7 +49,7 @@ void Robot::timeTick(float dt) {
   int int_radius = radius * world->i_res;
   if (!world->collides(ip, int_radius)) pose_in_parent = next_pose;
 
-  // std::cout << "pose in parent:\n" << pose_in_parent.matrix() << "\n";
+  // std::cout << "pose in parent robot:\n" << pose_in_parent.matrix() << "\n";
   // std::cout << "motion representation:\n" << motion.matrix() << "\n";
   // std::cout << "next pose representation:\n" << next_pose.matrix() << "\n";
 

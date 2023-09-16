@@ -13,11 +13,11 @@ struct Robot : public WorldItem {
   
   // Robot constructor that takes as input a word to which the robot belong
   Robot(float radius_, std::shared_ptr<World> w_,
-        std::string namespace_, const Pose& pose_ = Pose::Identity());
+        std::string namespace_, const Pose& pose_ = Pose::Identity(), int id_p = -1);
   
   // Robot contructor that takes as input a world item to which the robot belong
   Robot(float radius_, std::shared_ptr<WorldItem> parent_, 
-        std::string namespace_, const Pose& pose_ = Pose::Identity());
+        std::string namespace_, const Pose& pose_ = Pose::Identity(), int id_p = -1);
 
   // Method to draw the robot on the map with open cv
   void draw() override;
@@ -30,6 +30,7 @@ struct Robot : public WorldItem {
   // Robot dadious and initial translational and rotational velocity
   float radius;
   float tv = 0, rv = 0;
+  int id_p = -1;
 
   // Node fields
   ros::NodeHandle nh;  // ROS Node Handle

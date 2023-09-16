@@ -18,5 +18,6 @@
 using namespace std;
 
 using IntPoint = Eigen::Vector2i;
+using IntPoint3D = Eigen::Vector3i;
 using Point = Eigen::Vector2f;
 using Pose = Eigen::Isometry2f;

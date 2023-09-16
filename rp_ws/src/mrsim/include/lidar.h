@@ -12,13 +12,13 @@ class Lidar : public WorldItem {
  public:
 
   //B.F.N: Constructor of a lidar that is attached to the world
-  Lidar(float fov_, float max_range_, int num_beams_, std::shared_ptr<World> w,
-        std::string namespace_, const Pose& pose_ = Pose::Identity());
+  Lidar(float fov_, float vfov_, float max_range_, int num_beams_, std::shared_ptr<World> w,
+        std::string namespace_, const Pose& pose_ = Pose::Identity(), int id_p = -1);
 
   //B.F.N: Constructor of a lidar that is instead attached to a worlditem
-  Lidar(float fov_, float max_range_, int num_beams_,
+  Lidar(float fov_, float vfov_, float max_range_, int num_beams_,
         std::shared_ptr<WorldItem> p_, std::string namespace_, 
-        const Pose& pose_ = Pose::Identity());
+        const Pose& pose_ = Pose::Identity(), int id_p = -1);
 
   //B.F.N: Determine what do the lidat the time
   void timeTick(float dt) override;
@@ -27,9 +27,10 @@ class Lidar : public WorldItem {
   void draw() override;
 
   //B.F.N: Attributes
-  float fov, max_range; // B.F.N: fov = field of view
+  float fov, vfov, max_range; // B.F.N: fov = field of view
   int num_beams; // B.F.N:  num of beams launched from the sensor
   std::vector<float> ranges; // B.F.N: range of the beams launched
+  int id_p = -1;
 
   
   ros::NodeHandle nh;  // ROS Node Handle
