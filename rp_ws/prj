@@ -14,7 +14,7 @@ TEMP=$(getopt -o sud --long compile,execute,all\
 eval set -- "$TEMP"
 
 # Compile path
-path=$HOME'/Projects/robot-programming-nc/rp_ws'
+path=$HOME'/Desktop/Alpha/robot-programming-nc/rp_ws'
 
 # Source ROS noetic
 source /opt/ros/noetic/setup.bash

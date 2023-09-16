@@ -12,6 +12,8 @@
     <depend>nav_msgs</depend>
     <depend>geometry_msgs</depend>
     <build_depend>message_generation</build_depend>
+    <build_depend>libpcl-all-dev</build_depend>
     <exec_depend>message_runtime</exec_depend>
+    <exec_depend>libpcl-all</exec_depend>
 
 </package>

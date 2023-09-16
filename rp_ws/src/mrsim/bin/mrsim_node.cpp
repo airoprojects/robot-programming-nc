@@ -44,11 +44,11 @@ int main(int argc, char** argv) {
   WorldPointer world_pointer(&world, [](World*){ });   // is a lambda function 
 
   world.loadFromImage(image_path);  
-  // world.draw();
-  // cv::waitKey(1);
+  world.draw();
+  cv::waitKey(1);
  
   // LC: environment configuration
-  int NUM_ROBOTS = 2;
+  int NUM_ROBOTS = 0;
   auto robots_and_lidars =  initSimEnv(root, world_pointer, NUM_ROBOTS);
   if (robots_and_lidars == RobotsAndLidarsVector({},{})){
     cerr << "Error: incorrect configuration \n" << endl;
@@ -76,11 +76,9 @@ int main(int argc, char** argv) {
 
   while (ros::ok()) {
 
-    // world.draw();
+    world.draw();
 
     // cout << "ciao principale 1" << endl;
-
-
   
     int k = cv::waitKey(1);
     if (k == 27) break;
@@ -102,4 +100,4 @@ int main(int argc, char** argv) {
   }
   cv::destroyAllWindows();
   return 0;
-}
+} 
