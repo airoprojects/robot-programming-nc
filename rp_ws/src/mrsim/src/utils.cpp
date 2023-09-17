@@ -112,10 +112,11 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
       const int id_p = item["parent"].asInt(); 
              
       if (type == "robot") {
-
         // Robot parameters
-        string frame_id_ = item["frame_id"].asString();
+        string frame_id = item["frame_id"].asString();
         double radius = item["radius"].asDouble();
+        float max_rv = item["max_rv"].asFloat();
+        float max_tv = item["max_tv"].asFloat();
         double pose_x = item["pose"][0].asInt();
         double pose_y = item["pose"][1].asInt();
         double theta = item["pose"][2].asDouble();
@@ -124,16 +125,19 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
         robot_pose.translation() = world_->grid2world(Eigen::Vector2i(world_->rows/2, world_->cols/2));
         robot_pose.linear() = Eigen::Rotation2Df(theta).matrix();
 
-        Robot* r = new Robot(radius, world_, namespace_, frame_id_, robot_pose, id_p); // create a robot object dynamically
-        RobotPointer r_(r, [](Robot* r){ }); // create a shared_ptr with a custom deleter that doesn't delete dynamically allocated object
+        // create a robot object dynamically
+        Robot* r = new Robot(world_, frame_id, namespace_, radius, max_rv, max_tv, robot_pose, id_p); 
+        // create a shared_ptr with a custom deleter that doesn't delete dynamically allocated object
+        RobotPointer r_(r, [](Robot* r){ }); 
+
         id_shared_robots[id] = r_; 
         robots.push_back(r_);
         if (id_p != -1) robot_orphans.push_back(r_);
         robot_counter++;
       }
       else {
-
         // Lidar parameters
+        string frame_id = item["frame_id"].asString();
         float fov = item["fov"].asFloat();
         float vfov = item["vfov"].asFloat();
         double max_range_l = item["max_range"].asDouble();
@@ -154,16 +158,16 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
           }
           else {
             Pose pose_parent = parent_->poseInWorld();
-            Lidar* l = new Lidar(fov, vfov, max_range_l , num_beams_l, parent_, namespace_, lidar_pose);
-            LidarPointer l_(l, [](Lidar* l){ }); // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
-            //lidars_with_parent.push_back(l); // to check if usefull
+            Lidar* l = new Lidar(frame_id, fov, vfov, max_range_l , num_beams_l, parent_, namespace_, lidar_pose);
+            // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
+            LidarPointer l_(l, [](Lidar* l){ }); 
             lidars.push_back(l_);
           }
         }
         else {
-          Lidar* l = new Lidar(fov, vfov, max_range_l , num_beams_l, world_, namespace_, lidar_pose);
-          LidarPointer l_(l, [](Lidar* l){ }); // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
-          // lidar_orphans.push_back(l);
+          Lidar* l = new Lidar(frame_id, fov, vfov, max_range_l , num_beams_l, world_, namespace_, lidar_pose);
+          // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
+          LidarPointer l_(l, [](Lidar* l){ }); 
           lidars.push_back(l_);
         }
       }

@@ -23,12 +23,24 @@
 struct Robot : public WorldItem {
   
   // Robot constructor that takes as input a word to which the robot belong
-  Robot(float radius_, std::shared_ptr<World> w_,
-        string namespace_, string frame_id_, const Pose& pose_ = Pose::Identity(), int id_p = -1);
+  Robot(std::shared_ptr<World> w_,
+        string frame_id_, 
+        string namespace_, 
+        float radius_, 
+        float max_rv_,
+        float max_tv_,
+        const Pose& pose_ = Pose::Identity(), 
+        int id_p = -1);
   
   // Robot contructor that takes as input a world item to which the robot belong
-  Robot(float radius_, std::shared_ptr<WorldItem> parent_, 
-        string namespace_, string frame_id_, const Pose& pose_ = Pose::Identity(), int id_p = -1);
+  Robot(std::shared_ptr<WorldItem> parent_, 
+        string frame_id_, 
+        string namespace_,
+        float radius_, 
+        float max_rv_,
+        float max_tv_,
+        const Pose& pose_ = Pose::Identity(), 
+        int id_p = -1);
 
   // Method to draw the robot on the map with open cv
   void draw() override;
@@ -41,12 +53,12 @@ struct Robot : public WorldItem {
   void customTf2();
 
   // Robot dadious and initial translational and rotational velocity
-  float radius;
-  float tv = 0, rv = 0;
-  int id_p = -1;
   string frame_id;
+  float radius;
+  float tv = 0, rv = 0, max_rv, max_tv;
+  int id_p = -1;
 
-  // Node fields
+  // ROS
   ros::NodeHandle nh;  // ROS Node Handle
   ros::Publisher odom_pub;  // Publisher to send odometry data
   ros::Subscriber cmd_vel_sub;  // Subscriber to receive velocity commands

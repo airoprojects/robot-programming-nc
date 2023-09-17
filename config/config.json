@@ -7,8 +7,8 @@
           "frame_id": "frame_robot0",
           "namespace": "robot_0",
           "radius": 0.8,
-          "max_rv" : 0.1,
-          "max_tv" : 0.5,
+          "max_rv" : 1.5,
+          "max_tv" : 1.0,
           "pose": [
               20,
               8,
@@ -24,7 +24,6 @@
           "fov": 6.14,
           "vfov": 1.04,
           "max_range": 10.0,
-          "max_vrange": 10.0,
           "num_beams": 360,
           "pose": [
               0,
@@ -39,11 +38,11 @@
         "frame_id": "frame_robot0",
         "namespace": "robot_1",
         "radius": 0.5,
-        "max_rv" : 0.1,
+        "max_rv" : 1.0,
         "max_tv" : 0.5,
         "pose": [
             20,
-            8,
+            3,
             0
         ],
         "parent": -1
