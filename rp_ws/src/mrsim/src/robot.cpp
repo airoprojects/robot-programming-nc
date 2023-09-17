@@ -1,24 +1,40 @@
 #include "robot.h"
 
-Robot::Robot(float radius_, std::shared_ptr<World> w_,
-            string namespace_, string frame_id_, const Pose& pose_, int id_p_)
-    : radius(radius_), WorldItem(w_, namespace_,  pose_), tv(0.0), rv(0.0), nh("~"), id_p(id_p_),
-      odom_pub(nh.advertise<nav_msgs::Odometry>("/" + namespace_ + "/odom", 10)),
-      cmd_vel_sub(nh.subscribe("/" + namespace_ + "/cmd_vel", 10, &Robot::cmdVelCallback, this)),
-      frame_id(frame_id_) {}
+Robot::Robot( std::shared_ptr<World> w_,
+              string frame_id_, 
+              string namespace_,
+              float radius_,
+              float max_rv_,
+              float max_tv_,
+              const Pose& pose_, 
+              int id_p_)
+      : WorldItem(w_, namespace_,  pose_), frame_id(frame_id_), 
+        radius(radius_), max_rv(max_rv_), max_tv(max_tv_), nh("~"), id_p(id_p_),
+        odom_pub(nh.advertise<nav_msgs::Odometry>("/" + namespace_ + "/odom", 10)),
+        cmd_vel_sub(nh.subscribe("/" + namespace_ + "/cmd_vel", 10, &Robot::cmdVelCallback, this)) {}
 
-Robot::Robot(float radius_, std::shared_ptr<WorldItem> parent_,
-            string namespace_, string frame_id_, const Pose& pose_, int id_p_)
-    : radius(radius_), WorldItem(parent_, namespace_, pose_), tv(0.0), rv(0.0), nh("~"), id_p(id_p_),
-      odom_pub(nh.advertise<nav_msgs::Odometry>("/" + namespace_ + "/odom", 10)),
-      cmd_vel_sub(nh.subscribe("/" + namespace_ + "/cmd_vel", 10, &Robot::cmdVelCallback, this)),
-      frame_id(frame_id_) {}
+Robot::Robot( std::shared_ptr<WorldItem> parent_,
+              string frame_id_,
+              string namespace_,
+              float radius_,
+              float max_rv_,
+              float max_tv_,
+              const Pose& pose_, 
+              int id_p_)
+      : WorldItem(parent_, namespace_, pose_), frame_id(frame_id_), 
+        radius(radius_), max_rv(max_rv_), max_tv(max_tv_), nh("~"), id_p(id_p_),
+        odom_pub(nh.advertise<nav_msgs::Odometry>("/" + namespace_ + "/odom", 10)),
+        cmd_vel_sub(nh.subscribe("/" + namespace_ + "/cmd_vel", 10, &Robot::cmdVelCallback, this)) {}
 
 
 // Update the robot's velocity based on received commands
 void Robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg) {
-    tv = msg->linear.x;
-    rv = msg->angular.z;
+  float new_tv = msg->linear.x;
+  float new_rv = msg->angular.z; 
+  if (new_tv > max_tv) tv = max_tv;
+  else tv = new_tv;
+  if (new_rv > max_rv) rv = max_rv;
+  else rv = new_rv;
 }
 
 void Robot::draw() {
@@ -90,7 +106,6 @@ void Robot::customTf2() {
   transform_stamped.child_frame_id = "map";
 
   tf2::Transform tf_transform;
-
   tf_transform.setOrigin(tf2::Vector3(trasformation.translation().x(), trasformation.translation().y(), 0.0));
 
   tf2::Quaternion q;

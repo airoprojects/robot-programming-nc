@@ -1,28 +1,40 @@
 #include "lidar.h"
 
-Lidar::Lidar(float fov_, float vfov_, float max_range_, int num_beams_,
-             std::shared_ptr<World> w,
-             std::string namespace_, const Pose& pose_, int id_p_)
-    : WorldItem(w, namespace_, pose_),
-      fov(fov_),
-      vfov(vfov_),
-      max_range(max_range_),
-      num_beams(num_beams_),
-      ranges(num_beams, -1.0),
-      id_p(id_p_),
-      scan_pub(nh.advertise<sensor_msgs::PointCloud2>("/" +namespace_+ "/" +"base_scan", 1000)) {}
+Lidar::Lidar( string frame_id_,
+              float fov_, 
+              float vfov_, 
+              float max_range_, 
+              int num_beams_,
+              std::shared_ptr<World> w,
+              std::string namespace_, const Pose& pose_, 
+              int id_p_)
+      : WorldItem(w, namespace_, pose_),
+        frame_id(frame_id_),
+        fov(fov_),
+        vfov(vfov_),
+        max_range(max_range_),
+        num_beams(num_beams_),
+        ranges(num_beams, -1.0),
+        id_p(id_p_),
+        scan_pub(nh.advertise<sensor_msgs::PointCloud2>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
-Lidar::Lidar(float fov_,float vfov_, float max_range_, int num_beams_,
-             std::shared_ptr<WorldItem> p_,
-             std::string namespace_, const Pose& pose_, int id_p_)
-    : WorldItem(p_, namespace_, pose_),
-      fov(fov_),
-      vfov(vfov_),
-      max_range(max_range_),
-      num_beams(num_beams_),
-      ranges(num_beams, -1.0),
-      id_p(id_p_),
-      scan_pub(nh.advertise<sensor_msgs::PointCloud2>("/" +namespace_+ "/" +"base_scan", 1000)) {}
+Lidar::Lidar( string frame_id_,
+              float fov_,
+              float vfov_,
+              float max_range_, 
+              int num_beams_,
+              std::shared_ptr<WorldItem> p_,
+              std::string namespace_, const Pose& pose_,
+              int id_p_)
+      : WorldItem(p_, namespace_, pose_),
+        frame_id(frame_id_),
+        fov(fov_),
+        vfov(vfov_),
+        max_range(max_range_),
+        num_beams(num_beams_),
+        ranges(num_beams, -1.0),
+        id_p(id_p_),
+        scan_pub(nh.advertise<sensor_msgs::PointCloud2>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
 // modify the intern of the lidar, then when draw() is call is update on the map its position!
 void Lidar::timeTick(float dt) {
@@ -103,17 +115,17 @@ void Lidar::draw() {
 
 }
 
+// This function converts a set of 3D Int point int a point cloud 
 void Lidar::pointCloudConversion(const vector<IntPoint3D>& points) {
   pcl::PointCloud<pcl::PointXYZ> cloud;
   cloud.header.frame_id = "map"; // to modify
-  cloud.is_dense = false;
+  cloud.is_dense = true;
 
   for (const auto& point : points) {
     pcl::PointXYZ pcl_point;
     pcl_point.x = point(0);
     pcl_point.y = point(1);
     pcl_point.z = point(2);
-    // pcl_point.intensity = 100;  // O un altro valore di intensità appropriato
     cloud.points.push_back(pcl_point);
   }
   sensor_msgs::PointCloud2 output;

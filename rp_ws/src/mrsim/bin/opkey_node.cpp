@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
   // LC: simulation parameters
   bool select_robot = true; // no robot is selected to be controlled at the beginning
   int robot_index = -1;
+  bool clear = false;
   string input;
   geometry_msgs::Twist msg;
   ros::Rate rate(10);
@@ -53,6 +54,11 @@ int main(int argc, char** argv) {
     if (select_robot) {
       tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // deactivate getchar terminal functionalities
 
+      if (clear) {
+        system("cls||clear"); // clear terminal screen
+        clear = false;
+      }
+
       while (true) {
 
         cout << "\nWhat robot do you want to control? " << endl; 
@@ -60,12 +66,13 @@ int main(int argc, char** argv) {
         cin >> input;
 
         // LC: exit condiction
-        if (input == "exit") return 1;
+        if (input == "exit") killTerminal();
 
         // LC: check for user error in the input
         try {
           robot_index = stoi(input);
           if (robot_index < 0 || robot_index > NUM_ROBOTS-1) {
+            system("cls||clear"); 
             cout << "Invalid input. Please try again." << endl;
           }
           else {
@@ -76,6 +83,7 @@ int main(int argc, char** argv) {
           }
         } 
         catch (const exception& e) {
+          system("cls||clear"); 
           cout << "Invalid input. Please try again." << endl;
         }
       }
@@ -103,17 +111,23 @@ int main(int argc, char** argv) {
       if(next_ch == '[') {
         ch = getchar(); // get the character after '['
         switch (ch) {
-          case 'A': cout << "up\n"; msg.linear.x = 1.0; break;
-          case 'B': cout << "down\n"; msg.linear.x = -1.0; break;
-          case 'C': cout << "right\n"; msg.angular.z = -0.5; break;
-          case 'D': cout << "left\n"; msg.angular.z = 0.5; break;
-          default: cerr << "Invalid command: " << ch << endl; break;
+          case 'A': clearTerminal(); cout << "up\n"; msg.linear.x = 3.0; cout.flush(); break;
+          case 'B': clearTerminal(); cout << "down\n"; msg.linear.x = -1.0; cout.flush(); break;
+          case 'C': clearTerminal(); cout << "right\n"; msg.angular.z = -0.5; cout.flush(); break;
+          case 'D': clearTerminal(); cout << "left\n"; msg.angular.z = 0.5; cout.flush(); break;
+          default: clearTerminal(); cerr << "Invalid command: " << ch << endl; cout.flush(); break;
         }
       }
       else break;
     } 
-    else if (ch == 'c')  select_robot = true; 
-    else cerr << "Invalid command: " << ch << endl;
+    else if (ch == 'c')  {
+      select_robot = true; 
+      clear = true;
+    }
+    else if (ch != 'A' && ch != 'B' && ch != 'C' && ch != 'D') {
+      clearTerminal(); cout << "Invalid command: " << ch << endl; cout.flush();
+    }
+    else ;
 
     // LC: publish on robot_{robot_index}/cmd_vel topic
     publishers_vector[robot_index].publish(msg);
@@ -121,5 +135,6 @@ int main(int argc, char** argv) {
 
   }
   tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // deactivate getchar terminal functionalities
+  killTerminal();
   return 0;
 }

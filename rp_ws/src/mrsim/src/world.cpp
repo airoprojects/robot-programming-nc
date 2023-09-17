@@ -18,12 +18,8 @@ void World::loadFromImage(const std::string filename_) {
 
 void World::draw() {
   for (const auto item : _items) item->draw();
-  // cout << "ciao sono in word1" << endl;
   cv::imshow("Map", display_image);
-  // cout << "ciao sono in word2" << endl;
   memcpy(display_image.data, _grid.data(), size);
-  // cout << "ciao sono in word3" << endl;
-
 }
 
 void World::timeTick(float dt) {
@@ -33,8 +29,6 @@ void World::timeTick(float dt) {
 }
 
 void World::add(WorldItem* item) { _items.push_back(item); }
-
-
 
 /*
 Once a beam touch a point at the base, this function return true and save
@@ -65,9 +59,6 @@ bool World::collides(const IntPoint& p, const int radius) const {
       if (off.squaredNorm() > r2) continue;
       IntPoint p_test = p + IntPoint(r, c);
       if (!inside(p_test)) return true;
-
-      // cerr << "r: " << r << " c: " << c << " val: " << (int) at(p_test) <<
-      // endl;
       if (at(p_test) < 127) return true;
     }
   }
@@ -78,11 +69,7 @@ WorldItem::WorldItem(std::shared_ptr<World> w_,
                     std::string namespace_, const Pose& p_)
     : world(w_), parent(nullptr), 
       pose_in_parent(p_), _namespace(namespace_) {
-  if (world) {
-    world->add(this);
-    // cout<< "Added new item" << endl;
-    // cout<< "my name is" << namespace_ << endl;
-  }
+  if (world) world->add(this);
 }
 
 WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_, 
@@ -90,8 +77,6 @@ WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_,
     : world(parent_->world), parent(parent_), 
       pose_in_parent(p), _namespace(namespace_) {
   if (world) world->add(this);
-//   cout<< "Added new item attached to another" << endl;
-//   cout<< "my name is " << namespace_ << endl;
 }
 
 Pose WorldItem::poseInWorld() {
