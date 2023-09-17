@@ -103,17 +103,17 @@ void Lidar::draw() {
 
 }
 
+// This function converts a set of 3D Int point int a point cloud 
 void Lidar::pointCloudConversion(const vector<IntPoint3D>& points) {
   pcl::PointCloud<pcl::PointXYZ> cloud;
   cloud.header.frame_id = "map"; // to modify
-  cloud.is_dense = false;
+  cloud.is_dense = true;
 
   for (const auto& point : points) {
     pcl::PointXYZ pcl_point;
     pcl_point.x = point(0);
     pcl_point.y = point(1);
     pcl_point.z = point(2);
-    // pcl_point.intensity = 100;  // O un altro valore di intensità appropriato
     cloud.points.push_back(pcl_point);
   }
   sensor_msgs::PointCloud2 output;

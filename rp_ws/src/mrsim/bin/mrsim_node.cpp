@@ -57,16 +57,15 @@ int main(int argc, char** argv) {
 
   // LC: check that each items has been correctly added to the world
   for (const auto robot: world._items) {cout << robot->_namespace << endl;}
-  
+
+  // LC: run rviz
+  string command = "gnome-terminal -- bash -c 'rosrun rviz rviz'";
+  if (runShellCommand(command)) return 1; // exit if the command fails
+  sleep(3);
 
   // LC: run opkey controller node 
-  string command = "gnome-terminal -- bash -c 'rosrun mrsim opkey_node " + to_string(NUM_ROBOTS) + " ; exec bash'";
-  int result = system(command.c_str());
-  if (result != 0) {
-    ROS_ERROR("Failed to execute roslaunch command");
-    return 1;
-  }
-
+  command = "gnome-terminal -- bash -c 'rosrun mrsim opkey_node " + to_string(NUM_ROBOTS) + " ; exec bash'";
+  if (runShellCommand(command)) return 1; // exit if the command fails
 
   // LC: simulation parameters
   float delay = 0.08;
@@ -77,27 +76,15 @@ int main(int argc, char** argv) {
   while (ros::ok()) {
 
     world.draw();
-
-    // cout << "ciao principale 1" << endl;
-  
     int k = cv::waitKey(1);
     if (k == 27) break;
 
-    // cout << "ciao principale 2" << endl;
-
     ros::spinOnce();
-
-    // cout << "ciao principale 3" << endl;
-
     world.timeTick(delay);
-
-    // cout << "ciao principale 4" << endl;
-
     this_thread::sleep_for(chrono::milliseconds(10)); // sleep for x milliseconds
 
-    // return 1;
-
   }
+
   cv::destroyAllWindows();
   return 0;
 } 
