@@ -34,19 +34,19 @@ void World::add(WorldItem* item) { _items.push_back(item); }
 Once a beam touch a point at the base, this function return true and save
 in endpoint the point that is touched
 */
-bool World::traverseBeam(IntPoint& endpoint, const IntPoint& origin,
+int World::traverseBeam(IntPoint& endpoint, const IntPoint& origin,
                          const float angle, const int max_range) {
   Point p0 = origin.cast<float>(); // start point of a beam
   const Point dp(cos(angle), sin(angle)); // point -> (x,y) 
   int range_to_go = max_range;
   while (range_to_go > 0) {
     endpoint = IntPoint(p0.x(), p0.y());
-    if (!inside(endpoint)) return false; //beam out of map
-    if (at(endpoint) < 127) return true; //beam that hit a object in the map
+    if (!inside(endpoint)) return -1; //beam out of map
+    if (at(endpoint) < 127) return 1; //beam that hit a object in the map
     p0 = p0 + dp;
     --range_to_go;
   }
-  return true;
+  return 0; //beam that did not hit anything
 }
 
 

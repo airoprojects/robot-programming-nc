@@ -6,8 +6,8 @@ void killTerminal() {
     system("pause");
     system("TASKKILL /F /IM cmd.exe");
   #elif defined(__unix__) || defined(__APPLE__)
-    cout << "The terminal will close in 3 seconds" << endl;
-    sleep(3);
+    cout << "The terminal will close in 2 seconds" << endl;
+    sleep(2);
     system("kill -9 $(ps -p $PPID -o ppid=)");
   #else
     #error "Unknown system"

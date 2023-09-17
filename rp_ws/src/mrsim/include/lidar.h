@@ -50,7 +50,7 @@ class Lidar : public WorldItem {
   string frame_id;
   float fov, vfov, max_range; // B.F.N: fov = field of view
   int num_beams; // B.F.N:  num of beams launched from the sensor
-  std::vector<float> ranges; // B.F.N: range of the beams launched
+  vector<float> ranges; // B.F.N: range of the beams launched
   int id_p = -1;
 
   // ROS

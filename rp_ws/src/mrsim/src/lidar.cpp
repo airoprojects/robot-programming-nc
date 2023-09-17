@@ -39,46 +39,47 @@ Lidar::Lidar( string frame_id_,
 // modify the intern of the lidar, then when draw() is call is update on the map its position!
 void Lidar::timeTick(float dt) {
   vector<IntPoint3D> lidar_points;
-
   Pose piw = poseInWorld();
   IntPoint origin = world->world2grid(piw.translation()); //point of origin of base scan
   if (!world->inside(origin)) return;
 
+  vector<float> short_ranges = ranges;
   float d_alpha = fov / num_beams; // the angle between each beam
-  // cout << "d alpha: " << d_alpha << endl;
-
   float alpha = Eigen::Rotation2Df(piw.linear()).angle() - fov / 2; // where we start.
-
+  
   float d_beta = vfov / num_beams; // increment for beta
-  // cout << "d beta: " << d_beta  << endl << "vfov: " << vfov<< endl;
   float beta = 0; // start from the bottom
   float int_range = max_range * world->i_res; // (from world to grid)
 
-  
   for (int i = 0; i < num_beams; ++i) {
     IntPoint endpoint;
     ranges[i] = max_range; //each beam 
-    bool result = world->traverseBeam(endpoint, origin, alpha, int_range);  
-    if (result) {
+    int result = world->traverseBeam(endpoint, origin, alpha, int_range);  
+    if (result > -1) {
       IntPoint delta = endpoint - origin; // point where beam arrives
-      lidar_points.push_back(IntPoint3D(endpoint.x(), endpoint.y(), 0));
+      if (result > 0) {
+        lidar_points.push_back(IntPoint3D(endpoint.x(), endpoint.y(), 0));
+        short_ranges.push_back(delta.norm());
+      }
       ranges[i] = delta.norm() * world->res; // from grid to world
     }
     alpha += d_alpha; // from sx is the first beam, after i move to right with d_alpha 
   }
 
   // At the end of this loop we should have all the ranges for all the beams
-  for (int i = 0; i < num_beams; ++i) {
+  int i  = 0;
+  for (const auto hit_point: lidar_points) {
     beta += d_beta;
-    int ex = lidar_points[i].x();
-    int ey = lidar_points[i].y();
+    int ex = hit_point.x();
+    int ey = hit_point.y();
     while (beta <= vfov) {
       // cout << "I am here and beta is " << beta << endl; 
-      float diag_beam = ranges[i] / cos(beta);
+      float diag_beam = short_ranges[i] / cos(beta);
       float z_coordinate = diag_beam * sin(beta);
       lidar_points.push_back(IntPoint3D(ex, ey, z_coordinate));
       beta += d_beta;
     }
+    ++i;
   }
 
   // for (const auto value: lidar_points) {

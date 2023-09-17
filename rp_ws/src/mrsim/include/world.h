@@ -36,7 +36,7 @@ public:
 
   void loadFromImage(const std::string filename_);
 
-  bool traverseBeam(IntPoint& endpoint, const IntPoint& origin,
+  int traverseBeam(IntPoint& endpoint, const IntPoint& origin,
                     const float angle, const int max_range);
 
   void draw();
