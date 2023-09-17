@@ -8,7 +8,7 @@ Lidar::Lidar( string frame_id_,
               std::shared_ptr<World> w,
               std::string namespace_, const Pose& pose_, 
               int id_p_)
-      : WorldItem(w, namespace_, pose_),
+      : WorldItem(w, namespace_, frame_id_, pose_),
         frame_id(frame_id_),
         fov(fov_),
         vfov(vfov_),
@@ -16,6 +16,7 @@ Lidar::Lidar( string frame_id_,
         num_beams(num_beams_),
         ranges(num_beams, -1.0),
         id_p(id_p_),
+        parent_frame_id(w->world_frame_id),
         scan_pub(nh.advertise<sensor_msgs::PointCloud2>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
 Lidar::Lidar( string frame_id_,
@@ -26,7 +27,7 @@ Lidar::Lidar( string frame_id_,
               std::shared_ptr<WorldItem> p_,
               std::string namespace_, const Pose& pose_,
               int id_p_)
-      : WorldItem(p_, namespace_, pose_),
+      : WorldItem(p_, namespace_, frame_id_, pose_),
         frame_id(frame_id_),
         fov(fov_),
         vfov(vfov_),
@@ -34,68 +35,12 @@ Lidar::Lidar( string frame_id_,
         num_beams(num_beams_),
         ranges(num_beams, -1.0),
         id_p(id_p_),
+        parent_frame_id(p_->item_frame_id),
         scan_pub(nh.advertise<sensor_msgs::PointCloud2>("/" +namespace_+ "/" +"base_scan", 1000)) {}
-
-// modify the intern of the lidar, then when draw() is call is update on the map its position!
-void Lidar::timeTick(float dt) {
-  vector<IntPoint3D> lidar_points;
-
-  Pose piw = poseInWorld();
-  IntPoint origin = world->world2grid(piw.translation()); //point of origin of base scan
-  if (!world->inside(origin)) return;
-
-  float d_alpha = fov / num_beams; // the angle between each beam
-  // cout << "d alpha: " << d_alpha << endl;
-
-  float alpha = Eigen::Rotation2Df(piw.linear()).angle() - fov / 2; // where we start.
-
-  float d_beta = vfov / num_beams; // increment for beta
-  // cout << "d beta: " << d_beta  << endl << "vfov: " << vfov<< endl;
-  float beta = 0; // start from the bottom
-  float int_range = max_range * world->i_res; // (from world to grid)
-
-  
-  for (int i = 0; i < num_beams; ++i) {
-    IntPoint endpoint;
-    ranges[i] = max_range; //each beam 
-    bool result = world->traverseBeam(endpoint, origin, alpha, int_range);  
-    if (result) {
-      IntPoint delta = endpoint - origin; // point where beam arrives
-      lidar_points.push_back(IntPoint3D(endpoint.x(), endpoint.y(), 0));
-      ranges[i] = delta.norm() * world->res; // from grid to world
-    }
-    alpha += d_alpha; // from sx is the first beam, after i move to right with d_alpha 
-  }
-
-  // At the end of this loop we should have all the ranges for all the beams
-  for (int i = 0; i < num_beams; ++i) {
-    beta += d_beta;
-    int ex = lidar_points[i].x();
-    int ey = lidar_points[i].y();
-    while (beta <= vfov) {
-      // cout << "I am here and beta is " << beta << endl; 
-      float diag_beam = ranges[i] / cos(beta);
-      float z_coordinate = diag_beam * sin(beta);
-      lidar_points.push_back(IntPoint3D(ex, ey, z_coordinate));
-      beta += d_beta;
-    }
-  }
-
-  // for (const auto value: lidar_points) {
-  //   if (value.z() < 0) cout << "ERRORE Z NEGATIVOOOOO";
-  //   cout << "x: " << value.x() << endl
-  //   << "y: " << value.y() << endl
-  //   << "z: " << value.z() << endl;
-  // }
-
-  pointCloudConversion(lidar_points);
-
-}
 
 void Lidar::draw() {
 
   Pose piw = poseInWorld();
-  // std::cout << "pose in parent lidar:\n" << piw.matrix() << "\n";
   IntPoint origin = world->world2grid(piw.translation());
 
   if (!world->inside(origin)) return;
@@ -111,14 +56,64 @@ void Lidar::draw() {
              cv::Point(epi.y(), epi.x()), cv::Scalar(127, 127, 127), 1);
     alpha += d_alpha;
   }
- 
+}
+
+// B.F.N.: modify the intern of the lidar, then when draw() is call is update on the map its position!
+void Lidar::timeTick(float dt) {
+  vector<IntPoint3D> lidar_points;
+  Pose piw = poseInWorld();
+  IntPoint origin = world->world2grid(piw.translation()); //point of origin of base scan
+  if (!world->inside(origin)) return;
+
+  vector<float> short_ranges = ranges;
+  float d_alpha = fov / num_beams; // the angle between each beam
+  float alpha = Eigen::Rotation2Df(piw.linear()).angle() - fov / 2; // where we start.
+  
+  float d_beta = vfov / num_beams; // increment for beta
+  float beta = 0; // start from the bottom
+  float int_range = max_range * world->i_res; // (from world to grid)
+
+  for (int i = 0; i < num_beams; ++i) {
+    IntPoint endpoint;
+    ranges[i] = max_range; //each beam 
+    int result = world->traverseBeam(endpoint, origin, alpha, int_range);  
+    if (result > -1) {
+      IntPoint delta = endpoint - origin; // point where beam arrives
+      if (result > 0) {
+        lidar_points.push_back(IntPoint3D(endpoint.x(), endpoint.y(), 0));
+        short_ranges.push_back(delta.norm());
+      }
+      ranges[i] = delta.norm() * world->res; // from grid to world
+    }
+    alpha += d_alpha; // from sx is the first beam, after i move to right with d_alpha 
+  }
+
+  // At the end of this loop we should have all the ranges for all the beams
+  int i  = 0;
+  for (const auto hit_point: lidar_points) {
+    beta += d_beta;
+    int ex = hit_point.x();
+    int ey = hit_point.y();
+    while (beta <= vfov) {
+      // cout << "I am here and beta is " << beta << endl; 
+      float diag_beam = short_ranges[i] / cos(beta);
+      float z_coordinate = diag_beam * sin(beta);
+      lidar_points.push_back(IntPoint3D(ex, ey, z_coordinate));
+      beta += d_beta;
+    }
+    ++i;
+  }
+
+  // LC: 
+  pointCloudConversion(lidar_points);
+  tf2Lidar();
 
 }
 
 // This function converts a set of 3D Int point int a point cloud 
 void Lidar::pointCloudConversion(const vector<IntPoint3D>& points) {
   pcl::PointCloud<pcl::PointXYZ> cloud;
-  cloud.header.frame_id = "map"; // to modify
+  cloud.header.frame_id = frame_id; 
   cloud.is_dense = true;
 
   for (const auto& point : points) {
@@ -130,10 +125,34 @@ void Lidar::pointCloudConversion(const vector<IntPoint3D>& points) {
   }
   sensor_msgs::PointCloud2 output;
   pcl::toROSMsg(cloud, output);
-  output.header.frame_id = "frame_robot0";
+  output.header.frame_id = parent_frame_id;
   output.header.stamp = ros::Time::now();
 
   // Publish on ros topic /robot_i/base_scan
   scan_pub.publish(output);
 
 };
+
+void Lidar::tf2Lidar() {
+  // FIXED TRANSFOMATION TUTORIAL
+  static tf2_ros::TransformBroadcaster tfb;
+  geometry_msgs::TransformStamped transform_stamped;
+
+  transform_stamped.header.frame_id = parent_frame_id;
+  transform_stamped.child_frame_id = frame_id;
+
+  transform_stamped.transform.translation.x = 0.0;
+  transform_stamped.transform.translation.y = 0.0;
+  transform_stamped.transform.translation.z = 0.0;
+
+  tf2::Quaternion q;
+  q.setRPY(0, 0, 0);
+
+  transform_stamped.transform.rotation.x = q.x();
+  transform_stamped.transform.rotation.y = q.y();
+  transform_stamped.transform.rotation.z = q.z();
+  transform_stamped.transform.rotation.w = q.w();
+
+  transform_stamped.header.stamp = ros::Time::now();
+  tfb.sendTransform(transform_stamped);
+}

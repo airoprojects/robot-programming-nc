@@ -6,8 +6,8 @@ void killTerminal() {
     system("pause");
     system("TASKKILL /F /IM cmd.exe");
   #elif defined(__unix__) || defined(__APPLE__)
-    cout << "The terminal will close in 3 seconds" << endl;
-    sleep(3);
+    cout << "Closing the terminal" << endl;
+    sleep(1);
     system("kill -9 $(ps -p $PPID -o ppid=)");
   #else
     #error "Unknown system"
@@ -16,7 +16,7 @@ void killTerminal() {
 
 // LC: cleaqr terminal output to display always the same message
 void clearTerminal() {
-    // Move the cursor to the start position for the messages
+  // Move the cursor to the start position for the messages
   std::cout << "\033[" << 12 << ";1H";
   // Clear the line
   std::cout << "\033[K";
@@ -52,7 +52,6 @@ void clearTerminal() {
   if (!root_path.empty() && root_path[root_path.size() - 1] == '\n') {
     root_path.erase(root_path.size() - 1);
   }
-
   return root_path;
 }
 
@@ -100,7 +99,6 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
   RobotsVector robots; // changed
   LidarsVector lidars; // changed
   IdRobotSharedMap id_shared_robots; // map id -> shared_ptr<Robot>
-  RobotsVector robot_orphans;
 
   if (root["items"].isArray()) {
 
@@ -125,14 +123,26 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
         robot_pose.translation() = world_->grid2world(Eigen::Vector2i(pose_x, pose_y));
         robot_pose.linear() = Eigen::Rotation2Df(theta).matrix();
 
-        // create a robot object dynamically
-        Robot* r = new Robot(world_, frame_id, namespace_, radius, max_rv, max_tv, robot_pose, id_p); 
-        // create a shared_ptr with a custom deleter that doesn't delete dynamically allocated object
-        RobotPointer r_(r, [](Robot* r){ }); 
-
-        id_shared_robots[id] = r_; 
-        robots.push_back(r_);
-        if (id_p != -1) robot_orphans.push_back(r_);
+        if (id_p != -1){
+          RobotPointer parent_= id_shared_robots[id_p]; // the robot where the lidar is placed
+          if (parent_ == nullptr) {
+            cerr << "The world item you're refering to doesn't exist, please check config.json!"<< endl;
+            return RobotsAndLidarsVector({}, {});
+          }
+          else {
+            Pose parent_pose = parent_->poseInWorld();
+            Robot* r = new Robot(parent_, frame_id, namespace_, radius, max_rv, max_tv, parent_pose, id_p); // create a robot object dynamically
+            RobotPointer r_(r, [](Robot* r){ }); // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
+            id_shared_robots[id] = r_; 
+            robots.push_back(r_);
+          }
+        }
+        else {
+          Robot* r = new Robot(world_, frame_id, namespace_, radius, max_rv, max_tv, robot_pose, id_p); 
+          RobotPointer r_(r, [](Robot* r){ }); 
+          id_shared_robots[id] = r_; 
+          robots.push_back(r_);
+        }
         robot_counter++;
       }
       else {
@@ -157,16 +167,13 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
             return RobotsAndLidarsVector({}, {});
           }
           else {
-            Pose pose_parent = parent_->poseInWorld();
             Lidar* l = new Lidar(frame_id, fov, vfov, max_range_l , num_beams_l, parent_, namespace_, lidar_pose);
-            // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
             LidarPointer l_(l, [](Lidar* l){ }); 
             lidars.push_back(l_);
           }
         }
         else {
           Lidar* l = new Lidar(frame_id, fov, vfov, max_range_l , num_beams_l, world_, namespace_, lidar_pose);
-          // create a shared_ptr with a custom deleter that deletes the dynamically allocated object
           LidarPointer l_(l, [](Lidar* l){ }); 
           lidars.push_back(l_);
         }

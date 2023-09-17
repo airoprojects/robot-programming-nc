@@ -34,19 +34,19 @@ void World::add(WorldItem* item) { _items.push_back(item); }
 Once a beam touch a point at the base, this function return true and save
 in endpoint the point that is touched
 */
-bool World::traverseBeam(IntPoint& endpoint, const IntPoint& origin,
+int World::traverseBeam(IntPoint& endpoint, const IntPoint& origin,
                          const float angle, const int max_range) {
   Point p0 = origin.cast<float>(); // start point of a beam
   const Point dp(cos(angle), sin(angle)); // point -> (x,y) 
   int range_to_go = max_range;
   while (range_to_go > 0) {
     endpoint = IntPoint(p0.x(), p0.y());
-    if (!inside(endpoint)) return false; //beam out of map
-    if (at(endpoint) < 127) return true; //beam that hit a object in the map
+    if (!inside(endpoint)) return -1; //beam out of map
+    if (at(endpoint) < 127) return 1; //beam that hit a object in the map
     p0 = p0 + dp;
     --range_to_go;
   }
-  return true;
+  return 0; //beam that did not hit anything
 }
 
 
@@ -65,17 +65,21 @@ bool World::collides(const IntPoint& p, const int radius) const {
   return false;
 }
 
-WorldItem::WorldItem(std::shared_ptr<World> w_, 
-                    std::string namespace_, const Pose& p_)
-    : world(w_), parent(nullptr), 
-      pose_in_parent(p_), _namespace(namespace_) {
+WorldItem::WorldItem( shared_ptr<World> w_, 
+                      string namespace_, 
+                      string frame_id_,
+                      const Pose& p_)
+          : world(w_), parent(nullptr), item_frame_id(frame_id_),
+            _namespace(namespace_), pose_in_parent(p_) { 
   if (world) world->add(this);
 }
 
-WorldItem::WorldItem(std::shared_ptr<WorldItem> parent_, 
-                    std::string namespace_, const Pose& p)
-    : world(parent_->world), parent(parent_), 
-      pose_in_parent(p), _namespace(namespace_) {
+WorldItem::WorldItem( shared_ptr<WorldItem> parent_, 
+                      string namespace_,
+                      string frame_id_,
+                      const Pose& p)
+          : world(parent_->world), parent(parent_), item_frame_id(frame_id_),
+            _namespace(namespace_), pose_in_parent(p) { 
   if (world) world->add(this);
 }
 

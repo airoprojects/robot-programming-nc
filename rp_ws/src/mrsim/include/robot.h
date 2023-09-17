@@ -44,15 +44,17 @@ struct Robot : public WorldItem {
   // Method to update the robot pose in function of the velocity
   void timeTick(float dt) override;
 
+  // Callback function to update robot velocity
   void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg);
 
-  void customTf2();
+  // Custom tf module from robot to world(parent)
+  void tf2Robot();
 
-  // Robot dadious and initial translational and rotational velocity
   string frame_id;
   float radius;
   float tv = 0, rv = 0, max_rv, max_tv;
   int id_p = -1;
+  string parent_frame_id;
 
   // ROS
   ros::NodeHandle nh;  // ROS Node Handle

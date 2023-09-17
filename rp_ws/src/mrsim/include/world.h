@@ -36,7 +36,7 @@ public:
 
   void loadFromImage(const std::string filename_);
 
-  bool traverseBeam(IntPoint& endpoint, const IntPoint& origin,
+  int traverseBeam(IntPoint& endpoint, const IntPoint& origin,
                     const float angle, const int max_range);
 
   void draw();
@@ -52,9 +52,10 @@ public:
 
   cv::Mat display_image;
 
+  string world_frame_id = "map";
 
-  std::vector<uint8_t> _grid;
-  std::vector<WorldItem*> _items; 
+  vector<uint8_t> _grid;
+  vector<WorldItem*> _items; 
 
 // protected:
 
@@ -65,11 +66,14 @@ class WorldItem {
 
 public:
  
-  WorldItem(std::shared_ptr<World> w_,
-            std::string namespace_,
+  WorldItem(shared_ptr<World> w_,
+            string namespace_,
+              string frame_id_,
             const Pose& p_ = Pose::Identity());
-  WorldItem(std::shared_ptr<WorldItem> parent_,
-              std::string namespace_,
+
+  WorldItem(shared_ptr<WorldItem> parent_,
+            string namespace_,
+            string frame_id_,
             const Pose& p_ = Pose::Identity());
   ~WorldItem();
 
@@ -78,8 +82,9 @@ public:
   virtual void draw() = 0;
   virtual void timeTick(float dt) = 0;
 
-  std::shared_ptr<World> world = nullptr;
-  std::shared_ptr<WorldItem> parent = nullptr;
+  shared_ptr<World> world = nullptr;
+  shared_ptr<WorldItem> parent = nullptr;
   Pose pose_in_parent;
-  std::string _namespace = "";
+  string _namespace;
+  string item_frame_id;
 };
