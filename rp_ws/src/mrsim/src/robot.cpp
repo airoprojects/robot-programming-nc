@@ -106,7 +106,6 @@ void Robot::customTf2() {
   transform_stamped.child_frame_id = "map";
 
   tf2::Transform tf_transform;
-
   tf_transform.setOrigin(tf2::Vector3(trasformation.translation().x(), trasformation.translation().y(), 0.0));
 
   tf2::Quaternion q;

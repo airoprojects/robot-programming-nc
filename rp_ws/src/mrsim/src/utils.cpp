@@ -122,7 +122,7 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
         double theta = item["pose"][2].asDouble();
 
         Pose robot_pose = Pose::Identity();
-        robot_pose.translation() = world_->grid2world(Eigen::Vector2i(world_->rows/2, world_->cols/2));
+        robot_pose.translation() = world_->grid2world(Eigen::Vector2i(pose_x, pose_y));
         robot_pose.linear() = Eigen::Rotation2Df(theta).matrix();
 
         // create a robot object dynamically

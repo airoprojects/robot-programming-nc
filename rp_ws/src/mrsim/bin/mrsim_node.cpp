@@ -59,8 +59,8 @@ int main(int argc, char** argv) {
 
   // LC: run rviz
   string command = "gnome-terminal -- bash -c 'rosrun rviz rviz'";
-  if (runShellCommand(command)) return 1; // exit if the command fails
-  sleep(3);
+  // if (runShellCommand(command)) return 1; // exit if the command fails
+  // sleep(3);
 
   world.draw();
   cv::waitKey(1);

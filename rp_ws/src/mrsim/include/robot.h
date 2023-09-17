@@ -15,10 +15,6 @@
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2/convert.h> 
 
-
-
-
-
 // Definitiopn of robot struct that extend world item
 struct Robot : public WorldItem {
   
