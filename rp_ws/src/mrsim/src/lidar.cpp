@@ -8,7 +8,7 @@ Lidar::Lidar( string frame_id_,
               std::shared_ptr<World> w,
               std::string namespace_, const Pose& pose_, 
               int id_p_)
-      : WorldItem(w, namespace_, pose_),
+      : WorldItem(w, namespace_, frame_id_, pose_),
         frame_id(frame_id_),
         fov(fov_),
         vfov(vfov_),
@@ -16,6 +16,7 @@ Lidar::Lidar( string frame_id_,
         num_beams(num_beams_),
         ranges(num_beams, -1.0),
         id_p(id_p_),
+        parent_frame_id(w->world_frame_id),
         scan_pub(nh.advertise<sensor_msgs::PointCloud2>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
 Lidar::Lidar( string frame_id_,
@@ -26,7 +27,7 @@ Lidar::Lidar( string frame_id_,
               std::shared_ptr<WorldItem> p_,
               std::string namespace_, const Pose& pose_,
               int id_p_)
-      : WorldItem(p_, namespace_, pose_),
+      : WorldItem(p_, namespace_, frame_id_, pose_),
         frame_id(frame_id_),
         fov(fov_),
         vfov(vfov_),
@@ -34,9 +35,30 @@ Lidar::Lidar( string frame_id_,
         num_beams(num_beams_),
         ranges(num_beams, -1.0),
         id_p(id_p_),
+        parent_frame_id(p_->item_frame_id),
         scan_pub(nh.advertise<sensor_msgs::PointCloud2>("/" +namespace_+ "/" +"base_scan", 1000)) {}
 
-// modify the intern of the lidar, then when draw() is call is update on the map its position!
+void Lidar::draw() {
+
+  Pose piw = poseInWorld();
+  IntPoint origin = world->world2grid(piw.translation());
+
+  if (!world->inside(origin)) return;
+  
+  float d_alpha = fov / num_beams;
+  float alpha = -fov / 2;
+  for (int i = 0; i < num_beams; ++i) {
+    float r = ranges[i];
+    Point p_lidar(r * cos(alpha), r * sin(alpha));
+    Point p_world = piw * p_lidar;
+    IntPoint epi = world->world2grid(p_world);
+    cv::line(world->display_image, cv::Point(origin.y(), origin.x()),
+             cv::Point(epi.y(), epi.x()), cv::Scalar(127, 127, 127), 1);
+    alpha += d_alpha;
+  }
+}
+
+// B.F.N.: modify the intern of the lidar, then when draw() is call is update on the map its position!
 void Lidar::timeTick(float dt) {
   vector<IntPoint3D> lidar_points;
   Pose piw = poseInWorld();
@@ -82,44 +104,16 @@ void Lidar::timeTick(float dt) {
     ++i;
   }
 
-  // for (const auto value: lidar_points) {
-  //   if (value.z() < 0) cout << "ERRORE Z NEGATIVOOOOO";
-  //   cout << "x: " << value.x() << endl
-  //   << "y: " << value.y() << endl
-  //   << "z: " << value.z() << endl;
-  // }
-
+  // LC: 
   pointCloudConversion(lidar_points);
-
-}
-
-void Lidar::draw() {
-
-  Pose piw = poseInWorld();
-  // std::cout << "pose in parent lidar:\n" << piw.matrix() << "\n";
-  IntPoint origin = world->world2grid(piw.translation());
-
-  if (!world->inside(origin)) return;
-  
-  float d_alpha = fov / num_beams;
-  float alpha = -fov / 2;
-  for (int i = 0; i < num_beams; ++i) {
-    float r = ranges[i];
-    Point p_lidar(r * cos(alpha), r * sin(alpha));
-    Point p_world = piw * p_lidar;
-    IntPoint epi = world->world2grid(p_world);
-    cv::line(world->display_image, cv::Point(origin.y(), origin.x()),
-             cv::Point(epi.y(), epi.x()), cv::Scalar(127, 127, 127), 1);
-    alpha += d_alpha;
-  }
- 
+  tf2Lidar();
 
 }
 
 // This function converts a set of 3D Int point int a point cloud 
 void Lidar::pointCloudConversion(const vector<IntPoint3D>& points) {
   pcl::PointCloud<pcl::PointXYZ> cloud;
-  cloud.header.frame_id = "map"; // to modify
+  cloud.header.frame_id = frame_id; 
   cloud.is_dense = true;
 
   for (const auto& point : points) {
@@ -131,10 +125,34 @@ void Lidar::pointCloudConversion(const vector<IntPoint3D>& points) {
   }
   sensor_msgs::PointCloud2 output;
   pcl::toROSMsg(cloud, output);
-  output.header.frame_id = "frame_robot0";
+  output.header.frame_id = parent_frame_id;
   output.header.stamp = ros::Time::now();
 
   // Publish on ros topic /robot_i/base_scan
   scan_pub.publish(output);
 
 };
+
+void Lidar::tf2Lidar() {
+  // FIXED TRANSFOMATION TUTORIAL
+  static tf2_ros::TransformBroadcaster tfb;
+  geometry_msgs::TransformStamped transform_stamped;
+
+  transform_stamped.header.frame_id = parent_frame_id;
+  transform_stamped.child_frame_id = frame_id;
+
+  transform_stamped.transform.translation.x = 0.0;
+  transform_stamped.transform.translation.y = 0.0;
+  transform_stamped.transform.translation.z = 0.0;
+
+  tf2::Quaternion q;
+  q.setRPY(0, 0, 0);
+
+  transform_stamped.transform.rotation.x = q.x();
+  transform_stamped.transform.rotation.y = q.y();
+  transform_stamped.transform.rotation.z = q.z();
+  transform_stamped.transform.rotation.w = q.w();
+
+  transform_stamped.header.stamp = ros::Time::now();
+  tfb.sendTransform(transform_stamped);
+}
