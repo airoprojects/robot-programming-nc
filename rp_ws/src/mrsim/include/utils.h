@@ -5,10 +5,11 @@
 
 #include <jsoncpp/json/json.h> 
 #include <optional>
-
+#include <variant>
 
 // Complex custom types
 using WorldPointer = shared_ptr<World>;
+using WorldItemPointer = shared_ptr<WorldItem>;
 using RobotPointer = shared_ptr<Robot>;
 using LidarPointer = shared_ptr<Lidar>;
 using RobotsVector = vector<RobotPointer>;

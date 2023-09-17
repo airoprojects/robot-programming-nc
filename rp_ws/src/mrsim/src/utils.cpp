@@ -95,6 +95,7 @@ Json::Value readJson( string in_path) {
 RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_counter) {
 
   cout << "World id -> "  << w->_id << endl;
+  std::variant<WorldPointer, RobotPointer> var;
   WorldPointer world_ = w; 
   RobotsVector robots; // changed
   LidarsVector lidars; // changed
@@ -108,7 +109,7 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
       const  string type = item["type"].asString();
       const string namespace_ = item["namespace"].asString();
       const int id_p = item["parent"].asInt(); 
-             
+  
       if (type == "robot") {
         // Robot parameters
         string frame_id = item["frame_id"].asString();
@@ -138,7 +139,7 @@ RobotsAndLidarsVector initSimEnv(Json::Value root, WorldPointer w, int& robot_co
           }
         }
         else {
-          Robot* r = new Robot(world_, frame_id, namespace_, radius, max_rv, max_tv, robot_pose, id_p); 
+          Robot* r = new Robot(world_, frame_id, namespace_, radius, max_rv, max_tv, robot_pose, id_p);
           RobotPointer r_(r, [](Robot* r){ }); 
           id_shared_robots[id] = r_; 
           robots.push_back(r_);
