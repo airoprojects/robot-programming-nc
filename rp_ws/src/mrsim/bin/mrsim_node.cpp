@@ -56,9 +56,9 @@ int main(int argc, char** argv) {
   // LC: check that each items has been correctly added to the world
   cout << "World Items: " << endl;
   for (const auto item: world._items) {cout << item->item_frame_id << endl;}
-
+ 
   // LC: run rviz
-  string command = "gnome-terminal -- bash -c 'rosrun rviz rviz'";
+  string command = "gnome-terminal -- bash -c 'rosrun rviz rviz -d" + git_root_path + "/config/rviz_basic_config.rviz'";
   if (runShellCommand(command)) return 1; // exit if the command fails
   sleep(3);
 

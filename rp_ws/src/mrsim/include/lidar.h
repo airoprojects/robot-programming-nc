@@ -49,7 +49,7 @@ class Lidar : public WorldItem {
   void timeTick(float dt) override;
 
   // Point cloud conversion
-  void pointCloudConversion(const vector<IntPoint3D>& points);
+  void pointCloudConversion(const vector<Point3D>& points);
 
   // Custom tf module from lidar to robot(parent)
   void tf2Lidar();

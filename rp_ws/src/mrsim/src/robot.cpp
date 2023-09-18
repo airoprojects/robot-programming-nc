@@ -81,8 +81,8 @@ void Robot::tf2Robot() {
   Pose trasformation = poseInWorld();
   geometry_msgs::TransformStamped transform_stamped;
   transform_stamped.header.stamp = ros::Time::now();
-  transform_stamped.header.frame_id = frame_id;
-  transform_stamped.child_frame_id = parent_frame_id;
+  transform_stamped.header.frame_id = parent_frame_id;
+  transform_stamped.child_frame_id = frame_id;
 
   tf2::Transform tf_transform;
   tf_transform.setOrigin(tf2::Vector3(trasformation.translation().x(), trasformation.translation().y(), 0.0));

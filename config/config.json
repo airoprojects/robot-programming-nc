@@ -10,7 +10,7 @@
           "max_rv" : 1.5,
           "max_tv" : 1.0,
           "pose": [
-              500,
+              300,
               500,
               1.04
           ],
@@ -22,9 +22,9 @@
           "frame_id": "frame_lidar0",
           "namespace": "robot_0",
           "fov": 6.14,
-          "vfov": 1.04,
+          "vfov": 0.78,
           "max_range": 10.0,
-          "num_beams": 180,
+          "num_beams": 1000,
           "pose": [
               0,
               0,
@@ -32,6 +32,5 @@
           ],
           "parent": 0
       }
-      
   ]
 }
