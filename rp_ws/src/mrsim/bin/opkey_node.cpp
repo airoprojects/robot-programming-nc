@@ -112,9 +112,9 @@ int main(int argc, char** argv) {
         ch = getchar(); // get the character after '['
         switch (ch) {
           case 'A': clearTerminal(); cout << "up\n"; msg.linear.x = 3.0; cout.flush(); break;
-          case 'B': clearTerminal(); cout << "down\n"; msg.linear.x = -1.0; cout.flush(); break;
-          case 'C': clearTerminal(); cout << "right\n"; msg.angular.z = -0.5; cout.flush(); break;
-          case 'D': clearTerminal(); cout << "left\n"; msg.angular.z = 0.5; cout.flush(); break;
+          case 'B': clearTerminal(); cout << "down\n"; msg.linear.x = -3.0; cout.flush(); break;
+          case 'C': clearTerminal(); cout << "right\n"; msg.angular.z = -2.5; cout.flush(); break;
+          case 'D': clearTerminal(); cout << "left\n"; msg.angular.z = 2.5; cout.flush(); break;
           default: clearTerminal(); cerr << "Invalid command: " << ch << endl; cout.flush(); break;
         }
       }
