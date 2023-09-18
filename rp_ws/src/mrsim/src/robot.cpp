@@ -63,7 +63,7 @@ void Robot::timeTick(float dt) {
   odom_pub.publish(odom);
 
   // Call tf to update transformation from robot to world
-  tf2Robot();
+  // tf2Robot();
 }
 
 // Update the robot's velocity based on received commands

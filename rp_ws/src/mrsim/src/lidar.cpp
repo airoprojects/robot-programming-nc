@@ -50,7 +50,10 @@ void Lidar::draw() {
   for (int i = 0; i < num_beams; ++i) {
     float r = ranges[i];
     Point p_lidar(r * cos(alpha), r * sin(alpha));
-    Point p_world = piw * p_lidar;
+    Point p_world = piw * p_lidar; // report to reference frame world to draw
+    // get point lidar
+    // scan vertfical from this point
+    // use this point accumulated in pointCloudConversion
     IntPoint epi = world->world2grid(p_world);
     cv::line(world->display_image, cv::Point(origin.y(), origin.x()),
              cv::Point(epi.y(), epi.x()), cv::Scalar(127, 127, 127), 1);
@@ -72,18 +75,42 @@ void Lidar::timeTick(float dt) {
   float d_beta = vfov / num_beams; // increment for beta
   float beta = 0; // start from the bottom
   float int_range = max_range * world->i_res; // (from world to grid)
+  
+  cout << "max_range" << max_range << endl;
+  cout << "int_range" << int_range << endl;
+
+  
 
   for (int i = 0; i < num_beams; ++i) {
     IntPoint endpoint;
     ranges[i] = max_range; //each beam 
     int result = world->traverseBeam(endpoint, origin, alpha, int_range);  
+    // to trasform endpoint with respect the lidar frame 
     if (result > -1) {
       IntPoint delta = endpoint - origin; // point where beam arrives
       if (result > 0) {
-        lidar_points.push_back(IntPoint3D(endpoint.x(), endpoint.y(), 0));
-        short_ranges.push_back(delta.norm());
+
+        cout << "---------" << endl;
+        cout << "#piv" <<endl;
+        cout << piw.matrix() << endl;
+        cout << "#piv inverse " <<endl;
+        cout << piw.inverse().matrix()  << endl;
+        cout << "---------" << endl;
+
+
+
+        
+        Point endpoint_lidar = (piw.inverse() * (endpoint.cast<float>() * world -> res));
+        cout << "---------" << endl;
+        cout << "endpoint_lidar ->" << (endpoint_lidar.cast<float>()).transpose() << endl;
+        cout << "endpoint ->" << (endpoint.cast<float>()).transpose() << endl;
+        lidar_points.push_back(IntPoint3D(endpoint_lidar.x(), endpoint_lidar.y(), 0));
+        cout << "---------" << endl;
+
+        short_ranges.push_back(delta.norm()); // TO REMAIN PIXEL
       }
-      ranges[i] = delta.norm() * world->res; // from grid to world
+      ranges[i] = delta.norm() * world->res; // FROM GRID TO WORLD
+      // cout << "ranges [i] = " << ranges[i] << endl;
     }
     alpha += d_alpha; // from sx is the first beam, after i move to right with d_alpha 
   }
@@ -91,7 +118,7 @@ void Lidar::timeTick(float dt) {
   // At the end of this loop we should have all the ranges for all the beams
   int i  = 0;
   for (const auto hit_point: lidar_points) {
-    beta += d_beta;
+    beta = d_beta;
     int ex = hit_point.x();
     int ey = hit_point.y();
     while (beta <= vfov) {
@@ -99,6 +126,7 @@ void Lidar::timeTick(float dt) {
       float diag_beam = short_ranges[i] / cos(beta);
       float z_coordinate = diag_beam * sin(beta);
       lidar_points.push_back(IntPoint3D(ex, ey, z_coordinate));
+      // cout << "ex ey z_coordinate -> " << ex << " ," <<  ey << " ," <<  z_coordinate;
       beta += d_beta;
     }
     ++i;
