@@ -5,6 +5,8 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(jsoncpp REQUIRED)
 
+set(CMAKE_CXX_STANDARD 17)
+
 # In case you want to use a JSON format for the configuration file, feel free to use the jsoncpp lib
 # find_package(jsoncpp REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
