@@ -28,7 +28,7 @@ then
     while true; do
         case "$1" in
             -c | --compile) catkin_make; source ${path}'/devel/setup.bash'; break ;;
-            -e | --execute) source ${path}'/devel/setup.bash'; rosrun mrsim mrsim_node config.json; break;;
+            -e | --execute) source ${path}'/devel/setup.bash'; rosrun mrsim mrsim_node basic_config.json; break;;
             -a | --all) catkin_make; source ${path}'/devel/setup.bash'; rosrun mrsim mrsim_node config.json; break;;
             --target) shift 2;;
            *) break ;;

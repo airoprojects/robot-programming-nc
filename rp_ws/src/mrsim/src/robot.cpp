@@ -64,6 +64,7 @@ void Robot::timeTick(float dt) {
 
   // Call tf to update transformation from robot to world
   tf2Robot();
+  staticTransform();
 }
 
 // Update the robot's velocity based on received commands
@@ -105,4 +106,53 @@ void Robot::tf2Robot() {
   static tf2_ros::TransformBroadcaster br;
   br.sendTransform(transform_stamped);
 
+}
+
+void Robot::staticTransform() {
+  geometry_msgs::TransformStamped static_transformStamped1;
+  static_transformStamped1.header.stamp = ros::Time::now();
+  static_transformStamped1.header.frame_id = frame_id;
+  static_transformStamped1.child_frame_id = "base_link";
+  static_transformStamped1.transform.translation.x = 0.0;
+  static_transformStamped1.transform.translation.y = 0.0;
+  static_transformStamped1.transform.translation.z = 0.0;
+  tf2::Quaternion quat1;
+  quat1.setRPY(0, 0, 0);
+  static_transformStamped1.transform.rotation.x = quat1.x();
+  static_transformStamped1.transform.rotation.y = quat1.y();
+  static_transformStamped1.transform.rotation.z = quat1.z();
+  static_transformStamped1.transform.rotation.w = quat1.w();
+
+  geometry_msgs::TransformStamped static_transformStamped2;
+  static_transformStamped2.header.stamp = ros::Time::now();
+  static_transformStamped2.header.frame_id = frame_id;
+  static_transformStamped2.child_frame_id = "left_wheel";
+  static_transformStamped2.transform.translation.x = 1.0;
+  static_transformStamped2.transform.translation.y = 1.0;
+  static_transformStamped2.transform.translation.z = 0.0;
+  tf2::Quaternion quat2;
+  quat2.setRPY(0, 0, 0);
+  static_transformStamped2.transform.rotation.x = quat2.x();
+  static_transformStamped2.transform.rotation.y = quat2.y();
+  static_transformStamped2.transform.rotation.z = quat2.z();
+  static_transformStamped2.transform.rotation.w = quat2.w();
+
+  geometry_msgs::TransformStamped static_transformStamped3;
+  static_transformStamped3.header.stamp = ros::Time::now();
+  static_transformStamped3.header.frame_id = frame_id;
+  static_transformStamped3.child_frame_id = "right_wheel";
+  static_transformStamped3.transform.translation.x = -1.0;
+  static_transformStamped3.transform.translation.y = -1.0;
+  static_transformStamped3.transform.translation.z = 0.0;
+  tf2::Quaternion quat3;
+  quat3.setRPY(0, 0, 0);
+  static_transformStamped3.transform.rotation.x = quat3.x();
+  static_transformStamped3.transform.rotation.y = quat3.y();
+  static_transformStamped3.transform.rotation.z = quat3.z();
+  static_transformStamped3.transform.rotation.w = quat3.w();
+
+  tf2_ros::StaticTransformBroadcaster static_broadcaster;
+  static_broadcaster.sendTransform(static_transformStamped1);
+  static_broadcaster.sendTransform(static_transformStamped2);
+  static_broadcaster.sendTransform(static_transformStamped3);
 }

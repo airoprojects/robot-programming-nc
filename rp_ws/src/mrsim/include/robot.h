@@ -12,6 +12,7 @@
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Transform.h>
 #include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2/convert.h> 
 
@@ -49,6 +50,8 @@ struct Robot : public WorldItem {
 
   // Custom tf module from robot to world(parent)
   void tf2Robot();
+
+  void staticTransform();
 
   string frame_id;
   float radius;
