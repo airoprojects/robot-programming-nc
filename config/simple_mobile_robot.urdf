@@ -1,0 +1,53 @@
+
+<?xml version="1.0"?>
+<robot name="simple_mobile_robot">
+  <!-- Base link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.5 0.3 0.1"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0 1 0 1.0"/>
+      </material>
+    </visual>
+  </link>
+  
+  <!-- Wheels (just for visualization, not functional) -->
+  <link name="left_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.1" radius="0.1"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1.0"/>
+      </material>
+      <origin xyz="0 0 -0.1" rpy="1.5707 0 0"/>
+    </visual>
+  </link>
+
+  <link name="right_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.1" radius="0.1"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1.0"/>
+      </material>
+      <origin xyz="0 0 -0.1" rpy="1.5707 0 0"/>
+    </visual>
+  </link>
+
+  <!-- Joints to connect wheels to the base -->
+  <joint name="left_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin xyz="-0.15 -0.2 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="right_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="-0.15 0.2 0" rpy="0 0 0"/>
+  </joint>
+</robot>

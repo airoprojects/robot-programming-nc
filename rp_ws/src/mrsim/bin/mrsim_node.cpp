@@ -56,14 +56,18 @@ int main(int argc, char** argv) {
   // LC: check that each items has been correctly added to the world
   cout << "World Items: " << endl;
   for (const auto item: world._items) {cout << item->item_frame_id << endl;}
- 
-  // LC: run rviz
-  string command = "gnome-terminal -- bash -c 'rosrun rviz rviz -d" + git_root_path + "/config/rviz_basic_config.rviz'";
-  if (runShellCommand(command)) return 1; // exit if the command fails
-  sleep(3);
 
   world.draw();
   cv::waitKey(1);
+
+  // config robot in rviz
+  string command = "rosparam set robot_description --textfile " + git_root_path + "/config/simple_mobile_robot.urdf";
+  if (runShellCommand(command)) return 1; // exit if the command fails
+
+  // LC: run rviz
+  command = "gnome-terminal -- bash -c 'rosrun rviz rviz -d" + git_root_path + "/config/rviz_basic_config.rviz'";
+  if (runShellCommand(command)) return 1; // exit if the command fails
+  sleep(3);
 
   // LC: run opkey controller node 
   command = "gnome-terminal -- bash -c 'rosrun mrsim opkey_node " + to_string(NUM_ROBOTS) + " ; exec bash'";

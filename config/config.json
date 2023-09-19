@@ -31,6 +31,83 @@
               0
           ],
           "parent": 0
-      }
+      },
+      {
+        "id": 2,
+        "type": "robot",
+        "frame_id": "frame_robot1",
+        "namespace": "robot_1",
+        "radius": 0.3,
+        "max_rv" : 10.5,
+        "max_tv" : 10.0,
+        "pose": [
+            740,
+            1150,
+            1.04
+        ],
+        "parent": -1
+    },
+    {
+      "id": 3,
+      "type": "lidar",
+      "frame_id": "frame_lidar1",
+      "namespace": "robot_1",
+      "fov": 6.14,
+      "vfov": 0.52,
+      "max_range": 10.0,
+      "num_beams": 0,
+      "pose": [
+          0,
+          0,
+          0
+      ],
+      "parent": 2
+  },
+  {
+    "id": 4,
+    "type": "robot",
+    "frame_id": "frame_robot2",
+    "namespace": "robot_2",
+    "radius": 0.6,
+    "max_rv" : 10.5,
+    "max_tv" : 10.0,
+    "pose": [
+      500,
+      1000,
+      -0.26
+    ],
+    "parent": -1
+  },
+  {
+      "id": 5,
+      "type": "lidar",
+      "frame_id": "frame_lidar2",
+      "namespace": "robot_3",
+      "fov": 1.57,
+      "vfov": 0.52,
+      "max_range": 10.0,
+      "num_beams": 300,
+      "pose": [
+          0,
+          0,
+          0
+      ],
+      "parent": 4
+  },
+  {
+    "id": 6,
+    "type": "robot",
+    "frame_id": "frame_robot3",
+    "namespace": "robot_3",
+    "radius": 0.05,
+    "max_rv" : 10.5,
+    "max_tv" : 10.0,
+    "pose": [
+      450,
+      1000,
+      -0.26
+    ],
+    "parent": -1
+  }
   ]
 }
